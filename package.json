@@ -1,5 +1,5 @@
 {
-  "name": "auth-sistema",
+  "name": "dsRest-frontend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,10 +9,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix",
+    "format": "prettier --write src/",
     "sass": "npx sass src/assets/scss:src/assets/css --no-source-map --style=compressed --watch --quiet-deps"
   },
   "dependencies": {
-    "auth-sistema": "file:",
     "axios": "^1.8.1",
     "pinia": "^3.0.1",
     "qrcode.vue": "^3.6.0",
@@ -23,7 +23,11 @@
     "@eslint/js": "^9.20.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-vue": "^9.32.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
     "sass": "^1.85.1",
     "vite": "^6.3.2",
     "vite-plugin-vue-devtools": "^7.7.2"

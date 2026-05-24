@@ -9,8 +9,8 @@
         <div class="mb-3">
           <label class="form-label">Nombre de la categoría</label>
           <input
-            class="form-control"
             v-model="nombre"
+            class="form-control"
             placeholder="Ej: Cafés"
             :class="{ 'is-invalid': errorNombre }"
           />
@@ -19,8 +19,8 @@
         <div class="mb-3">
           <label class="form-label">Descripción (opcional)</label>
           <textarea
-            class="form-control"
             v-model="descripcion"
+            class="form-control"
             placeholder="Descripción de la categoría"
             rows="2"
           ></textarea>
@@ -30,7 +30,7 @@
       <div class="modal-footer">
         <button class="btn btn-outline-primary" @click="onCancel">Cancelar</button>
         <button class="btn btn-primary" :disabled="!nombre.trim() || guardando" @click="onGuardar">
-          {{ guardando ? 'Guardando...' : (categoriaEditar ? 'Guardar cambios' : 'Crear categoría') }}
+          {{ guardando ? 'Guardando...' : categoriaEditar ? 'Guardar cambios' : 'Crear categoría' }}
         </button>
       </div>
     </div>
@@ -42,7 +42,7 @@ import { ref, watch } from 'vue'
 
 const props = defineProps({
   show: Boolean,
-  categoriaEditar: Object
+  categoriaEditar: Object,
 })
 
 const emit = defineEmits(['guardar', 'cancel'])
@@ -53,20 +53,27 @@ const errorNombre = ref('')
 const errorGeneral = ref('')
 const guardando = ref(false)
 
-watch(() => props.categoriaEditar, (cat) => {
-  nombre.value = cat?.nombre || ''
-  descripcion.value = cat?.descripcion || ''
-  errorNombre.value = ''
-  errorGeneral.value = ''
-}, { immediate: true })
-
-watch(() => props.show, (val) => {
-  if (val) {
+watch(
+  () => props.categoriaEditar,
+  (cat) => {
+    nombre.value = cat?.nombre || ''
+    descripcion.value = cat?.descripcion || ''
     errorNombre.value = ''
     errorGeneral.value = ''
-    guardando.value = false
+  },
+  { immediate: true }
+)
+
+watch(
+  () => props.show,
+  (val) => {
+    if (val) {
+      errorNombre.value = ''
+      errorGeneral.value = ''
+      guardando.value = false
+    }
   }
-})
+)
 
 const onGuardar = () => {
   errorNombre.value = ''
@@ -81,7 +88,7 @@ const onGuardar = () => {
   emit('guardar', {
     id: props.categoriaEditar?.id,
     nombre: nombre.value.trim(),
-    descripcion: descripcion.value.trim() || null
+    descripcion: descripcion.value.trim() || null,
   })
 }
 

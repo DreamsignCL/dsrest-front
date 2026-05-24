@@ -8,15 +8,17 @@
         <p>{{ message }}</p>
       </div>
       <div class="modal-footer justify-content-center">
-        <button class="btn btn-primary rounded-pill" type="button" @click="onConfirm">Aceptar</button>
+        <button class="btn btn-primary rounded-pill" type="button" @click="onConfirm">
+          Aceptar
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  defineProps(['show', 'message'])
-  const emit = defineEmits(['confirm', 'cancel'])
-  const onConfirm = () => emit('confirm')
-  const onCancel = () => emit('cancel')
+defineProps(['show', 'message'])
+const emit = defineEmits(['confirm', 'cancel'])
+const onConfirm = () => emit('confirm')
+const onCancel = () => emit('cancel')
 </script>

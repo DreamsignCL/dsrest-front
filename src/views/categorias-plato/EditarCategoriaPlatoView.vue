@@ -15,7 +15,7 @@ const categoria = ref({
   id: null,
   nombre: '',
   descripcion: '',
-  localId: null
+  localId: null,
 })
 
 const obtenerCategoria = async () => {
@@ -35,7 +35,7 @@ const obtenerCategoria = async () => {
     const data = await apiService.get(`categorias-plato/${id}?localId=${local.value?.id}`)
     categoria.value = {
       ...data,
-      localId: local.value?.id || data.localId
+      localId: local.value?.id || data.localId,
     }
   } catch (error) {
     errorMessage.value = error.message
@@ -57,7 +57,7 @@ const guardarCategoria = async () => {
     await apiService.put(`categorias-plato/${categoria.value.id}`, {
       nombre: categoria.value.nombre,
       descripcion: categoria.value.descripcion,
-      localId: categoria.value.localId
+      localId: categoria.value.localId,
     })
     router.push('/categorias-plato')
   } catch (error) {
@@ -104,9 +104,9 @@ onMounted(() => {
                   <label class="form-label" for="nombre">Nombre</label>
                   <input
                     id="nombre"
+                    v-model="categoria.nombre"
                     class="form-control"
                     type="text"
-                    v-model="categoria.nombre"
                     placeholder="Nombre de la categoría"
                     required
                   />
@@ -116,8 +116,8 @@ onMounted(() => {
                   <label class="form-label" for="descripcion">Descripción</label>
                   <textarea
                     id="descripcion"
-                    class="form-control"
                     v-model="categoria.descripcion"
+                    class="form-control"
                     placeholder="Descripción de la categoría"
                     rows="3"
                   ></textarea>

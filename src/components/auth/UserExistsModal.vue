@@ -1,9 +1,12 @@
 <template>
   <div class="modal-backdrop">
     <div class="modal-content">
-      <button class="close-btn" @click="$emit('close')" aria-label="Cerrar">
-        <img src="../../assets/img/close-skyblue-icon.svg" alt="Eliminar"
-          style="width: 15px; height: 15px; filter: brightness(0) invert(1);" />
+      <button class="close-btn" aria-label="Cerrar" @click="$emit('close')">
+        <img
+          src="../../assets/img/close-skyblue-icon.svg"
+          alt="Eliminar"
+          style="width: 15px; height: 15px; filter: brightness(0) invert(1)"
+        />
       </button>
       <h3>Ya existes en nuestro sistema</h3>
       <p>Crea tu local y elige tu plan</p>
@@ -42,7 +45,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #00AEEF;
+  background: #00aeef;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -58,7 +61,7 @@
 
 .primary-btn {
   width: 100%;
-  background: #00AEEF;
+  background: #00aeef;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -71,7 +74,7 @@
 
 .secondary-btn {
   width: 100%;
-  background: #E0E0E0;
+  background: #e0e0e0;
   color: #888;
   border: none;
   border-radius: 6px;

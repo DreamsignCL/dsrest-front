@@ -24,20 +24,16 @@ const cerrarModal = () => {
   mostrarModal.value = false
 }
 
-
 const nombreCategoriaActiva = computed(() => {
-  const cat = categorias.value.find(c => c.id === categoriaActiva.value)
+  const cat = categorias.value.find((c) => c.id === categoriaActiva.value)
   return cat ? cat.nombre : categoriaActiva.value
 })
 
 const categorias = computed(() => {
-  const platosActivos = platos.value.filter(p => p.estado === true)
-  const nombresUnicos = [...new Set(platosActivos.map(p => p.categoria).filter(Boolean))]
-  const dinamicas = nombresUnicos.map(nombre => ({ id: nombre.toLowerCase(), nombre }))
-  return [
-    { id: 'recomendados', nombre: 'Recomendados' },
-    ...dinamicas
-  ]
+  const platosActivos = platos.value.filter((p) => p.estado === true)
+  const nombresUnicos = [...new Set(platosActivos.map((p) => p.categoria).filter(Boolean))]
+  const dinamicas = nombresUnicos.map((nombre) => ({ id: nombre.toLowerCase(), nombre }))
+  return [{ id: 'recomendados', nombre: 'Recomendados' }, ...dinamicas]
 })
 
 const obtenerDatos = async () => {
@@ -61,24 +57,22 @@ const obtenerDatos = async () => {
 
 const filtrarPlatosPorCategoria = (categoria) => {
   // Primero filtramos solo los platos activos (estado: true)
-  const platosActivos = platos.value.filter(plato => plato.estado === true);
+  const platosActivos = platos.value.filter((plato) => plato.estado === true)
 
   if (categoria === 'recomendados') {
     // Filtra entre los recomendados activos y luego agarra sólo los primeros 3
-    return platosActivos
-      .filter(plato => plato.recomendacion_chef)
-      .slice(0, 3)
+    return platosActivos.filter((plato) => plato.recomendacion_chef).slice(0, 3)
   }
-  return platosActivos.filter(plato => plato.categoria.toLowerCase() === categoria)
+  return platosActivos.filter((plato) => plato.categoria.toLowerCase() === categoria)
 }
 
 const categoriasVisibles = computed(() => {
-  const platosActivos = platos.value.filter(plato => plato.estado === true)
-  const tieneRecomendados = platosActivos.some(plato => plato.recomendacion_chef)
-  return categorias.value.filter(cat => {
+  const platosActivos = platos.value.filter((plato) => plato.estado === true)
+  const tieneRecomendados = platosActivos.some((plato) => plato.recomendacion_chef)
+  return categorias.value.filter((cat) => {
     if (cat.id === 'recomendados') return tieneRecomendados
-    return platosActivos.some(plato =>
-      plato.categoria && plato.categoria.toLowerCase() === cat.id
+    return platosActivos.some(
+      (plato) => plato.categoria && plato.categoria.toLowerCase() === cat.id
     )
   })
 })
@@ -103,98 +97,143 @@ onMounted(() => {
       <p>{{ error }}</p>
       <button class="retry-button" @click="obtenerDatos">Intentar nuevamente</button>
     </div>
-      <!-- Carta content -->
+    <!-- Carta content -->
     <template v-else>
-        <header></header>
-        <main>
-          <div class="page-content page-content--menu">
-            <div class="page-content__header">
-              <div class="user-logo">
-                <div class="user-logo__image">
-                  <img v-if="local?.foto" :src="local.foto" alt="Logo del Local" />
-                  <img v-else src="../../assets/img/no-logo.png" alt="Sin logo" />
-                </div>
+      <header></header>
+      <main>
+        <div class="page-content page-content--menu">
+          <div class="page-content__header">
+            <div class="user-logo">
+              <div class="user-logo__image">
+                <img v-if="local?.foto" :src="local.foto" alt="Logo del Local" />
+                <img v-else src="../../assets/img/no-logo.png" alt="Sin logo" />
               </div>
-              <!-- Categorías -->
-              <div class="category-nav">
-                <img src="../../assets/img/horizontal-scroll.gif" alt="" />
-                <div class="category-nav-content">
-                  <button v-for="categoria in categoriasVisibles" :key="categoria.id"
-                    :class="['btn btn-outline-primary rounded-pill', { active: categoriaActiva === categoria.id }]"
-                    @click="categoriaActiva = categoria.id">
-                    <!--
+            </div>
+            <!-- Categorías -->
+            <div class="category-nav">
+              <img src="../../assets/img/horizontal-scroll.gif" alt="" />
+              <div class="category-nav-content">
+                <button
+                  v-for="categoria in categoriasVisibles"
+                  :key="categoria.id"
+                  :class="[
+                    'btn btn-outline-primary rounded-pill',
+                    { active: categoriaActiva === categoria.id },
+                  ]"
+                  @click="categoriaActiva = categoria.id"
+                >
+                  <!--
                       <span class="icon">{{ categoria.icon }}</span>
                     -->
-                    <span class="text">{{ categoria.nombre }}</span>
-                  </button>
-                </div>
+                  <span class="text">{{ categoria.nombre }}</span>
+                </button>
               </div>
-            </div>  
-            <div class="page-content__body">
-              <div>
-                <img class="mb-3" v-if="categoriaActiva === 'recomendados'" src="../../assets/img/menu-text.svg" alt="" style="width:85%">
-                <h1 v-else >{{ nombreCategoriaActiva }}</h1>
-              </div>
+            </div>
+          </div>
+          <div class="page-content__body">
+            <div>
+              <img
+                v-if="categoriaActiva === 'recomendados'"
+                class="mb-3"
+                src="../../assets/img/menu-text.svg"
+                alt=""
+                style="width: 85%"
+              />
+              <h1 v-else>{{ nombreCategoriaActiva }}</h1>
+            </div>
 
-              <!-- Platos -->
-              <div v-if="categoriaActiva === 'recomendados' && filtrarPlatosPorCategoria('recomendados').length > 0"
-                class="recommended-section">
-                <div class="dishes-grid">
-                  <div v-for="plato in filtrarPlatosPorCategoria('recomendados')" :key="plato.id" class="dish-item"
-                    :style="{ backgroundImage: `url(${plato.foto})` }" @click="abrirModal(plato)">
-                    <div class="dish-info">
-                      <h3>{{ plato.nombre }}</h3>
-                      <div class="price">
-                        <span class="badge text-bg-primary">${{ plato.precio }}</span><br>
-                        <small v-if="plato.precio_comparacion">${{ plato.precio_comparacion }}</small>
-                      </div>
+            <!-- Platos -->
+            <div
+              v-if="
+                categoriaActiva === 'recomendados' &&
+                  filtrarPlatosPorCategoria('recomendados').length > 0
+              "
+              class="recommended-section"
+            >
+              <div class="dishes-grid">
+                <div
+                  v-for="plato in filtrarPlatosPorCategoria('recomendados')"
+                  :key="plato.id"
+                  class="dish-item"
+                  :style="{ backgroundImage: `url(${plato.foto})` }"
+                  @click="abrirModal(plato)"
+                >
+                  <div class="dish-info">
+                    <h3>{{ plato.nombre }}</h3>
+                    <div class="price">
+                      <span class="badge text-bg-primary">${{ plato.precio }}</span
+                      ><br />
+                      <small v-if="plato.precio_comparacion">${{ plato.precio_comparacion }}</small>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <!-- Mensaje si no hay platos en la categoría -->
-              <div v-if="filtrarPlatosPorCategoria(categoriaActiva).length === 0" class="no-dishes">
-                <div class="no-dishes-content">
-                  <span class="icon">🍽️</span>
-                  <h3>No hay platos disponibles</h3>
-                  <p>Actualmente no tenemos platos en esta categoría</p>
-                </div>
-              </div>
-
-              <!-- Lista de platos por categoría -->
-              <div v-else-if="categoriaActiva !== 'recomendados'" class="element-list">
-                <button v-for="plato in filtrarPlatosPorCategoria(categoriaActiva)" :key="plato.id" class="element-item"
-                  @click="abrirModal(plato)">
-                  <div class="element-item__image"
-                    v-bind:style="{ backgroundImage: plato.foto ? 'url(' + plato.foto + ')' : 'url(assets/no-image.png)' }">
-                  </div>
-                  <div class="element-item__text">
-                    <h3>{{ plato.nombre }}</h3>
-                    <p>{{ plato.descripcion }}</p>
-                  </div>
-                  <div class="element-item__price">
-                    <div class="current-price">${{ plato.precio }}</div>
-                    <div class="prev-price" v-if="plato.precio_comparacion">${{ plato.precio_comparacion }}</div>
-                  </div>
-                  <div></div>
-                </button>
+            <!-- Mensaje si no hay platos en la categoría -->
+            <div v-if="filtrarPlatosPorCategoria(categoriaActiva).length === 0" class="no-dishes">
+              <div class="no-dishes-content">
+                <span class="icon">🍽️</span>
+                <h3>No hay platos disponibles</h3>
+                <p>Actualmente no tenemos platos en esta categoría</p>
               </div>
             </div>
-            <div class="page-content__footer">
-              <Signature />
+
+            <!-- Lista de platos por categoría -->
+            <div v-else-if="categoriaActiva !== 'recomendados'" class="element-list">
+              <button
+                v-for="plato in filtrarPlatosPorCategoria(categoriaActiva)"
+                :key="plato.id"
+                class="element-item"
+                @click="abrirModal(plato)"
+              >
+                <div
+                  class="element-item__image"
+                  :style="{
+                    backgroundImage: plato.foto
+                      ? 'url(' + plato.foto + ')'
+                      : 'url(assets/no-image.png)',
+                  }"
+                >
+                  >
+                </div>
+                <div class="element-item__text">
+                  <h3>{{ plato.nombre }}</h3>
+                  <p>{{ plato.descripcion }}</p>
+                </div>
+                <div class="element-item__price">
+                  <div class="current-price">${{ plato.precio }}</div>
+                  <div v-if="plato.precio_comparacion" class="prev-price">
+                    ${{ plato.precio_comparacion }}
+                  </div>
+                </div>
+                <div></div>
+              </button>
             </div>
           </div>
-        </main>
+          <div class="page-content__footer">
+            <Signature />
+          </div>
+        </div>
+      </main>
     </template>
   </div>
 
   <!-- Modal para los platos -->
-  <div v-if="mostrarModal" class="modal modal-dish animate__animated animate__fadeIn" @click.self="cerrarModal">
-    <div 
+  <div
+    v-if="mostrarModal"
+    class="modal modal-dish animate__animated animate__fadeIn"
+    @click.self="cerrarModal"
+  >
+    <div
       class="modal-content animate__animated animate__fadeInUp"
-      v-bind:style="{ backgroundImage: platoSeleccionado?.foto ? 'url(' + platoSeleccionado?.foto + ')' : 'url(assets/no-image.png)' }" 
-      @click.stop>
+      :style="{
+        backgroundImage: platoSeleccionado?.foto
+          ? 'url(' + platoSeleccionado?.foto + ')'
+          : 'url(assets/no-image.png)',
+      }"
+      @click.stop
+    >
       <div class="modal-header">
         <button class="btn-close" @click.self="cerrarModal"></button>
         <div class="price">

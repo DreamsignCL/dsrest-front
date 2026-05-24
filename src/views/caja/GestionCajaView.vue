@@ -59,7 +59,10 @@ const accionPrincipalLabel = computed(() => {
 const opcionesTipoPago = ['Transferencias', 'Tarjeta de cr\u00e9dito', 'Tarjeta de d\u00e9bito']
 
 const totalContadoPaso1 = computed(() => {
-  return conteoLineas.value.reduce((acc, item) => acc + (Number(item.denominacion) * Number(item.cantidad || 0)), 0)
+  return conteoLineas.value.reduce(
+    (acc, item) => acc + Number(item.denominacion) * Number(item.cantidad || 0),
+    0
+  )
 })
 
 const totalOtrosPagosPaso1 = computed(() => {
@@ -69,7 +72,9 @@ const totalOtrosPagosPaso1 = computed(() => {
 const totalGeneralPaso1 = computed(() => totalContadoPaso1.value + totalOtrosPagosPaso1.value)
 
 const subtotalDenominacionSeleccionada = computed(() => {
-  const encontrada = denominaciones.value.find((d) => String(d.denominacion) === String(denominacionSeleccionada.value))
+  const encontrada = denominaciones.value.find(
+    (d) => String(d.denominacion) === String(denominacionSeleccionada.value)
+  )
   if (!encontrada) return 0
   return Number(encontrada.denominacion) * Number(cantidadSeleccionada.value || 0)
 })
@@ -86,19 +91,19 @@ const totalCajaResumen = computed(() => {
 
 const conteadoTransferencia = computed(() => {
   const otros = resumenCierre.value?.conteadoOtros || []
-  const item = otros.find(p => p.tipo === 'Transferencias')
+  const item = otros.find((p) => p.tipo === 'Transferencias')
   return Number(item?.monto || 0)
 })
 
 const conteadoDebito = computed(() => {
   const otros = resumenCierre.value?.conteadoOtros || []
-  const item = otros.find(p => p.tipo === 'Tarjeta de débito')
+  const item = otros.find((p) => p.tipo === 'Tarjeta de débito')
   return Number(item?.monto || 0)
 })
 
 const conteadoCredito = computed(() => {
   const otros = resumenCierre.value?.conteadoOtros || []
-  const item = otros.find(p => p.tipo === 'Tarjeta de crédito')
+  const item = otros.find((p) => p.tipo === 'Tarjeta de crédito')
   return Number(item?.monto || 0)
 })
 
@@ -152,7 +157,7 @@ const cargarHistorial = async () => {
   if (filtroUsuario.value) params.set('usuarioId', filtroUsuario.value)
 
   const resp = await apiService.get(`cajas/historial?${params.toString()}`)
-  cajas.value = (resp.data || []).map(c => ({ ...c, isActive: false }))
+  cajas.value = (resp.data || []).map((c) => ({ ...c, isActive: false }))
   total.value = Number(resp.total || 0)
   isLoading.value = false
 
@@ -165,7 +170,7 @@ const cargarHistorial = async () => {
 }
 
 const toggleCajaActive = (caja) => {
-  cajas.value.forEach(c => {
+  cajas.value.forEach((c) => {
     if (c.id !== caja.id) c.isActive = false
   })
   caja.isActive = !caja.isActive
@@ -203,7 +208,9 @@ const continuarCierre = async (caja) => {
     cierreCajaId.value = caja.id
     const den = await apiService.get(`cajas/denominaciones?localId=${localId.value}`)
     denominaciones.value = den.map((d) => ({ id: d.id, denominacion: d.valor, cantidad: 0 }))
-    denominacionSeleccionada.value = denominaciones.value.length ? String(denominaciones.value[0].denominacion) : ''
+    denominacionSeleccionada.value = denominaciones.value.length
+      ? String(denominaciones.value[0].denominacion)
+      : ''
     cantidadSeleccionada.value = 0
     tipoPagoManual.value = ''
     montoPagoManual.value = 0
@@ -236,7 +243,9 @@ const iniciarCierre = async () => {
       cantidad: 0,
     }))
 
-    denominacionSeleccionada.value = denominaciones.value.length ? String(denominaciones.value[0].denominacion) : ''
+    denominacionSeleccionada.value = denominaciones.value.length
+      ? String(denominaciones.value[0].denominacion)
+      : ''
     cantidadSeleccionada.value = 0
     tipoPagoManual.value = ''
     montoPagoManual.value = 0
@@ -386,7 +395,12 @@ const cajasFiltradas = computed(() => {
     const usuarioA = c.usuarioApertura?.nombre?.toLowerCase() || ''
     const usuarioC = c.usuarioCierre?.nombre?.toLowerCase() || ''
     const estado = c.estado?.toLowerCase() || ''
-    return numero.includes(query) || usuarioA.includes(query) || usuarioC.includes(query) || estado.includes(query)
+    return (
+      numero.includes(query) ||
+      usuarioA.includes(query) ||
+      usuarioC.includes(query) ||
+      estado.includes(query)
+    )
   })
 })
 
@@ -399,9 +413,9 @@ const estadoChipClass = (estado) => {
 const puedeConfirmarCierre = computed(() => {
   if (!resumenCierre.value) return false
   if (
-    resumenCierre.value.requiereObservacionDiferencia
-    && resumenCierre.value.diferencia !== 0
-    && !observacionCierre.value.trim()
+    resumenCierre.value.requiereObservacionDiferencia &&
+    resumenCierre.value.diferencia !== 0 &&
+    !observacionCierre.value.trim()
   ) {
     return false
   }
@@ -446,25 +460,34 @@ onMounted(async () => {
         <template v-if="cierreStep === 0">
           <div class="page-content__body">
             <div class="list-filters">
-              <button class="btn btn-outline-secondary btn-filter" type="button" @click="showFiltroModal = true">
-                <img src="../../assets/img/filter-icon.svg" alt="">
+              <button
+                class="btn btn-outline-secondary btn-filter"
+                type="button"
+                @click="showFiltroModal = true"
+              >
+                <img src="../../assets/img/filter-icon.svg" alt="" />
               </button>
               <form @submit.prevent>
-                <input class="form-control" type="search" placeholder="Buscar..." v-model="busqueda" />
+                <input
+                  v-model="busqueda"
+                  class="form-control"
+                  type="search"
+                  placeholder="Buscar..."
+                />
               </form>
             </div>
-  
+
             <div class="element-list">
               <div v-if="isLoading" class="loader"></div>
-  
+
               <div v-else-if="cajasFiltradas.length === 0" class="empty-state">
                 <div class="no-image"></div>
                 No hay registros de cajas
               </div>
-  
+
               <button
-                v-else
                 v-for="caja in cajasFiltradas"
+                v-else
                 :key="caja.id"
                 type="button"
                 class="element-item element-item--caja"
@@ -475,7 +498,9 @@ onMounted(async () => {
                   <div class="caja-item-head">
                     <span class="caja-num">N&deg; Cierre: {{ caja.id }}</span>
                     <span :class="estadoChipClass(caja.estado)">{{ caja.estado }}</span>
-                    <span class="caja-fecha">{{ formatearFechaCorta(caja.fechaCierre || caja.fechaApertura) }}</span>
+                    <span class="caja-fecha">{{
+                      formatearFechaCorta(caja.fechaCierre || caja.fechaApertura)
+                    }}</span>
                   </div>
                   <div class="caja-item-labels">
                     <span>Responsable:</span>
@@ -493,27 +518,72 @@ onMounted(async () => {
                   </div>
                 </div>
                 <div class="element-item__options-menu">
-                  <button v-if="caja.estado === 'Abierta'" class="btn btn-option" @click.stop="iniciarCierre">
-                    <img class="option-icon" src="../../assets/img/lock-circle-icon.svg" alt="Iniciar cierre" />
+                  <button
+                    v-if="caja.estado === 'Abierta'"
+                    class="btn btn-option"
+                    @click.stop="iniciarCierre"
+                  >
+                    <img
+                      class="option-icon"
+                      src="../../assets/img/lock-circle-icon.svg"
+                      alt="Iniciar cierre"
+                    />
                   </button>
-                  <button v-else-if="caja.estado === 'En cierre'" class="btn btn-option" @click.stop="continuarCierre(caja)">
-                    <img class="option-icon" src="../../assets/img/lock-circle-icon.svg" alt="Continuar cierre" />
+                  <button
+                    v-else-if="caja.estado === 'En cierre'"
+                    class="btn btn-option"
+                    @click.stop="continuarCierre(caja)"
+                  >
+                    <img
+                      class="option-icon"
+                      src="../../assets/img/lock-circle-icon.svg"
+                      alt="Continuar cierre"
+                    />
                   </button>
                   <button class="btn btn-option" @click.stop="verDetalleCaja(caja.id)">
-                    <img class="option-icon" src="../../assets/img/eye-circle-icon.svg" alt="Ver detalle" />
+                    <img
+                      class="option-icon"
+                      src="../../assets/img/eye-circle-icon.svg"
+                      alt="Ver detalle"
+                    />
                   </button>
                   <button class="btn btn-option" @click.stop="toggleCajaActive(caja)">
-                    <img class="option-icon" src="../../assets/img/close-circle-icon.svg" alt="Cerrar" />
+                    <img
+                      class="option-icon"
+                      src="../../assets/img/close-circle-icon.svg"
+                      alt="Cerrar"
+                    />
                   </button>
                 </div>
               </button>
             </div>
-  
-            <div v-if="totalPages > 1" class="d-flex justify-content-between align-items-center mt-3">
+
+            <div
+              v-if="totalPages > 1"
+              class="d-flex justify-content-between align-items-center mt-3"
+            >
               <small class="text-muted">P&aacute;gina {{ page }} de {{ totalPages }}</small>
               <div class="d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm rounded-pill" :disabled="page <= 1" @click="page -= 1; cargarHistorial()">Anterior</button>
-                <button class="btn btn-outline-secondary btn-sm rounded-pill" :disabled="page >= totalPages" @click="page += 1; cargarHistorial()">Siguiente</button>
+                <button
+                  class="btn btn-outline-secondary btn-sm rounded-pill"
+                  :disabled="page <= 1"
+                  @click="
+                    page -= 1
+                    cargarHistorial()
+                  "
+                >
+                  Anterior
+                </button>
+                <button
+                  class="btn btn-outline-secondary btn-sm rounded-pill"
+                  :disabled="page >= totalPages"
+                  @click="
+                    page += 1
+                    cargarHistorial()
+                  "
+                >
+                  Siguiente
+                </button>
               </div>
             </div>
           </div>
@@ -533,7 +603,7 @@ onMounted(async () => {
           <div class="page-content__body">
             <div class="flow-section">
               <h6>Ingresa el efectivo:</h6>
-  
+
               <!-- Add row -->
               <div class="conteo-row">
                 <div class="conteo-row__labels">
@@ -549,15 +619,23 @@ onMounted(async () => {
                       {{ formatear(d.denominacion) }}
                     </option>
                   </select>
-                  <input v-model.number="cantidadSeleccionada" type="number" min="0" class="form-control form-control-sm" />
-                  <input :value="formatear(subtotalDenominacionSeleccionada)" disabled class="form-control form-control-sm" />
+                  <input
+                    v-model.number="cantidadSeleccionada"
+                    type="number"
+                    min="0"
+                    class="form-control form-control-sm"
+                  />
+                  <input
+                    :value="formatear(subtotalDenominacionSeleccionada)"
+                    disabled
+                    class="form-control form-control-sm"
+                  />
                   <button type="button" class="plus-btn" @click="agregarDenominacion">+</button>
                 </div>
               </div>
-  
+
               <!-- Added denomination lines -->
               <div class="cash-earnings">
-  
                 <div v-for="(linea, idx) in conteoLineas" :key="idx" class="conteo-row">
                   <div class="conteo-row__labels">
                     <span>Denominaci&oacute;n:</span>
@@ -567,12 +645,25 @@ onMounted(async () => {
                   </div>
                   <div class="conteo-row__inputs">
                     <select v-model="linea.denominacion" class="form-select form-select-sm">
-                      <option v-for="d in denominaciones" :key="d.id" :value="String(d.denominacion)">
+                      <option
+                        v-for="d in denominaciones"
+                        :key="d.id"
+                        :value="String(d.denominacion)"
+                      >
                         {{ formatear(d.denominacion) }}
                       </option>
                     </select>
-                    <input v-model.number="linea.cantidad" type="number" min="0" class="form-control form-control-sm" />
-                    <input :value="formatear(Number(linea.denominacion) * Number(linea.cantidad || 0))" disabled class="form-control form-control-sm" />
+                    <input
+                      v-model.number="linea.cantidad"
+                      type="number"
+                      min="0"
+                      class="form-control form-control-sm"
+                    />
+                    <input
+                      :value="formatear(Number(linea.denominacion) * Number(linea.cantidad || 0))"
+                      disabled
+                      class="form-control form-control-sm"
+                    />
                     <button type="button" class="remove-btn" @click="eliminarLineaConteo(idx)">
                       <img src="../../assets/img/close-circle-icon.svg" alt="Eliminar" />
                     </button>
@@ -580,12 +671,12 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-  
+
             <hr />
-  
+
             <div class="flow-section">
               <h6>Ingresa otros medios de pago:</h6>
-  
+
               <!-- Add row -->
               <div class="conteo-row conteo-row--pagos">
                 <div class="conteo-row__labels">
@@ -598,14 +689,23 @@ onMounted(async () => {
                     <option value="">Selecciona</option>
                     <option v-for="tp in opcionesTipoPago" :key="tp" :value="tp">{{ tp }}</option>
                   </select>
-                  <input v-model.number="montoPagoManual" type="number" min="0" class="form-control form-control-sm" />
+                  <input
+                    v-model.number="montoPagoManual"
+                    type="number"
+                    min="0"
+                    class="form-control form-control-sm"
+                  />
                   <button type="button" class="plus-btn" @click="agregarOtroPago">+</button>
                 </div>
               </div>
-  
+
               <!-- Added payment lines -->
               <div class="payment-methods">
-                <div v-for="(pago, idx) in otrosPagos" :key="idx" class="conteo-row conteo-row--pagos">
+                <div
+                  v-for="(pago, idx) in otrosPagos"
+                  :key="idx"
+                  class="conteo-row conteo-row--pagos"
+                >
                   <div class="conteo-row__labels">
                     <span>Tipo de pago:</span>
                     <span>Total:</span>
@@ -615,7 +715,12 @@ onMounted(async () => {
                     <select v-model="pago.tipo" class="form-select form-select-sm">
                       <option v-for="tp in opcionesTipoPago" :key="tp" :value="tp">{{ tp }}</option>
                     </select>
-                    <input v-model.number="pago.monto" type="number" min="0" class="form-control form-control-sm" />
+                    <input
+                      v-model.number="pago.monto"
+                      type="number"
+                      min="0"
+                      class="form-control form-control-sm"
+                    />
                     <button type="button" class="remove-btn" @click="eliminarOtroPago(idx)">
                       <img src="../../assets/img/close-circle-icon.svg" alt="Eliminar" />
                     </button>
@@ -623,7 +728,7 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-  
+
             <div class="row g-2 mt-3">
               <div class="col-4">
                 <div class="total-box">
@@ -647,9 +752,21 @@ onMounted(async () => {
           </div>
 
           <div class="page-content__footer">
-            <div style="display:flex; gap:.5rem;">
-              <button class="btn btn-outline-primary rounded-pill" @click="cancelarCierre" style="width:100%">Cancelar</button>
-              <button class="btn btn-primary rounded-pill" @click="confirmarConteo" style="width:100%">Continuar</button>
+            <div style="display: flex; gap: 0.5rem">
+              <button
+                class="btn btn-outline-primary rounded-pill"
+                style="width: 100%"
+                @click="cancelarCierre"
+              >
+                Cancelar
+              </button>
+              <button
+                class="btn btn-primary rounded-pill"
+                style="width: 100%"
+                @click="confirmarConteo"
+              >
+                Continuar
+              </button>
             </div>
             <Signature />
           </div>
@@ -662,11 +779,11 @@ onMounted(async () => {
               <div class="close-date">{{ formatearFecha(new Date()) }}</div>
 
               <div class="box text-left">
-                  <span>Responsable:</span>
-                  {{ local?.nombre || '-' }}
+                <span>Responsable:</span>
+                {{ local?.nombre || '-' }}
               </div>
             </div>
-  
+
             <div class="row g-2 mt-2">
               <div class="col-6">
                 <div class="chip-info">
@@ -677,8 +794,8 @@ onMounted(async () => {
                 <div class="saldo-value">{{ formatear(cajaActiva?.montoInicial || 0) }}</div>
               </div>
             </div>
-  
-            <div class="table-responsive mt-3" v-if="resumenCierre">
+
+            <div v-if="resumenCierre" class="table-responsive mt-3">
               <table class="table table-sm cierre-table">
                 <thead>
                   <tr>
@@ -693,30 +810,46 @@ onMounted(async () => {
                     <td>Efectivo</td>
                     <td>{{ formatear(resumenCierre.efectivoEsperado) }}</td>
                     <td>{{ formatear(resumenCierre.cashContado) }}</td>
-                    <td :class="{ negativo: (resumenCierre.cashContado - resumenCierre.efectivoEsperado) < 0 }">{{ formatear(resumenCierre.cashContado - resumenCierre.efectivoEsperado) }}</td>
+                    <td
+                      :class="{
+                        negativo: resumenCierre.cashContado - resumenCierre.efectivoEsperado < 0,
+                      }"
+                    >
+                      {{ formatear(resumenCierre.cashContado - resumenCierre.efectivoEsperado) }}
+                    </td>
                   </tr>
                   <tr>
                     <td>Transferencia</td>
                     <td>{{ formatear(resumenCierre.ventasTransferencia) }}</td>
                     <td>{{ formatear(conteadoTransferencia) }}</td>
-                    <td :class="{ negativo: (conteadoTransferencia - resumenCierre.ventasTransferencia) < 0 }">{{ formatear(conteadoTransferencia - resumenCierre.ventasTransferencia) }}</td>
+                    <td
+                      :class="{
+                        negativo: conteadoTransferencia - resumenCierre.ventasTransferencia < 0,
+                      }"
+                    >
+                      {{ formatear(conteadoTransferencia - resumenCierre.ventasTransferencia) }}
+                    </td>
                   </tr>
                   <tr>
                     <td>Tarj. D&eacute;bito</td>
                     <td>{{ formatear(resumenCierre.ventasDebito) }}</td>
                     <td>{{ formatear(conteadoDebito) }}</td>
-                    <td :class="{ negativo: (conteadoDebito - resumenCierre.ventasDebito) < 0 }">{{ formatear(conteadoDebito - resumenCierre.ventasDebito) }}</td>
+                    <td :class="{ negativo: conteadoDebito - resumenCierre.ventasDebito < 0 }">
+                      {{ formatear(conteadoDebito - resumenCierre.ventasDebito) }}
+                    </td>
                   </tr>
                   <tr>
                     <td>Tarj. Cr&eacute;dito</td>
                     <td>{{ formatear(resumenCierre.ventasCredito) }}</td>
                     <td>{{ formatear(conteadoCredito) }}</td>
-                    <td :class="{ negativo: (conteadoCredito - resumenCierre.ventasCredito) < 0 }">{{ formatear(conteadoCredito - resumenCierre.ventasCredito) }}</td>
+                    <td :class="{ negativo: conteadoCredito - resumenCierre.ventasCredito < 0 }">
+                      {{ formatear(conteadoCredito - resumenCierre.ventasCredito) }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-  
+
             <div class="row g-2 mt-3">
               <div class="col-4">
                 <div class="total-box">
@@ -731,22 +864,43 @@ onMounted(async () => {
                 </div>
               </div>
               <div class="col-4">
-                <div class="total-box" :class="{ 'total-box--negativo': Number(resumenCierre?.diferencia || 0) < 0 }">
+                <div
+                  class="total-box"
+                  :class="{ 'total-box--negativo': Number(resumenCierre?.diferencia || 0) < 0 }"
+                >
                   <span>DIFERENCIA</span>
                   <strong>{{ formatear(resumenCierre?.diferencia) }}</strong>
                 </div>
               </div>
             </div>
-  
-            <div class="mt-3" v-if="resumenCierre && resumenCierre.diferencia !== 0">
+
+            <div v-if="resumenCierre && resumenCierre.diferencia !== 0" class="mt-3">
               <label class="form-label">Observaci&oacute;n</label>
-              <textarea class="form-control" v-model="observacionCierre" rows="2" placeholder="Ingrese observaci&oacute;n"></textarea>
+              <textarea
+                v-model="observacionCierre"
+                class="form-control"
+                rows="2"
+                placeholder="Ingrese observaci&oacute;n"
+              ></textarea>
             </div>
           </div>
           <div class="page-content__footer">
-            <div style="display:flex; gap:.5rem;">
-              <button class="btn btn-primary rounded-pill" :disabled="!puedeConfirmarCierre" @click="confirmarCierre" style="width:100%">Cerrar caja</button>
-              <button class="btn btn-outline-primary rounded-pill" @click="cancelarCierre" style="width:100%">Volver</button>
+            <div style="display: flex; gap: 0.5rem">
+              <button
+                class="btn btn-primary rounded-pill"
+                :disabled="!puedeConfirmarCierre"
+                style="width: 100%"
+                @click="confirmarCierre"
+              >
+                Cerrar caja
+              </button>
+              <button
+                class="btn btn-outline-primary rounded-pill"
+                style="width: 100%"
+                @click="cancelarCierre"
+              >
+                Volver
+              </button>
             </div>
             <Signature />
           </div>
@@ -756,7 +910,7 @@ onMounted(async () => {
 
     <AperturaCajaModal
       :show="showAperturaModal"
-      :montoSugerido="aperturaSugerida.montoSugerido"
+      :monto-sugerido="aperturaSugerida.montoSugerido"
       :sugerida="aperturaSugerida.sugerida"
       @confirm="confirmarApertura"
       @cancel="showAperturaModal = false"
@@ -770,7 +924,11 @@ onMounted(async () => {
     />
 
     <!-- Modal de filtros -->
-    <div v-if="showFiltroModal" class="modal animate__animated animate__fadeIn" @click="showFiltroModal = false">
+    <div
+      v-if="showFiltroModal"
+      class="modal animate__animated animate__fadeIn"
+      @click="showFiltroModal = false"
+    >
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Filtros</h4>
@@ -780,15 +938,15 @@ onMounted(async () => {
           <div class="row g-3">
             <div class="col-6">
               <label class="form-label">Desde:</label>
-              <input class="form-control" type="date" v-model="filtroDesde" />
+              <input v-model="filtroDesde" class="form-control" type="date" />
             </div>
             <div class="col-6">
               <label class="form-label">Hasta:</label>
-              <input class="form-control" type="date" v-model="filtroHasta" />
+              <input v-model="filtroHasta" class="form-control" type="date" />
             </div>
             <div class="col-12">
               <label class="form-label">Estado:</label>
-              <select class="form-select" v-model="filtroEstado">
+              <select v-model="filtroEstado" class="form-select">
                 <option value="">Todos los estados</option>
                 <option value="Abierta">Abierta</option>
                 <option value="En cierre">En cierre</option>
@@ -797,7 +955,7 @@ onMounted(async () => {
             </div>
             <div class="col-12">
               <label class="form-label">Tipo diferencia:</label>
-              <select class="form-select" v-model="filtroTipoDiferencia">
+              <select v-model="filtroTipoDiferencia" class="form-select">
                 <option value="">Todos</option>
                 <option value="Sin diferencia">Sin diferencia</option>
                 <option value="Sobrante">Sobrante</option>
@@ -806,31 +964,45 @@ onMounted(async () => {
             </div>
             <div class="col-12">
               <label class="form-label">Usuario:</label>
-              <select class="form-select" v-model="filtroUsuario">
+              <select v-model="filtroUsuario" class="form-select">
                 <option value="">Todos los usuarios</option>
-                <option v-for="u in usuariosFiltro" :key="u.id" :value="u.id">{{ u.nombre }}</option>
+                <option v-for="u in usuariosFiltro" :key="u.id" :value="u.id">
+                  {{ u.nombre }}
+                </option>
               </select>
             </div>
           </div>
         </div>
         <div class="modal-footer justify-content-center">
-          <button class="btn btn-outline-primary rounded-pill" type="button" @click="resetFiltros">Limpiar</button>
-          <button class="btn btn-primary rounded-pill" type="button" @click="aplicarFiltros">Filtrar</button>
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="resetFiltros">
+            Limpiar
+          </button>
+          <button class="btn btn-primary rounded-pill" type="button" @click="aplicarFiltros">
+            Filtrar
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Modal de detalle -->
-    <div v-if="showDetalleModal" class="modal animate__animated animate__fadeIn" @click.self="showDetalleModal = false">
+    <div
+      v-if="showDetalleModal"
+      class="modal animate__animated animate__fadeIn"
+      @click.self="showDetalleModal = false"
+    >
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">
-            {{ detalleCaja?.estado === 'Abierta' ? 'Apertura de caja N° ' + detalleCaja?.id : 'Cierre de caja #' + detalleCaja?.id }}
+            {{
+              detalleCaja?.estado === 'Abierta'
+                ? 'Apertura de caja N° ' + detalleCaja?.id
+                : 'Cierre de caja #' + detalleCaja?.id
+            }}
           </h4>
           <button class="btn-close" type="button" @click="showDetalleModal = false"></button>
         </div>
 
-        <div class="modal-body" v-if="detalleCaja">
+        <div v-if="detalleCaja" class="modal-body">
           <template v-if="detalleCaja.estado === 'Abierta'">
             <div class="row g-2 mb-4">
               <div class="col-6">
@@ -853,7 +1025,12 @@ onMounted(async () => {
               </div>
             </div>
             <div class="d-grid">
-              <button class="btn btn-outline-primary rounded-pill" @click="showDetalleModal = false">Cerrar</button>
+              <button
+                class="btn btn-outline-primary rounded-pill"
+                @click="showDetalleModal = false"
+              >
+                Cerrar
+              </button>
             </div>
           </template>
 
@@ -874,7 +1051,9 @@ onMounted(async () => {
               <div class="col-6">
                 <div class="chip-info">
                   <span>Responsable:</span>
-                  <strong>{{ detalleCaja.usuarioCierre?.nombre || detalleCaja.usuarioApertura?.nombre || '-' }}</strong>
+                  <strong>{{
+                    detalleCaja.usuarioCierre?.nombre || detalleCaja.usuarioApertura?.nombre || '-'
+                  }}</strong>
                 </div>
               </div>
               <div class="col-6">
@@ -911,7 +1090,9 @@ onMounted(async () => {
                     <td>Efectivo</td>
                     <td>{{ formatear(detalleCaja.montoEsperado) }}</td>
                     <td>{{ formatear(detalleCaja.montoContado) }}</td>
-                    <td :class="{ negativo: Number(detalleCaja.diferencia || 0) < 0 }">{{ formatear(detalleCaja.diferencia) }}</td>
+                    <td :class="{ negativo: Number(detalleCaja.diferencia || 0) < 0 }">
+                      {{ formatear(detalleCaja.diferencia) }}
+                    </td>
                   </tr>
                   <tr>
                     <td>Transferencia</td>
@@ -930,15 +1111,26 @@ onMounted(async () => {
             </div>
 
             <div class="d-grid gap-2 mt-3">
-              <button class="btn btn-primary rounded-pill" @click="showDetalleModal = false">Continuar</button>
-              <button class="btn btn-outline-primary rounded-pill" @click="showDetalleModal = false">Cancelar</button>
+              <button class="btn btn-primary rounded-pill" @click="showDetalleModal = false">
+                Continuar
+              </button>
+              <button
+                class="btn btn-outline-primary rounded-pill"
+                @click="showDetalleModal = false"
+              >
+                Cancelar
+              </button>
             </div>
           </template>
         </div>
       </div>
     </div>
 
-    <QrModal :isOpen="showQrModal" :localNombre="local?.nombre || 'Mi Restaurante'" @close="showQrModal = false" />
+    <QrModal
+      :is-open="showQrModal"
+      :local-nombre="local?.nombre || 'Mi Restaurante'"
+      @close="showQrModal = false"
+    />
   </div>
 </template>
 
@@ -949,7 +1141,7 @@ onMounted(async () => {
   border-radius: 999px;
   border: none;
   color: #fff;
-  background: #009EE3;
+  background: #009ee3;
   font-size: 22px;
   line-height: 1;
   padding: 0;
@@ -1124,8 +1316,8 @@ onMounted(async () => {
 
 .element-item--caja {
   align-items: flex-start;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 .caja-item-body {

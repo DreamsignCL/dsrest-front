@@ -8,13 +8,13 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [
     vue({
-      devTools: false
+      devTools: false,
     }),
     //vueDevTools(),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
   envPrefix: 'VITE_',

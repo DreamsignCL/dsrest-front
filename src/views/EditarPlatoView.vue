@@ -3,7 +3,6 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { apiService } from '@/services/api.service'
 import InnerHeader from '@/components/InnerHeader.vue'
-import Signature from '@/components/Signature.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -22,7 +21,7 @@ const plato = ref({
   precio_comparacion: '',
   categoriaPlatoId: '',
   recomendacion_chef: false,
-  localId: null
+  localId: null,
 })
 
 const fotoPreview = ref(null)
@@ -34,7 +33,7 @@ const obtenerCategorias = async () => {
   if (!local.value?.id) return
   try {
     const res = await apiService.get(`categorias-plato?localId=${local.value.id}`)
-    categorias.value = res.filter(cat => cat.estado)
+    categorias.value = res.filter((cat) => cat.estado)
   } catch (error) {
     console.error('Error al obtener categorías:', error)
   }
@@ -63,7 +62,7 @@ const obtenerPlato = async () => {
     plato.value = {
       ...data,
       // Asegurarse de que el localId esté establecido
-      localId: local.value?.id || data.localId
+      localId: local.value?.id || data.localId,
     }
 
     if (data.foto) {
@@ -140,7 +139,6 @@ const validarRecomendacionChef = async (e) => {
     // si hay menos de 3, lo marco
     errorMessage.value = ''
     plato.value.recomendacion_chef = true
-
   } catch (err) {
     console.error('Error validando recomendados:', err)
     errorMessage.value = 'No se pudo validar recomendación. Intenta más tarde.'
@@ -158,8 +156,10 @@ const handleFotoChange = (event) => {
   const file = event.target.files[0]
   if (file) {
     // Verificar tamaño del archivo original
-    if (file.size > 5000000) { // 5MB
-      errorMessage.value = 'La imagen es demasiado grande. Por favor seleccione una imagen más pequeña.'
+    if (file.size > 5000000) {
+      // 5MB
+      errorMessage.value =
+        'La imagen es demasiado grande. Por favor seleccione una imagen más pequeña.'
       return
     }
 
@@ -168,7 +168,7 @@ const handleFotoChange = (event) => {
       const base64String = e.target.result
 
       // Comprimir la imagen para MariaDB
-      comprimirImagen(base64String).then(imagenComprimida => {
+      comprimirImagen(base64String).then((imagenComprimida) => {
         fotoPreview.value = imagenComprimida
         plato.value.foto = imagenComprimida
       })
@@ -178,7 +178,12 @@ const handleFotoChange = (event) => {
 }
 
 const guardarPlato = async () => {
-  if (!plato.value.nombre || !plato.value.descripcion || !plato.value.precio || !plato.value.categoriaPlatoId) {
+  if (
+    !plato.value.nombre ||
+    !plato.value.descripcion ||
+    !plato.value.precio ||
+    !plato.value.categoriaPlatoId
+  ) {
     errorMessage.value = 'Por favor complete los campos obligatorios'
     return
   }
@@ -258,14 +263,29 @@ onMounted(async () => {
                 <div class="mb-3">
                   <label class="form-label">Foto</label>
                   <div class="file-upload">
-                    <input type="file" accept="image/*" id="foto" @change="handleFotoChange" class="file-upload__input" />
+                    <input
+                      id="foto"
+                      type="file"
+                      accept="image/*"
+                      class="file-upload__input"
+                      @change="handleFotoChange"
+                    />
                     <label for="foto" class="file-upload__label">
                       <div v-if="fotoPreview" class="file-upload__preview">
                         <img :src="fotoPreview" alt="Vista previa" />
                       </div>
                       <div v-else class="file-upload__placeholder">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
                           <path d="M12 5v14"></path>
                           <path d="M5 12h14"></path>
                         </svg>
@@ -277,35 +297,63 @@ onMounted(async () => {
                 <!-- Nombre -->
                 <div class="mb-3">
                   <label class="form-label" for="nombre">Nombre</label>
-                  <input id="nombre" class="form-control" type="text" v-model="plato.nombre"
-                    placeholder="Nombre del plato" required />
+                  <input
+                    id="nombre"
+                    v-model="plato.nombre"
+                    class="form-control"
+                    type="text"
+                    placeholder="Nombre del plato"
+                    required
+                  />
                 </div>
 
                 <!-- Descripción -->
                 <div class="mb-3">
                   <label class="form-label" for="descripcion">Descripción</label>
-                  <textarea id="descripcion" class="form-control" v-model="plato.descripcion"
-                    placeholder="Descripción del plato" rows="3" required></textarea>
+                  <textarea
+                    id="descripcion"
+                    v-model="plato.descripcion"
+                    class="form-control"
+                    placeholder="Descripción del plato"
+                    rows="3"
+                    required
+                  ></textarea>
                 </div>
 
                 <!-- Precio -->
                 <div class="mb-3">
                   <label class="form-label" for="precio">Precio</label>
-                  <input id="precio" class="form-control" type="number" v-model="plato.precio"
-                    placeholder="Precio en pesos" required />
+                  <input
+                    id="precio"
+                    v-model="plato.precio"
+                    class="form-control"
+                    type="number"
+                    placeholder="Precio en pesos"
+                    required
+                  />
                 </div>
 
                 <!-- Precio de comparación -->
                 <div class="mb-3">
                   <label class="form-label" for="precio_comparacion">Precio de comparación</label>
-                  <input id="precio_comparacion" type="number" class="form-control" v-model="plato.precio_comparacion"
-                    placeholder="Precio anterior (opcional)" />
+                  <input
+                    id="precio_comparacion"
+                    v-model="plato.precio_comparacion"
+                    type="number"
+                    class="form-control"
+                    placeholder="Precio anterior (opcional)"
+                  />
                 </div>
 
                 <!-- Categoría -->
                 <div class="mb-3">
                   <label class="form-label" for="categoria">Categoría</label>
-                  <select id="categoria" class="form-select" v-model="plato.categoriaPlatoId" required>
+                  <select
+                    id="categoria"
+                    v-model="plato.categoriaPlatoId"
+                    class="form-select"
+                    required
+                  >
                     <option value="" disabled>Seleccione una categoría</option>
                     <option v-for="cat in categorias" :key="cat.id" :value="cat.id">
                       {{ cat.nombre }}
@@ -317,7 +365,11 @@ onMounted(async () => {
                 <div class="switch-group">
                   <label>Recomendación del chef</label>
                   <label class="switch">
-                    <input type="checkbox" :checked="plato.recomendacion_chef" @change="validarRecomendacionChef" />
+                    <input
+                      type="checkbox"
+                      :checked="plato.recomendacion_chef"
+                      @change="validarRecomendacionChef"
+                    />
                     <span class="slider round"></span>
                   </label>
                 </div>
@@ -329,7 +381,7 @@ onMounted(async () => {
                 <button type="button" class="btn btn-outline-primary rounded-pill" @click="volver">
                   Volver
                 </button>
-                
+
                 <button type="submit" class="btn btn-primary rounded-pill" :disabled="isLoading">
                   {{ isLoading ? 'Guardando...' : 'Guardar' }}
                 </button>
@@ -337,14 +389,12 @@ onMounted(async () => {
             </div>
           </form>
         </div>
-        
+
         <div class="content">
           <div class="content-header pt-5 pb-4">
             <h2 class="fw-normal">Editar {{ plato.nombre }}</h2>
           </div>
-          <div class="content-body">
-            
-          </div>
+          <div class="content-body"></div>
         </div>
       </div>
     </main>

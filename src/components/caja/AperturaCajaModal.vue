@@ -6,7 +6,10 @@
         <button class="btn-close" type="button" @click="$emit('cancel')"></button>
       </div>
       <div class="modal-body">
-        <p v-if="sugerida" class="hint">Se encontró cierre previo. Monto sugerido: <strong>${{ formatear(montoSugerido) }}</strong></p>
+        <p v-if="sugerida" class="hint">
+          Se encontró cierre previo. Monto sugerido:
+          <strong>${{ formatear(montoSugerido) }}</strong>
+        </p>
         <label class="form-label">Saldo inicial:</label>
         <div class="input-group">
           <span class="input-group-text">$</span>
@@ -18,12 +21,27 @@
             placeholder="50000"
           />
         </div>
-        <small v-if="monto === null || monto === undefined || monto === ''" class="text-danger">Debe ingresar el monto inicial de caja</small>
-        <small v-else-if="monto < 0" class="text-danger">El monto inicial debe ser mayor o igual a 0</small>
+        <small v-if="monto === null || monto === undefined || monto === ''"
+class="text-danger"
+        >Debe ingresar el monto inicial de caja</small
+        >
+        <small v-else-if="monto < 0"
+class="text-danger"
+        >El monto inicial debe ser mayor o igual a 0</small
+        >
       </div>
       <div class="modal-footer justify-content-center">
-        <button class="btn btn-outline-primary rounded-pill" type="button" @click="$emit('cancel')">Cancelar</button>
-        <button class="btn btn-primary rounded-pill" type="button" :disabled="!puedeAbrir" @click="confirmar">Sí, abrir</button>
+        <button class="btn btn-outline-primary rounded-pill" type="button" @click="$emit('cancel')">
+          Cancelar
+        </button>
+        <button
+          class="btn btn-primary rounded-pill"
+          type="button"
+          :disabled="!puedeAbrir"
+          @click="confirmar"
+        >
+          Sí, abrir
+        </button>
       </div>
     </div>
   </div>
@@ -41,13 +59,18 @@ const props = defineProps({
 const emit = defineEmits(['confirm', 'cancel'])
 const monto = ref(50000)
 
-watch(() => props.show, (value) => {
-  if (value) {
-    monto.value = Number(props.montoSugerido || 50000)
+watch(
+  () => props.show,
+  (value) => {
+    if (value) {
+      monto.value = Number(props.montoSugerido || 50000)
+    }
   }
-})
+)
 
-const puedeAbrir = computed(() => monto.value !== '' && monto.value !== null && Number(monto.value) >= 0)
+const puedeAbrir = computed(
+  () => monto.value !== '' && monto.value !== null && Number(monto.value) >= 0
+)
 
 const confirmar = () => {
   if (!puedeAbrir.value) return

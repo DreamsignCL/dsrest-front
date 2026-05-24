@@ -16,7 +16,6 @@ const cargarOtroPlato = () => {
   <div class="success-page">
     <div class="card message-card text-center animate__animated animate__fadeInUp">
       <div class="card-body">
-
         <h1>¡Felicidades, tu primer plato ha sido creado!</h1>
 
         <div class="emoji">👌</div>

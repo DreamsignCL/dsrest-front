@@ -12,7 +12,7 @@ const local = ref(null)
 const categoria = ref({
   nombre: '',
   descripcion: '',
-  localId: null
+  localId: null,
 })
 
 const obtenerInfoLocal = () => {
@@ -85,9 +85,9 @@ onMounted(() => {
                   <label class="form-label" for="nombre">Nombre</label>
                   <input
                     id="nombre"
+                    v-model="categoria.nombre"
                     class="form-control"
                     type="text"
-                    v-model="categoria.nombre"
                     placeholder="Nombre de la categoría"
                     required
                   />
@@ -97,8 +97,8 @@ onMounted(() => {
                   <label class="form-label" for="descripcion">Descripción</label>
                   <textarea
                     id="descripcion"
-                    class="form-control"
                     v-model="categoria.descripcion"
+                    class="form-control"
                     placeholder="Descripción de la categoría"
                     rows="3"
                   ></textarea>

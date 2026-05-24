@@ -23,14 +23,28 @@
                 <p>No hay zonas registradas.</p>
               </div>
               <div v-else>
-                <div v-for="zona in zonas" :key="zona.id" class="zona-item d-flex justify-content-between align-items-center border rounded-3 p-3 mb-3">
+                <div
+                  v-for="zona in zonas"
+                  :key="zona.id"
+                  class="zona-item d-flex justify-content-between align-items-center border rounded-3 p-3 mb-3"
+                >
                   <div>
                     <div class="fw-bold">{{ zona.nombre }}</div>
                     <div class="text-muted">{{ zona.descripcion }}</div>
                   </div>
                   <div>
-                    <button class="btn btn-outline-primary btn-sm me-2" @click="abrirEditarZona(zona)">Editar</button>
-                    <button class="btn btn-outline-danger btn-sm" @click="confirmarEliminarZona(zona)">Eliminar</button>
+                    <button
+                      class="btn btn-outline-primary btn-sm me-2"
+                      @click="abrirEditarZona(zona)"
+                    >
+                      Editar
+                    </button>
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      @click="confirmarEliminarZona(zona)"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               </div>
@@ -47,11 +61,11 @@
           </div>
         </div>
         <!-- Modal QR -->
-        <QrModal :isOpen="showQrModal" :localNombre="localNombre" @close="cerrarQrModal" />
+        <QrModal :is-open="showQrModal" :local-nombre="localNombre" @close="cerrarQrModal" />
         <!-- Modal para crear/editar zona -->
         <CrearZonaModal
           :show="showZonaModal"
-          :zonaEditar="zonaEditar"
+          :zona-editar="zonaEditar"
           @crear="guardarZona"
           @cancel="cerrarZonaModal"
         />
@@ -106,8 +120,12 @@ const obtenerZonas = async () => {
   }
 }
 
-const abrirQrModal = () => { showQrModal.value = true }
-const cerrarQrModal = () => { showQrModal.value = false }
+const abrirQrModal = () => {
+  showQrModal.value = true
+}
+const cerrarQrModal = () => {
+  showQrModal.value = false
+}
 const localNombre = computed(() => local.value?.nombre || 'Mi Restaurante')
 
 const abrirNuevaZona = () => {
@@ -131,7 +149,7 @@ const guardarZona = async (zonaData) => {
     }
     await obtenerZonas()
     showZonaModal.value = false
-  } catch (error) {
+  } catch {
     alert('Error al guardar zona')
   }
 }
@@ -147,7 +165,7 @@ const eliminarZona = async () => {
   try {
     await apiService.delete(`zonas/${zonaAEliminar.value.id}`)
     await obtenerZonas()
-  } catch (error) {
+  } catch {
     alert('Error al eliminar zona')
   } finally {
     showDeleteModal.value = false
