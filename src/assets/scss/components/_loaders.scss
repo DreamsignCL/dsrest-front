@@ -1,0 +1,16 @@
+@use '../abstracts' as *;
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ccc;
+    border-top: 5px solid $primary-500;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 100px auto; /* Centrado en la página */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

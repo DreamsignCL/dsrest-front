@@ -1,0 +1,33 @@
+@use '../abstracts' as *;
+
+.tabs{
+    display: flex;
+    align-items: center;
+
+    .tab{
+        $radius: 1rem;
+
+        display: block;
+        width: 50%;
+        color: #ADB0B6;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 1px solid #D9D9D9;
+        background: #F5F5F5;
+        background: linear-gradient(0deg,rgba(245, 245, 245, 1) 0%, rgba(245, 245, 245, 0) 67%);
+
+        -webkit-border-top-left-radius: $radius;
+        -webkit-border-top-right-radius: $radius;
+        -moz-border-radius-topleft: $radius;
+        -moz-border-radius-topright: $radius;
+        border-top-left-radius: $radius;
+        border-top-right-radius: $radius;
+
+        &.active{
+            color: $primary-500;
+            border: 1px solid #D9D9D9;
+            border-bottom-color: transparent;
+            background: #fff;
+        }
+    }
+}

@@ -1,0 +1,229 @@
+@use '../abstracts' as *;
+
+/*---- Main Menu ----*/
+
+nav.main-menu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100vh;
+    background-color: #fff;
+    text-align: left;
+    z-index: 2;
+    -webkit-border-top-right-radius: 50px;
+    -webkit-border-bottom-right-radius: 50px;
+    -moz-border-radius-topright: 50px;
+    -moz-border-radius-bottomright: 50px;
+    border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+
+    &.slide-in,
+    &.slide-out{
+        transition: all .3s ease-in-out;
+    }
+
+    &.slide-out{
+        margin-left: -310px;
+    }
+
+    &.slide-in {
+        margin-left: 0px;
+        -webkit-box-shadow: 40px 0px 41px -30px rgba(0,0,0,0.30);
+        -moz-box-shadow: 40px 0px 41px -30px rgba(0,0,0,0.30);
+        box-shadow: 40px 0px 41px -30px rgba(0,0,0,0.30);
+    }
+
+    .main-menu-top{
+        display: flex;
+        justify-content: end;
+        padding: 1rem;
+
+        button{
+            background-color: transparent;
+            border: none;
+
+            img{
+                width: 25px;
+            }
+        }
+    }
+
+    ul{
+        height: 100vh;
+
+        .bg-items{
+            display: none;
+        }
+
+        li{
+            a{
+                display: flex;
+                padding: .8rem .7rem;
+                color: $primary-500;
+                text-decoration: none;
+                align-items: center;
+                justify-content: start;
+                font-size: 1.15rem;
+
+                img{
+                    margin-right: .7rem;
+                    filter: invert(14%) sepia(88%) saturate(3963%) hue-rotate(292deg) brightness(86%) contrast(79%);
+                    -webkit-transition: .2s ease-in-out all;
+                    -o-transition: .2s ease-in-out all;
+                    transition: .2s ease-in-out all;
+                }
+
+                &:hover{
+                    img{
+                        margin-right: 1.1rem; 
+                    }
+                }
+
+                &.active{
+                    background-color: $primary-500;
+                    color: #fff;
+
+                    img{
+                        filter: invert(100%) sepia(0%) saturate(24%) hue-rotate(114deg) brightness(108%) contrast(108%);
+                    }
+
+                    &:hover{
+                        img{
+                            margin-right: .7rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@include MQ(LG){
+    nav.main-menu{
+        position: relative;
+        background-color: transparent;
+        width: 100%;
+        height: auto;
+        -webkit-border-top-right-radius: 0;
+        -webkit-border-bottom-right-radius: 0;
+        -moz-border-radius-topright: 0;
+        -moz-border-radius-bottomright: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+
+        &.slide-out{
+            margin-left: 0px;
+        }
+
+        .main-menu-top{
+            display: none;
+        }
+
+        ul{
+            height: auto;
+            padding-left: 1rem;
+
+            .bg-items{
+                display: block;
+                background-color: #fff;
+                width: 100%;
+                max-width: 244px;
+                height: 50px;
+                position: absolute;
+                z-index: -1;
+                -webkit-border-top-left-radius: 100px;
+                -webkit-border-bottom-left-radius: 100px;
+                -moz-border-radius-topleft: 100px;
+                -moz-border-radius-bottomleft: 100px;
+                border-top-left-radius: 100px;
+                border-bottom-left-radius: 100px;
+                -webkit-transition: .25s ease-in-out all;
+                -o-transition: .25s ease-in-out all;
+                transition: .25s ease-in-out all;
+    
+                &::before, &::after{
+                    position: absolute;
+                    content: '';
+                    background-image: url('../img/bg-menu-item.svg');
+                    background-repeat:no-repeat;
+                    width: 26px;
+                    height: 29px;
+                }
+    
+                &::before{
+                    margin-top: -29px;
+                    margin-left: 218px;
+                }
+    
+                &::after{
+                    margin-left: 216px;
+                    margin-top: 48px;
+                    rotate: -90deg;
+                }
+    
+                &.home{
+                    top: 0px;
+                }
+
+                &.clients{
+                    top: 55px;
+                }
+    
+                &.services{
+                    top: 108px;
+                }
+    
+                &.price-lists{
+                    top: 162px;
+                }
+    
+                &.prices{
+                    top: 215px;
+                }
+    
+                &.service-records{
+                    top: 268px;
+                }
+    
+                &.users{
+                    top: 320px;
+                }
+            }
+    
+            li{
+                a{
+                    color: #fff;
+    
+                    img{
+                        filter: invert(100%) sepia(0%) saturate(24%) hue-rotate(114deg) brightness(108%) contrast(108%);
+                    }
+    
+                    &:hover{
+                        img{
+                            margin-right: 1.1rem; 
+                        }
+                    }
+    
+                    &.active{
+                        background-color: transparent;
+                        color: $primary-500;
+    
+                        img{
+                            filter: invert(14%) sepia(88%) saturate(3963%) hue-rotate(292deg) brightness(86%) contrast(79%);
+                        }
+    
+                        &:hover{
+                            img{
+                                margin-right: .7rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

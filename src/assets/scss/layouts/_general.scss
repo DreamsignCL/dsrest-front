@@ -1,0 +1,176 @@
+@use '../abstracts' as *;
+
+header, main{
+    display: flex;
+    justify-content: center;
+    -webkit-transition: .2s ease-in-out all;
+    -o-transition: .2s ease-in-out all;
+    transition: .2s ease-in-out all;
+}
+
+.page{
+    height: 100vh;
+    height: 100dvh;
+
+    &.page--login{
+        & > header{
+            height: 30vh;
+            height: 30dvh;
+            align-items: flex-end;
+
+            .logo{
+                width: 100%;
+                max-width: 300px;        
+                height: auto;
+                margin-bottom: 1rem;
+            }
+        }
+
+        main{
+            height: 70vh;
+            height: 70dvh;
+        }
+
+        &.register,
+        &.email-verification,
+        &.plan-selection{
+            & > header{
+                height: 13vh;
+                height: 13dvh;
+            }
+
+            main{
+                height: 87vh;
+                height: 87dvh;
+            }
+        }
+    }
+
+    &.page--backoffice{
+        & > header{
+            height: 10vh;
+            height: 10dvh;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 .8rem;
+        }
+
+        main{
+            height: 90vh;
+            height: 90dvh;
+        }
+    }
+
+    &.page--menu{
+        & > header{
+            height: 10vh;
+            height: 10dvh;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 .8rem;
+        }
+
+        main{
+            height: 90vh;
+            height: 90dvh;
+        }
+    }
+
+}
+
+.success-page{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-page{
+    
+
+    .category-header{
+        text-transform: capitalize;
+        padding: .5rem;
+
+        h1{margin-bottom: 0;}
+
+        &.active{
+            background-color: #B20101;
+            
+            h1{
+                color: #fff;
+            }
+        }
+    }
+
+    
+
+    .no-dishes{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20vh;
+
+        .no-dishes-content{
+            .icon{
+                display: block;
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+
+    .menu-footer{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+@include MQ(LG){
+    .page-content{    
+        .user-logo{
+            margin-top: -7%;
+        }
+    }
+}
+
+.flow-section{
+    height: 38%;
+}
+
+.cash-earnings{
+    height:60%;
+    overflow-y: auto;
+}
+
+.payment-methods{
+    height:60%;
+    overflow-y: auto;
+}
+
+.close-resume{
+    .flex-row{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top:.5rem
+    }
+
+    .box{
+        background: #e8f1f7;
+        border-radius: 7px;
+        padding: .5rem;
+        font-size: 13px;
+
+        span{
+            display: block;
+            font-size: 12px;
+            color: #0e96dc;
+            font-weight: 700;
+        }
+
+        &.text-left{
+            text-align: left;
+        }
+    }
+}

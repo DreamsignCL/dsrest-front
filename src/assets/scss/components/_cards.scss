@@ -1,0 +1,13 @@
+@use '../abstracts' as *;
+
+.card{
+    &.message-card{
+        width: 90%;
+        border-radius: 2rem;
+
+        .emoji{
+            font-size: 4rem;
+            margin: 2rem 0;
+        }
+    }
+}

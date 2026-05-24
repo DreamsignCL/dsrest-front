@@ -1,0 +1,199 @@
+@use '../abstracts' as *;
+
+/*
+-----------------------------
+-----------General-----------
+-----------------------------
+*/
+
+label.form-label{
+    display: block;
+    font-weight: 500;
+    text-align: left;
+}
+
+.form-control,
+.form-select{
+    border-radius: 10rem;
+}
+
+textarea.form-control{
+    border-radius: 1rem;
+}
+
+input[type="search"]{
+    background-image: url('../img/search-icon.svg');
+    background-repeat: no-repeat;
+    background-position: 95% center;
+}
+
+.form-check-input:checked{
+    background-color: $primary-500;
+    border-color: $primary-500;
+}
+/*
+---------------------------------
+-------New form components-------
+---------------------------------
+*/
+
+/*--------File Upload---------*/
+
+.file-upload{
+    display: flex;
+    justify-content: center;
+    
+    .file-upload__input{
+        display: none;
+    }
+    
+    .file-upload__label{
+        cursor: pointer;
+        width: 100px;
+        height: 100px;
+        display: block;
+
+        .file-upload__preview{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        
+        .file-upload__placeholder{
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+    }
+}
+
+/*--------Switch---------*/
+.switch{
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+
+    input{
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked + .slider {
+            background-color: $primary-500;
+
+            &::before{
+                transform: translateX(26px);
+            }
+        }
+        
+        &:focus + .slider {
+            box-shadow: 0 0 1px $primary-700;
+        }
+    }
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+
+        &::before{
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        &.round {
+            border-radius: 34px;
+            
+            &::before {
+              border-radius: 50%;
+            }
+        }
+    }
+
+    &.switch--vertical{
+        transform: rotate(-90deg);
+    }
+}
+
+.switch-group{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .form-label{
+        margin-bottom: 0;
+    } 
+}
+
+/*---- Messages ----*/
+.message{
+    &.message-login.error-message{
+        margin-top: 1rem;
+        background-color:red;
+        text-align: center;
+        font-size: 1rem;
+
+        &::after{
+            border: none;
+        }
+    }
+
+    &.error-message{
+        margin-top: .3rem;
+        background-color: $dark;
+        display: block;
+        color: #fff;
+        font-size: .8rem;
+        padding: .3rem .875rem;
+        border-radius: 1rem;
+        text-align: left;
+    
+        &::after{
+            position: absolute;
+            left: 80%;
+            margin-top: -16px;
+            content: "";
+            border-top: 0;
+            border-right: .8rem solid transparent;
+            border-bottom: .8rem solid;
+            border-left: .8rem solid transparent;
+            color: $dark;
+        }
+    }
+}
+
+.page-content{
+    .error-message{
+        background-color: #ffc107;
+        color: $dark;
+
+        &::after{
+            color: #ffc107;
+        }
+    }
+}
