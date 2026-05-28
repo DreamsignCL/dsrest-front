@@ -1,0 +1,209 @@
+@use '../abstracts/breakpoints' as *;
+
+.auth-layout {
+    position: relative;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .auth-layout__hero {
+        .auth-layout__logo {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto 1rem auto;
+        }
+
+        p {
+            display: none;
+        }
+    }
+
+    .auth-layout__content {
+        .auth-header {
+            display: none;
+        }
+
+        .auth-body {
+            form {
+                .form-label {
+                    color: #fff;
+                }
+
+                .form-helper {
+                    color: #fff;
+                }
+
+                .checkbox__label {
+                    color: #fff;
+
+                    button {
+                        color: #fff;
+                    }
+                }
+
+                button[type="submit"] {
+                    margin-bottom: .75rem;
+                }
+            }
+
+            .verify-email-card {
+                color: #fff;
+                text-align: center;
+                margin-bottom: 1rem;
+
+                .verify-email-card__icon {
+                    display: flex;
+                    justify-content: center;
+
+                    animation: floating-mail 3s ease-in-out infinite;
+                    will-change: transform;
+                }
+
+            }
+            
+            .btn--outline-primary {
+                --btn-border: #fff;
+                --btn-color: #fff;
+            }
+
+            .btn--link {
+                --btn-color: #fff;
+            }
+        }
+
+        .auth-footer {
+            display: none;
+        }
+    }
+}
+
+/* Responsive desktop */
+@include mq(md) {
+    .auth-layout {
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 700px;
+
+        .auth-layout__hero {
+            overflow: hidden;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+
+            .auth-layout__logo {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto 2rem auto;
+            }
+
+            p {
+                display: block;
+            }
+        }
+
+        main {
+            background-color: #fff;
+
+            .auth-layout__content {
+                height: 100%;
+                padding: 1.5rem 4rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+    
+                .auth-header {
+                    display: block;
+    
+                    .auth-layout__title {
+                        font-size: 2.5rem;
+                    }
+                }
+    
+                .auth-body {
+                    form {
+                        .form-label {
+                            color: var(--color-text);
+                        }
+
+                        .form-helper {
+                            color: var(--color-text-muted);
+                        }
+
+                        .checkbox__label {
+                            color: var(--color-text);
+
+                            button {
+                                color: var(--color-primary);
+                            }
+                        }
+                    }
+    
+                    .btn--outline-primary {
+                        --btn-bg: transparent;
+                        --btn-border: var(--color-primary);
+                        --btn-color: var(--color-primary);
+                    }
+    
+                    .btn--link {
+                        --btn-color: var(--color-primary);
+                    }
+
+                    .verify-email-card {
+                        color: var(--color-text);
+
+                        .verify-email-card__icon {
+                            color: var(--color-primary);
+                        }
+
+                    }
+                }
+                
+                .auth-footer {
+                    display: block;
+                }
+            }
+        }
+        
+
+        .loader {
+            .loader__content {  
+                .loader__text {
+                    color: #fff;
+                }
+            }
+        }
+
+    }
+}
+
+.auth-fade-enter-active,
+.auth-fade-leave-active {
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.auth-fade-enter-from,
+.auth-fade-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+@keyframes floating-mail {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}

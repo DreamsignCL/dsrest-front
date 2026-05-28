@@ -1,0 +1,271 @@
+@use '../abstracts' as *;
+
+/*
+--------------------------
+----------Wrapper---------
+--------------------------
+*/
+
+.form-control-wrapper {
+    position: relative;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/*
+--------------------------
+-------Form Label---------
+--------------------------
+*/
+
+.form-label {
+    font-size: 0.875rem;
+    color: var(--color-text);
+
+    &__required {
+        color: var(--color-danger);
+    }
+}
+
+/*
+--------------------------
+-------Form Control-------
+--------------------------
+*/
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-full);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    font-size: 1rem;
+    line-height: 1.5;
+    transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+    appearance: none;
+
+    &.has-icon {
+        padding-right: 3rem;
+    }
+
+    &__icon {
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: var(--color-text-muted);
+        transform: translateY(-50%);
+        cursor: pointer;
+        transition: color .2s ease;
+
+        &:hover {
+            color: var(--color-text);
+        }
+    }
+
+    &::placeholder {
+        color: var(--color-text-muted);
+    }
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 4px rgba(0, 158, 227, 0.12);
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+/* Textarea */
+
+textarea.form-control {
+    min-height: 120px;
+
+    resize: vertical;
+}
+
+/* Select */
+
+select.form-control {
+    cursor: pointer;
+}
+
+/*
+--------------------------
+-------Checkbox---------
+--------------------------
+*/
+
+.form-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+
+    .checkbox {
+        --checkbox-size: 25px;
+    
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+  
+        &__input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+  
+        &__box {
+            width: var(--checkbox-size);
+            height: var(--checkbox-size);
+            border: 2px solid var(--color-border);
+            border-radius: 6px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.15s ease;
+            flex-shrink: 0;
+    
+            &::after {
+                content: '';
+                width: 5px;
+                height: 10px;
+                border: solid white;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg) scale(0);
+                transition: transform 0.15s ease;
+            }
+        }
+  
+        &__label {
+            font-size: 0.95rem;
+            color: var(--color-text);
+            line-height: 1.4;
+
+            button {
+                color: var(--color-primary);
+                background: none;
+                cursor: pointer;
+                border: none;
+                text-decoration: underline;
+            }
+        }
+  
+        // Hover
+        &:hover{
+            .checkbox__box {
+                border-color: var(--color-primary);
+            }
+        }
+  
+        // Focus
+        &__input:focus-visible + .checkbox__box {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+  
+        // Checked
+        &__input:checked + .checkbox__box {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+    
+            &::after {
+                transform: rotate(45deg) scale(1);
+            }
+        }
+  
+        // Active click effect
+        &:active &__box {
+            transform: scale(0.96);
+        }
+  
+        // Disabled state
+        &--disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+    
+            .checkbox__box {
+                background-color: #f1f5f9;
+                border-color: var(--checkbox-disabled);
+            }
+        
+            .checkbox__label {
+                color: var(--checkbox-disabled);
+            }
+        }
+  
+        // Error state
+        &--error {
+            .checkbox__box {
+                border-color: var(--checkbox-error);
+            }
+        
+            .checkbox__input:checked + .checkbox__box {
+                background-color: var(--checkbox-error);
+                border-color: var(--checkbox-error);
+            }
+        }
+  }
+}
+
+
+
+
+.form-control.is-error {
+    border-color: var(--color-danger);
+
+    &:focus {
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+    }
+}
+
+.form-error {
+    font-size: 0.875rem;
+    color: var(--color-danger);
+}
+
+.form-helper {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.form-row {
+    display: grid;
+    gap: 1rem;
+}
+
+@include mq(md) {
+    .form-row--2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row--3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

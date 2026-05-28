@@ -1,0 +1,48 @@
+<template>
+    <button
+        :type="type"
+        :disabled="disabled"
+        :class="classes">
+        <slot />
+    </button>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+    variant: {
+        type: String,
+        default: 'primary',
+    },
+
+    size: {
+        type: String,
+        default: 'md',
+    },
+
+    block: {
+        type: Boolean,
+        default: false,
+    },
+
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
+
+    type: {
+        type: String,
+        default: 'button',
+    },
+})
+
+const classes = computed(() => [
+    'btn',
+    `btn--${props.variant}`,
+    `btn--${props.size}`,
+    {
+        'btn--block': props.block,
+    },
+])
+</script>

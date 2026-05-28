@@ -1,0 +1,56 @@
+@use '../abstracts' as *;
+
+/* =========================================
+   Global Styles
+========================================= */
+
+html {
+    font-size: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: $font-primary;
+    font-size: $body-font-size;
+    font-weight: $body-font-weight;
+    line-height: $body-line-height;
+    color: var(--color-text);
+    background-color: var(--color-background);
+    min-height: 100vh;
+}
+
+/* =========================================
+   Typography Defaults
+========================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: $heading-line-height;
+    font-weight: $heading-font-weight;
+}
+
+p {
+    line-height: $line-height-relaxed;
+}
+
+/* =========================================
+   Accessibility
+========================================= */
+
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/* =========================================
+   Selection
+========================================= */
+
+::selection {
+    background-color: var(--color-primary);
+    color: white;
+}

@@ -1,0 +1,68 @@
+@use '../abstracts/breakpoints' as *;
+
+.grid {
+    display: grid;
+    gap: 1rem;
+    
+    /* Auto grids */
+    .grid--auto-sm {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .grid--auto-md {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    
+    .grid--auto-lg {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+    
+    /* Fixed columns */
+    .grid--2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid--3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid--4 {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Alignments */
+    .grid--center {
+        align-items: center;
+    }
+    
+    .grid--between {
+        justify-content: space-between;
+    }
+    
+    /* Gap modifiers */
+    .grid--gap-sm {
+        gap: 0.5rem;
+    }
+    
+    .grid--gap-lg {
+        gap: 2rem;
+    }
+}
+
+
+/* Responsive desktop */
+@include mq(md) {
+    .grid {
+        .grid--2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    
+        .grid--3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    
+        .grid--4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+}

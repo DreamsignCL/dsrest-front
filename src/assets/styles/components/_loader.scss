@@ -1,0 +1,70 @@
+@use '../abstracts' as *;
+
+.loader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: rgba(10, 10, 10, 0.45);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    
+    .loader__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        min-width: 180px;
+        
+        .loader__spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid rgba(255, 255, 255, 0.12);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: loader-spin 0.85s linear infinite;
+        }
+        
+        .loader__text {
+            margin: 0;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-align: center;
+        }
+    }
+}
+
+/* Animation */
+
+@keyframes loader-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Transition */
+
+.fade-enter-active,
+.fade-leave-active {
+    transition:
+        opacity .25s ease,
+        backdrop-filter .25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+@include mq(md) {
+    .loader {
+        .loader__content {  
+            .loader__text {
+                color: var(--color-text);
+            }
+        }
+    }
+}

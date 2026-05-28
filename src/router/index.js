@@ -10,8 +10,34 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'auth',
-      component: Auth,
+      component: () => import('@/layouts/AuthLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'login',
+          component: () => import('@/views/auth/LoginView.vue'),
+        },
+        {
+          path: 'register',
+          name: 'register',
+          component: () => import('@/views/auth/RegisterView.vue'),
+        },
+        {
+          path: 'forgot-password',
+          name: 'forgot-password',
+          component: () => import('@/views/auth/ForgotPasswordView.vue'),
+        },
+        {
+          path: 'register/check-email',
+          name: 'register-check-email',
+          component: () => import('@/views/auth/CheckEmailView.vue'),
+        },
+        {
+          path: 'register/verify-email/:token',
+          name: 'verify-email',
+          component: () => import('@/views/auth/VerifyEmailView.vue'),
+        },
+      ],
     },
     {
       path: '/auth/',

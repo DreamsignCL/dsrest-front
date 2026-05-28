@@ -1,0 +1,107 @@
+@use '../abstracts' as *;
+
+.btn {
+    --btn-bg: var(--color-primary);
+    --btn-color: #ffffff;
+    --btn-border: transparent;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: .375rem .75rem;
+    border: 1px solid var(--btn-border);
+    border-radius: var(--border-radius-full);
+    background-color: var(--btn-bg);
+    color: var(--btn-color);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.15s ease;
+
+    -webkit-tap-highlight-color: transparent;
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:focus-visible {
+        outline: 3px solid rgba(0, 158, 227, 0.25);
+        outline-offset: 2px;
+    }
+
+    &:disabled,
+    &.is-disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+}
+
+/* Primary */
+
+.btn--primary {
+    --btn-bg: var(--color-primary);
+    --btn-color: #ffffff;
+}
+
+/* Secondary */
+
+.btn--secondary {
+    --btn-bg: var(--color-secondary);
+    --btn-color: var(--color-dark);
+
+    &:hover {
+        --btn-bg: var(--color-secondary-dark);
+    }
+}
+
+/* Danger */
+
+.btn--danger {
+    --btn-bg: var(--color-danger);
+    --btn-color: #ffffff;
+}
+
+/* Warning */
+
+.btn--warning {
+    --btn-bg: var(--color-warning);
+    --btn-color: var(--color-dark);
+}
+
+/* Link */
+
+.btn--link {
+    --btn-bg: transparent;
+    --btn-color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Outline */
+
+.btn--outline-primary {
+    --btn-bg: transparent;
+    --btn-border: var(--color-primary);
+    --btn-color: var(--color-primary);
+}
+
+/* Ghost */
+
+.btn--ghost {
+    --btn-bg: transparent;
+    --btn-border: transparent;
+    --btn-color: var(--color-primary);
+}
+
+/* Full width */
+
+.btn--block {
+    width: 100%;
+}

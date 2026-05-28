@@ -1,5 +1,5 @@
 {
-  "name": "dsRest-frontend",
+  "name": "dsrest-frontend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,10 +10,12 @@
     "preview": "vite preview",
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
-    "sass": "npx sass src/assets/scss:src/assets/css --no-source-map --style=compressed --watch --quiet-deps"
+    "sass": "npx sass src/assets/styles/main.scss:src/assets/css/style.css --no-source-map --style=compressed --watch --quiet-deps"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "axios": "^1.8.1",
+    "lucide-vue-next": "^1.0.0",
     "pinia": "^3.0.1",
     "qrcode.vue": "^3.6.0",
     "vue": "^3.5.13",

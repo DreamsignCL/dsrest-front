@@ -1,0 +1,47 @@
+/* =========================================
+   Typography
+========================================= */
+
+/* Font Family */
+$font-primary: 'Inter', sans-serif;
+
+/* Font Weights */
+$font-light: 300;
+$font-regular: 400;
+$font-medium: 500;
+$font-semibold: 600;
+$font-bold: 700;
+
+/* Line Heights */
+$line-height-tight: 1.1;
+$line-height-base: 1.5;
+$line-height-relaxed: 1.7;
+
+/* =========================================
+   Fluid Font Sizes
+========================================= */
+
+$font-size-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+$font-size-sm: clamp(0.875rem, 0.84rem + 0.2vw, 0.9375rem);
+$font-size-base: clamp(1rem, 0.95rem + 0.25vw, 1rem);
+
+$font-size-lg: clamp(1.125rem, 1.05rem + 0.4vw, 1.25rem);
+$font-size-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+
+$font-size-2xl: clamp(2rem, 1.7rem + 1.5vw, 3rem);
+$font-size-3xl: clamp(2.5rem, 2rem + 2vw, 4rem);
+
+/* =========================================
+   Heading Styles
+========================================= */
+
+$heading-font-weight: $font-bold;
+$heading-line-height: $line-height-tight;
+
+/* =========================================
+   Body Text
+========================================= */
+
+$body-font-size: $font-size-base;
+$body-font-weight: $font-regular;
+$body-line-height: $line-height-base;
