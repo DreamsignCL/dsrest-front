@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Auth from '../views/Auth.vue'
 import PrimerPlatoView from '@/views/onboarding/PrimerPlatoView.vue'
 import ExitoView from '@/views/onboarding/ExitoView.vue'
 import CartaPublicaView from '@/views/carta/CartaPublicaView.vue'
@@ -23,19 +22,34 @@ const router = createRouter({
           component: () => import('@/views/auth/RegisterView.vue'),
         },
         {
-          path: 'forgot-password',
-          name: 'forgot-password',
-          component: () => import('@/views/auth/ForgotPasswordView.vue'),
-        },
-        {
           path: 'register/check-email',
           name: 'register-check-email',
           component: () => import('@/views/auth/CheckEmailView.vue'),
         },
         {
-          path: 'register/verify-email/:token',
+          path: 'verify-email/:token',
           name: 'verify-email',
           component: () => import('@/views/auth/VerifyEmailView.vue'),
+        },        
+        {
+          path: 'forgot-password',
+          name: 'forgot-password',
+          component: () => import('@/views/auth/ForgotPasswordView.vue'),
+        },
+        {
+          path: 'forgot-password/check-email',
+          name: 'forgot-password-check-email',
+          component: () => import('@/views/auth/ForgotPasswordCheckEmailView.vue'),
+        },
+        {
+          path: 'reset-password/:token',
+          name: 'reset-password',
+          component: () => import('@/views/auth/ResetPasswordView.vue'),
+        },
+        {
+          path: 'reset-password/success',
+          name: 'reset-password-success',
+          component: () => import('@/views/auth/ResetPasswordSuccessView.vue'),
         },
       ],
     },

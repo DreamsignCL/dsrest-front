@@ -1,28 +1,23 @@
 <template>
     <div class="auth-layout__content">
+
         <AuthHeader
-            title="Recuperar contraseña"
-            description="Ingresa tu correo electrónico para continuar"
+            title="Nueva contraseña"
+            description="Ingresa tu nueva contraseña"
         />
 
         <div class="auth-body">
 
-            <ForgotPasswordForm
+            <ResetPasswordForm
                 :form="form"
                 :errors="errors"
                 @update:form="Object.assign(form, $event)"
                 @submit="handleSubmit"
             />
 
-            <div class="auth-actions">
-                <RouterLink class="btn btn--link" to="/">
-                    <ArrowLeft :size="18" /> Volver al inicio de sesión
-                </RouterLink>
-            </div>
-
         </div>
 
-        <BaseLoader v-if="isLoading" text="Enviando correo..." />
+        <BaseLoader v-if="isLoading" text="Actualizando contraseña..." />
 
         <div class="auth-footer">
             <DsSignature />
@@ -33,33 +28,37 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
-import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm.vue'
+import ResetPasswordForm from '@/components/auth/ResetPasswordForm.vue'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
 import DsSignature from '@/components/DsSignature.vue'
-import {ArrowLeft} from 'lucide-vue-next'
 
 const router = useRouter()
 
 const isLoading = ref(false)
 
 const form = reactive({
-    email: '',
+    password: '',
+    confirmPassword: '',
 })
 
 const errors = reactive({})
 
 const validateForm = () => {
 
-    errors.email = ''
+    errors.password = ''
+    errors.confirmPassword = ''
 
-    if (!form.email) {
-        errors.email = 'Ingrese su correo electrónico'
-        return false
+    if (!form.password) {
+        errors.password = 'Ingrese una contraseña'
     }
 
-    return true
+    if (form.password !== form.confirmPassword) {
+        errors.confirmPassword = 'Las contraseñas no coinciden'
+    }
+
+    return !errors.password && !errors.confirmPassword
 }
 
 const handleSubmit = async () => {
@@ -72,12 +71,7 @@ const handleSubmit = async () => {
 
         await fakeRequest()
 
-        router.push({
-            path: '/forgot-password/check-email',
-            query: {
-                email: form.email,
-            },
-        })
+        router.push('/reset-password/success')
 
     } catch (error) {
 

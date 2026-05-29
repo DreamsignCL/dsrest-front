@@ -1,43 +1,47 @@
 <template>
-  <div class="forgot-content animate__animated animate__fadeInUp">
-    <h2 class="text-light mb-4">Recuperar contraseña</h2>
+  <form @submit.prevent="$emit('submit')">
+    <BaseInput
+      id="email"
+      label="Correo electrónico:"
+      type="email"
+      helper="correo@empresa.cl"
+      :model-value="form.email"
+      :error="errors.email"
+      required
+      @update:model-value="updateField('email', $event)"
+    />
 
-    <div class="mb-3">
-      <label class="form-label text-light" for="forgot-email">Correo electrónico</label>
-      <input
-        id="forgot-email"
-        class="form-control"
-        type="email"
-        :value="email"
-        placeholder="Ingrese su correo electrónico"
-        @input="$emit('update:email', $event.target.value)"
-      />
-    </div>
-
-    <div class="d-grid gap-2">
-      <button class="btn btn-warning rounded-pill" @click="$emit('recover-password')">
-        Enviar instrucciones
-      </button>
-      <button class="btn btn-outline-light rounded-pill" @click="$emit('switch-view', 'login')">
-        Volver al inicio de sesión
-      </button>
-    </div>
-  </div>
+    <BaseButton type="submit" variant="secondary" block>
+      Recuperar contraseña
+    </BaseButton>
+  </form>
 </template>
 
-<script>
-export default {
-  name: 'ForgotPasswordForm',
-  props: {
-    email: {
-      type: String,
-      required: true,
-    },
+<script setup>
+import BaseInput from '@/components/ui/BaseInput.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
+
+const props = defineProps({
+  form: {
+    type: Object,
+    required: true,
   },
-  emits: ['switch-view', 'update:email', 'recover-password'],
+
+  errors: {
+    type: Object,
+    default: () => ({}),
+  },
+})
+
+const emit = defineEmits([
+  'submit',
+  'update:form',
+])
+
+const updateField = (field, value) => {
+  emit('update:form', {
+    ...props.form,
+    [field]: value,
+  })
 }
 </script>
-
-<style scoped>
-/* Los estilos específicos del formulario de recuperación de contraseña se heredan del componente padre */
-</style>
