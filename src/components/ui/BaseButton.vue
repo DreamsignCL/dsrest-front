@@ -2,6 +2,7 @@
     <button
         :type="type"
         :disabled="disabled"
+        :form="form"
         :class="classes">
         <slot />
     </button>
@@ -35,6 +36,11 @@ const props = defineProps({
         type: String,
         default: 'button',
     },
+
+    form: {
+        type: String,
+        default: null,
+    }
 })
 
 const classes = computed(() => [

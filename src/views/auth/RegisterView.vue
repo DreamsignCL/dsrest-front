@@ -1,13 +1,11 @@
 <template>
-    <div class="auth-layout__content">
-
+    <div class="panel__content">
         <AuthHeader
             title="Crear cuenta"
             description="Completa tus datos para comenzar"
         />
-
-        <div class="auth-body">
-
+    
+        <div class="panel__body" aria-label="Formulario de registro">
             <RegisterForm
                 :form="registerForm"
                 :errors="registerErrors"
@@ -16,28 +14,24 @@
                 @submit="handleRegister"
                 @open-terms="isTermsModalOpen = true"
             />
-
-            <div class="auth-actions">
+        </div>
+    
+        <footer class="panel__footer">
+            <div class="panel__actions">
+                <BaseButton type="submit" variant="secondary" form="register-form" block>Crear cuenta</BaseButton>
                 <RouterLink class="btn btn--link" to="/">
                     <ArrowLeft :size="18" /> Volver al inicio de sesión
                 </RouterLink>
             </div>
-        </div>
-
-        <BaseLoader
-            v-if="isLoading"
-            text="Creando cuenta..."
-        />
-
+            <DsSignature />
+        </footer>
+    
+        <BaseLoader v-if="isLoading" text="Creando cuenta..." />
+    
         <TermsAndConditionsModal
             v-model="isTermsModalOpen"
             @accepted="registerForm.acceptTerms = true"
         />
-
-        <div class="auth-footer">
-            <DsSignature />
-        </div>
-
     </div>
 </template>
 
@@ -47,6 +41,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
 import TermsAndConditionsModal from '@/components/auth/TermsAndConditionsModal.vue'
+import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
 import DsSignature from '@/components/DsSignature.vue'
 import { useFormValidation } from '@/composables/useFormValidation'

@@ -1,32 +1,29 @@
 <template>
-    <div class="auth-layout__content">
+    <div class="panel__content">
         <AuthHeader
             title="Recuperar contraseña"
             description="Ingresa tu correo electrónico para continuar"
         />
 
-        <div class="auth-body">
-
+        <div class="panel__body" aria-label="Formulario de recuperación de contraseña">
             <ForgotPasswordForm
                 :form="form"
                 :errors="errors"
                 @update:form="Object.assign(form, $event)"
                 @submit="handleSubmit"
             />
+        </div>
 
-            <div class="auth-actions">
+         <footer class="panel__footer">
+            <div class="panel__actions">
                 <RouterLink class="btn btn--link" to="/">
                     <ArrowLeft :size="18" /> Volver al inicio de sesión
                 </RouterLink>
             </div>
-
-        </div>
+            <DsSignature />
+        </footer>
 
         <BaseLoader v-if="isLoading" text="Enviando correo..." />
-
-        <div class="auth-footer">
-            <DsSignature />
-        </div>
 
     </div>
 </template>

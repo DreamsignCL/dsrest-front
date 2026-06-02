@@ -1,11 +1,11 @@
 <template>
-    <div class="auth-layout__content">
+    <div class="panel__content">
         <AuthHeader
             title="Iniciar sesión"
             description="Completa el formulario para iniciar sesión"
         />
-
-        <div class="auth-body">
+    
+        <div class="panel__body" aria-label="Formulario de acceso">
             <LoginForm
                 :form="loginForm"
                 :is-loading="isLoading"
@@ -15,23 +15,22 @@
                 @update:form="Object.assign(loginForm, $event)"
                 @login="performLogin"
             />
-
-            <div class="auth-actions">
-                <RouterLink class="btn btn--outline-primary btn--block" to="/register">
+        </div>
+    
+        <footer class="panel__footer">
+            <div class="panel__actions">
+                <RouterLink class="btn btn--link" to="/register">
                     Crear cuenta
                 </RouterLink>
-
+        
                 <RouterLink class="btn btn--link" to="/forgot-password">
                     ¿Olvidaste tu contraseña?
                 </RouterLink>
             </div>
-
-            <BaseLoader v-if="isLoading" text="Iniciando sesión..." />
-        </div>
-
-        <div class="auth-footer">
             <DsSignature />
-        </div>
+        </footer>
+    
+        <BaseLoader v-if="isLoading" text="Iniciando sesión..." />
     </div>
 </template>
 
@@ -57,33 +56,33 @@ const loginError = ref(false)
 const loginErrors = reactive({})
 
 const loginForm = reactive({
-  email: '',
-  password: '',
+    email: '',
+    password: '',
 })
 
 const validateLoginForm = () => {
 
-  const formValidation = useFormValidation()
+    const formValidation = useFormValidation()
 
-  const {
+    const {
     errors,
     isValid,
-  } = formValidation.validateLoginForm(loginForm)
+    } = formValidation.validateLoginForm(loginForm)
 
-  Object.assign(loginErrors, errors)
+    Object.assign(loginErrors, errors)
 
-  return isValid
+    return isValid
 }
 
 const performLogin = async () => {
 
-  if (!validateLoginForm()) return
+    if (!validateLoginForm()) return
 
-  isLoading.value = true
+    isLoading.value = true
 
-  loginMessage.value = ''
+    loginMessage.value = ''
 
-  loginError.value = false
+    loginError.value = false
 
   try {
 

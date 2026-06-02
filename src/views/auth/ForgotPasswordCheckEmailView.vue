@@ -1,11 +1,11 @@
 <template>
-    <div class="auth-layout__content">
+    <div class="panel__content">
         <AuthHeader
             title="Revisa tu correo"
             description="Te enviamos un enlace para recuperar tu cuenta"
         />
 
-        <div class="auth-body">
+        <div class="panel__body" aria-label="Verificación de correo">
             <div class="verify-email-card">
                 <div class="verify-email-card__icon">
                     <Mail :size="100" />
@@ -23,17 +23,15 @@
                     Sigue las instrucciones del correo para restablecer tu contraseña.
                 </p>
             </div>
-
+        </div>
+        <footer class="panel__footer">
             <div class="auth-actions">
                 <RouterLink class="btn btn--link" to="/">
                     <ArrowLeft :size="18" /> Volver al inicio
                 </RouterLink>
             </div>
-        </div>
-
-        <div class="auth-footer">
             <DsSignature />
-        </div>
+        </footer>
     </div>
 </template>
 

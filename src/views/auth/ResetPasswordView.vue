@@ -1,12 +1,11 @@
 <template>
-    <div class="auth-layout__content">
-
+    <div class="panel__content">
         <AuthHeader
             title="Nueva contraseña"
             description="Ingresa tu nueva contraseña"
         />
 
-        <div class="auth-body">
+        <div class="panel__body" aria-label="Formulario de restablecimiento de contraseña">
 
             <ResetPasswordForm
                 :form="form"
@@ -16,13 +15,17 @@
             />
 
         </div>
-
-        <BaseLoader v-if="isLoading" text="Actualizando contraseña..." />
-
-        <div class="auth-footer">
+        
+        <footer class="panel__footer">
+            <div class="panel__actions">
+                <RouterLink class="btn btn--link" to="/">
+                    <ArrowLeft :size="18" /> Volver al inicio
+                </RouterLink>
+            </div>
             <DsSignature />
-        </div>
-
+        </footer>
+        
+        <BaseLoader v-if="isLoading" text="Actualizando contraseña..." />
     </div>
 </template>
 
@@ -32,6 +35,7 @@ import { useRouter } from 'vue-router'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm.vue'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
+import {ArrowLeft} from 'lucide-vue-next'
 import DsSignature from '@/components/DsSignature.vue'
 
 const router = useRouter()

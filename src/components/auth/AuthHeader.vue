@@ -1,13 +1,8 @@
 <template>
-  <div class="auth-header">
-    <h1 class="auth-header__title">
-      {{ title }}
-    </h1>
-
-    <p v-if="description" class="auth-header__description">
-      {{ description }}
-    </p>
-  </div>
+  <header class="panel__header">
+    <h1 id="page-title">{{ title }}</h1>
+    <p v-if="description">{{ description }}</p>
+  </header>
 </template>
 
 <script setup>

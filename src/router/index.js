@@ -54,21 +54,25 @@ const router = createRouter({
       ],
     },
     {
-      path: '/auth/',
-      name: 'auth2',
-      component: AuthSystem2,
-    },
-    {
-      path: '/onboarding/plato',
-      name: 'PrimerPlato',
-      component: PrimerPlatoView,
-      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
-    },
-    {
-      path: '/onboarding/exito',
-      name: 'Exito',
-      component: ExitoView,
-      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
+      path: '/onboarding',
+      component: () => import('@/layouts/OnboardingLayout.vue'),
+      children: [
+        {
+          path: 'local',
+          name: 'onboarding-local',
+          component: () => import('@/views/onboarding/LocalSetupView.vue'),
+        },
+        {
+          path: 'first-dish',
+          name: 'onboarding-first-dish',
+          component: () => import('@/views/onboarding/FirstDishView.vue'),
+        },
+        {
+          path: 'trial-started',
+          name: 'onboarding-trial-started',
+          component: () => import('@/views/onboarding/TrialStartedView.vue'),
+        },
+      ],
     },
     {
       path: '/platos',

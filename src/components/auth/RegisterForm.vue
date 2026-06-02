@@ -1,5 +1,5 @@
 <template>
-    <form class="register-form" @submit.prevent="$emit('submit')">
+    <form id="register-form" @submit.prevent="$emit('submit')">
         <BaseInput
             id="name"
             label="Nombre:"
@@ -28,12 +28,13 @@
             helper="correo@empresa.cl"
             :model-value="form.correo"
             :error="errors.correo"
+            required
             @update:model-value="$emit('update:form', {...form, correo: $event})"
         />
 
         <BaseInput
             id="phone"
-            label="Teléfono"
+            label="Teléfono:"
             type="tel"
             helper="+56 9 1234 5678"
             :model-value="form.telefono"
@@ -43,17 +44,18 @@
 
         <BaseInput
             id="password"
-            label="Contraseña"
+            label="Contraseña:"
             type="password"
             helper="Máximo 8 caracteres"
             :model-value="form.password"
             :error="errors.password"
+            required
             @update:model-value="$emit('update:form', {...form, password: $event})"
         />
 
         <BaseInput
             id="confirmPassword"
-            label="Confirmar contraseña"
+            label="Confirmar contraseña:"
             type="password"
             :model-value="form.confirmPassword"
             :error="errors.confirmPassword"
@@ -66,14 +68,6 @@
             @update:model-value="updateField('acceptTerms', $event)">
             Acepto los <button type="button" @click="$emit('open-terms')">términos y condiciones</button>
         </BaseCheckbox>
-
-        <BaseButton
-            type="submit"
-            variant="secondary"
-            block>
-            Crear cuenta
-        </BaseButton>
-
     </form>
 
 </template>
@@ -81,7 +75,6 @@
 <script setup>
 
 import BaseInput from '@/components/ui/BaseInput.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseCheckbox from '@/components/ui/BaseCheckbox.vue'
 import {cleanRut,formatRut} from '@/helpers/rut'
 

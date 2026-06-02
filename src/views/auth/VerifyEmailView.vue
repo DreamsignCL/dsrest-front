@@ -1,64 +1,68 @@
 <template>
-    <div class="auth-layout__content">
-        <div class="auth-body">
+    <div class="panel__content">
+        <!-- Loading -->
+        <template v-if="isLoading">
+            <BaseLoader text="Verificando tu cuenta..." />
+        </template>
+        
+        <!-- Success -->
+        <template v-else-if="isSuccess">
+            <AuthHeader
+                title="¡Cuenta verificada!"
+                description="Tu correo fue validado correctamente."
+            />
 
-            <!-- Loading -->
-            <template v-if="isLoading">
-                <BaseLoader text="Verificando tu cuenta..." />
-            </template>
-
-            <!-- Success -->
-            <template v-else-if="isSuccess">
-                <div class="auth-status">
-                    <div class="auth-status__icon auth-status__icon--success">
-                        <CircleCheckBig :size="42" />
-                    </div>
-
-                    <h1 class="auth-layout__title">
-                        ¡Cuenta verificada!
-                    </h1>
-
-                    <p class="auth-status__description">
-                        Tu correo fue validado correctamente.
-                    </p>
-
-                    <p class="auth-status__description">
-                        Serás redirigido automáticamente...
-                    </p>
+            <div class="panel__body" aria-label="Correo verificado con éxito">
+                <div class="auth-status__icon auth-status__icon--success">
+                    <CircleCheckBig :size="42" />
                 </div>
-            </template>
 
-            <!-- Error -->
-            <template v-else>
-                <div class="auth-status">
-                    <div class="auth-status__icon auth-status__icon--error">
-                        <CircleX :size="42" />
-                    </div>
+                <p class="auth-status__description">
+                    Serás redirigido automáticamente...
+                </p>     
+            </div>
+        </template>
 
-                    <h1 class="auth-layout__title">
-                        No pudimos verificar tu cuenta
-                    </h1>
+        <!-- Error -->
+        <template v-else>
+            <AuthHeader
+                title="¡Lo sentinmos!"
+                description="No pudimos verificar tu cuenta."
+            />
 
-                    <p class="auth-status__description">
-                        {{ errorMessage }}
-                    </p>
-
-                    <div class="auth-status__actions">
-                        <RouterLink  class="btn btn--secondary btn--block" to="/register/check-email">
-                            Reenviar correo
-                        </RouterLink>
-
-                        <RouterLink  class="btn btn--link" to="/">
-                            Volver al inicio
-                        </RouterLink>
-                    </div>
+            <div class="panel__body" aria-label="Correo no verificado">
+                <div class="auth-status__icon auth-status__icon--error">
+                    <CircleX :size="42" />
                 </div>
-            </template>
-        </div>
 
-        <div class="auth-footer">
+                <p class="auth-status__description">
+                    {{ errorMessage }}
+                </p>
+
+                <div class="auth-status__actions">
+                    <RouterLink  class="btn btn--secondary btn--block" to="/register/check-email">
+                        Reenviar correo
+                    </RouterLink>
+
+                    <RouterLink  class="btn btn--link" to="/">
+                        Volver al inicio
+                    </RouterLink>
+                </div>
+            </div>
+        </template>
+
+        <footer class="panel__footer">
+            <div class="panel__actions">
+                <RouterLink  class="btn btn--secondary btn--block" to="/register/check-email">
+                    Reenviar correo
+                </RouterLink>
+
+                <RouterLink  class="btn btn--link" to="/">
+                    <ArrowLeft :size="18" /> Volver al inicio
+                </RouterLink>
+            </div>
             <DsSignature />
-        </div>
+        </footer>
 
     </div>
 </template>
@@ -67,8 +71,9 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
+import AuthHeader from '@/components/auth/AuthHeader.vue'
 import DsSignature from '@/components/DsSignature.vue'
-import {CircleCheckBig,CircleX} from 'lucide-vue-next'
+import {CircleCheckBig,CircleX, ArrowLeft} from 'lucide-vue-next'
 
 // import { apiService } from '@/services/api.service'
 

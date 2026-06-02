@@ -1,41 +1,35 @@
 <template>
-    <div class="auth-layout__content">
+    <div class="panel__content">
+        <AuthHeader
+            title="¡Contraseña actualizada!"
+            description="Tu contraseña fue actualizada correctamente."
+        />
 
-        <div class="auth-body">
-
-            <div class="auth-status">
-
-                <div class="auth-status__icon auth-status__icon--success">
-                    ✅
-                </div>
-
-                <h1 class="auth-layout__title">
-                    Contraseña actualizada
-                </h1>
-
-                <p class="auth-status__description">
-                    Tu contraseña fue actualizada correctamente.
-                </p>
-
-                <RouterLink
-                    class="btn btn--secondary btn--block"
-                    to="/"
-                >
-                    Iniciar sesión
-                </RouterLink>
-
+        <div class="panel__body" aria-label="Contraseña actualizada con éxito">
+            <div class="auth-status__icon auth-status__icon--success">
+                <CircleCheckBig :size="42" />
             </div>
 
+            <p class="auth-status__description">
+                Tu contraseña fue actualizada correctamente.
+            </p>
+
         </div>
 
-        <div class="auth-footer">
+        <footer class="panel__footer">
+            <div class="panel__actions">
+                <RouterLink class="btn btn--secondary btn--block" to="/">
+                    Iniciar sesión
+                </RouterLink>
+            </div>
             <DsSignature />
-        </div>
-
+        </footer>
     </div>
 </template>
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import {CircleCheckBig} from 'lucide-vue-next'
+import AuthHeader from '@/components/auth/AuthHeader.vue'
 import DsSignature from '@/components/DsSignature.vue'
 </script>

@@ -12,14 +12,22 @@
     margin: 0;
 }
 
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
 html {
     hanging-punctuation: first last;
+    height: 100%;
 }
 
 body {
-    min-height: 100vh;
+    height: 100dvh;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    overflow: hidden;
 }
 
 img,

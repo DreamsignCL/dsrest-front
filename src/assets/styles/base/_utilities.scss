@@ -2,11 +2,11 @@
    Utilities
 ========================================= */
 
-.u-hidden {
+.hidden {
     display: none !important;
 }
 
-.u-visually-hidden {
+.visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -20,18 +20,18 @@
     border: 0;
 }
 
-.u-text-center {
+.text-center {
     text-align: center;
 }
 
-.u-text-left {
+.text-left {
     text-align: left;
 }
 
-.u-text-right {
+.text-right {
     text-align: right;
 }
 
-.u-full-width {
+.full-width {
     width: 100%;
 }

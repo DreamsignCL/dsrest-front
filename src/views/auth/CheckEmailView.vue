@@ -1,11 +1,11 @@
 <template>
-    <div class="auth-layout__content">
+    <div class="panel__content">
         <AuthHeader
             title="Revisa tu correo"
             description="Te enviamos un enlace de verificación para activar tu cuenta"
         />
 
-        <div class="auth-body">
+        <div class="panel__body" aria-label="Verificación de correo">
             <div class="verify-email-card">
                 <div class="verify-email-card__icon">
                     <Mail :size="100" />
@@ -34,8 +34,10 @@
                 </p>
 
             </div>
+        </div>
 
-            <div class="auth-actions">
+        <footer class="panel__footer">
+            <div class="panel__actions">
                 <BaseButton
                     variant="secondary"
                     block
@@ -47,19 +49,11 @@
                 <RouterLink class="btn btn--link" to="/">
                     <ArrowLeft :size="18" /> Volver al inicio de sesión
                 </RouterLink>
-
             </div>
-
-        </div>
-
-        <BaseLoader
-            v-if="isLoading"
-            text="Reenviando correo..."
-        />
-
-        <div class="auth-footer">
             <DsSignature />
-        </div>
+        </footer>
+
+        <BaseLoader v-if="isLoading" text="Reenviando correo..." />
 
     </div>
 </template>

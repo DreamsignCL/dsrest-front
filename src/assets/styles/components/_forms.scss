@@ -1,5 +1,9 @@
 @use '../abstracts' as *;
 
+form {
+    width: 100%;
+}
+
 /*
 --------------------------
 ----------Wrapper---------
@@ -10,11 +14,22 @@
     position: relative;
 }
 
-.form-group {
+.field {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+legend {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
 }
 
 /*
