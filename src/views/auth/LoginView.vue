@@ -132,7 +132,7 @@ const performLogin = async () => {
 
           } else {
 
-            router.push('/platos')
+            router.push('/app/dashboard')
 
           }
 

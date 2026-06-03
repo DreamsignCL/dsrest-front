@@ -1,0 +1,24 @@
+@use '../abstracts' as *;
+
+.dropdown {
+    position: relative;
+
+    .dropdown__menu {
+        position: absolute;
+        right: 0;
+    }
+
+    &.dropdown--main-menu {
+
+        & > button {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .dropdown__menu {
+            background-color: var(--color-primary);
+            border-radius: 1rem;
+            width: 200px;
+        }
+    }
+}

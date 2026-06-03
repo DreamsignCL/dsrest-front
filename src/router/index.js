@@ -54,25 +54,36 @@ const router = createRouter({
       ],
     },
     {
-      path: '/onboarding',
-      component: () => import('@/layouts/OnboardingLayout.vue'),
+      path: '/app',
+      component: () => import('@/layouts/AppLayout.vue'),
+      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
       children: [
         {
-          path: 'local',
-          name: 'onboarding-local',
-          component: () => import('@/views/onboarding/LocalSetupView.vue'),
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('@/views/dashboard/DashboardView.vue'),
         },
         {
-          path: 'first-dish',
-          name: 'onboarding-first-dish',
-          component: () => import('@/views/onboarding/FirstDishView.vue'),
+          path: 'dishes',
+          name: 'dishes',
+          component: () => import('@/views/dishes/DishesView.vue'),
         },
         {
-          path: 'trial-started',
-          name: 'onboarding-trial-started',
-          component: () => import('@/views/onboarding/TrialStartedView.vue'),
+          path: 'dishes/new',
+          name: 'new-dish',
+          component: () => import('@/views/dishes/NewDishView.vue'),
         },
-      ],
+        {
+          path: 'dishes/edit/:id',
+          name: 'edit-dish',
+          component: () => import('@/views/dishes/EditDishView.vue'),
+        },
+        {
+          path: 'clients-attention',
+          name: 'clients-attention',
+          component: () => import('@/views/clients-attention/ClientsAttentionView.vue'),
+        },
+      ]
     },
     {
       path: '/platos',

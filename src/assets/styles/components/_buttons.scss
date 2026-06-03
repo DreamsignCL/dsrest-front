@@ -90,6 +90,22 @@
     --btn-bg: transparent;
     --btn-border: var(--color-primary);
     --btn-color: var(--color-primary);
+
+    &:hover {
+        --btn-bg: var(--color-primary);
+        --btn-color: #fff;
+    }
+}
+
+.btn--outline-white {
+    --btn-bg: transparent;
+    --btn-border: #fff;
+    --btn-color: #fff;
+
+    &:hover {
+        --btn-bg: #fff;
+        --btn-color: var(--color-primary);
+    }
 }
 
 /* Ghost */
