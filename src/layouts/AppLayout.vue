@@ -1,10 +1,13 @@
 <template>
     <main class="layout-app" role="main">
+
         <AppSidebar />
 
-        <div class="content" aria-label="Contenido">
+        <div class="panel" aria-label="Contenido">
             <RouterView v-slot="{ Component }">
-                <transition name="auth-fade" mode="out-in">
+                <transition
+                    name="app-fade"
+                    mode="out-in">
                     <component :is="Component" />
                 </transition>
             </RouterView>
@@ -13,8 +16,18 @@
 </template>
 
 <script setup>
-import { RouterView, useRoute } from 'vue-router'
+import { provide } from 'vue'
+import { RouterView } from 'vue-router'
+import { useCurrentUser } from '@/composables/useCurrentUser'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 
-const route = useRoute()
+const {
+    user,
+    local,
+    token,
+} = useCurrentUser()
+
+provide('currentUser', user)
+provide('currentLocal', local)
+provide('currentToken', token)
 </script>

@@ -13,7 +13,6 @@
                 <div class="logo__image logo__image--dsrest">
                     <img :src="Logo" alt="dsRest" />
                 </div>
-                <div class="separation"></div>
                 <div class="logo__image logo__image--client">
                     <img v-if="local?.foto" :src="local.foto" :alt="local?.nombreFantasia" />
                 </div>
@@ -64,29 +63,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ref, onMounted, onUnmounted, inject } from 'vue'
 import Logo from '@/assets/img/logo.svg'
 import MainMenu from '@/components/layout/MainMenu.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { QrCode, Menu, X } from 'lucide-vue-next'
 
-const local = ref(null)
+const router = useRouter()
 
-onMounted(() => {
-  local.value = JSON.parse(localStorage.getItem('local'))
-})
+const local = inject('currentLocal')
 
+/*
+------ LogOut Button Funcions--------------
+*/
 
 const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     localStorage.removeItem('local')
 
-    window.location.href = '/'
+    router.push('/')
 }
 
 /*
------- Menu Funcions--------------
+------ Dropdown Funcions--------------
 */
 
 const isOpen = ref(false)
