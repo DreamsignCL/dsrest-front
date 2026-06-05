@@ -36,7 +36,7 @@
 
 <script setup>
 
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthHeader from '@/components/auth/AuthHeader.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
@@ -76,83 +76,168 @@ const validateLoginForm = () => {
 
 const performLogin = async () => {
 
-    if (!validateLoginForm()) return
-
-    isLoading.value = true
+    /*
+    |----------------------------------------------------------------------
+    | Reset State
+    |----------------------------------------------------------------------
+    */
 
     loginMessage.value = ''
 
     loginError.value = false
 
-  try {
+    Object.keys(loginErrors).forEach(key => {
+        delete loginErrors[key]
+    })
 
-    const response = await apiService.post(
-      'auth/login',
-      {
-        correo: loginForm.email,
-        contrasena: loginForm.password,
-      }
-    )
+    /*
+    |----------------------------------------------------------------------
+    | Validate Form
+    |----------------------------------------------------------------------
+    */
 
-    localStorage.setItem(
-      'token',
-      response.token
-    )
+    if (!validateLoginForm()) return
 
-    if (response.usuario) {
+    isLoading.value = true
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify(response.usuario)
-      )
+    try {
 
-      const usuarioRolesLocales =
-        response.usuario.usuarioRolesLocales || []
-
-      if (usuarioRolesLocales.length > 0) {
-
-        const selected = {
-          rol: usuarioRolesLocales[0].rol.nombre,
-          local: usuarioRolesLocales[0].local,
-        }
-
-        localStorage.setItem(
-          'local',
-          JSON.stringify(selected.local)
+        const response = await apiService.post(
+            'auth/login',
+            {
+                correo: loginForm.email,
+                contrasena: loginForm.password,
+            }
         )
 
-        loginMessage.value =
-          'Inicio de sesión exitoso'
+        /*
+        |----------------------------------------------------------------------
+        | Save Token
+        |----------------------------------------------------------------------
+        */
 
-        setTimeout(() => {
+        localStorage.setItem(
+            'token',
+            response.token
+        )
 
-          if (selected.rol === 'Garzon') {
+        /*
+        |----------------------------------------------------------------------
+        | Save User
+        |----------------------------------------------------------------------
+        */
 
-            router.push('/garzon')
+        if (response.usuario) {
 
-          } else {
+            localStorage.setItem(
+                'user',
+                JSON.stringify(response.usuario)
+            )
 
-            router.push('/app/dashboard')
+            const usuarioRolesLocales =
+                response.usuario.usuarioRolesLocales || []
 
-          }
+            if (usuarioRolesLocales.length > 0) {
 
-        }, 800)
-      }
+                const selected = {
+                    rol: usuarioRolesLocales[0].rol.nombre,
+                    local: usuarioRolesLocales[0].local,
+                }
+
+                localStorage.setItem(
+                    'local',
+                    JSON.stringify(selected.local)
+                )
+
+                /*
+                |----------------------------------------------------------------------
+                | Success Message
+                |----------------------------------------------------------------------
+                */
+
+                loginError.value = false
+
+                loginMessage.value =
+                    'Inicio de sesión exitoso.'
+
+                /*
+                |----------------------------------------------------------------------
+                | Redirect
+                |----------------------------------------------------------------------
+                */
+
+                setTimeout(() => {
+
+                    if (selected.rol === 'Garzon') {
+
+                        router.push('/garzon')
+
+                    } else {
+
+                        router.push('/app/dashboard')
+
+                    }
+
+                }, 800)
+            }
+        }
+
+    } catch (error) {
+
+        console.error(error)
+
+        loginError.value = true
+
+        /*
+        |----------------------------------------------------------------------
+        | Friendly Messages
+        |----------------------------------------------------------------------
+        */
+
+        const status = error?.response?.status
+
+        if (status === 401) {
+
+            loginMessage.value =
+                'Correo o contraseña incorrectos.'
+
+        } else if (status === 403) {
+
+            loginMessage.value =
+                'Tu cuenta no tiene permisos para acceder.'
+
+        } else if (status === 422) {
+
+            loginMessage.value =
+                'Verifica los datos ingresados.'
+
+        } else {
+
+            loginMessage.value =
+                'No fue posible iniciar sesión. Inténtalo nuevamente.'
+
+        }
+
+    } finally {
+
+        isLoading.value = false
+
     }
-
-  } catch (error) {
-
-    loginError.value = true
-
-    loginMessage.value =
-      error.response?.data?.mensaje ||
-      'Error al iniciar sesión'
-
-  } finally {
-
-    isLoading.value = false
-
-  }
 }
+
+watch(
+    () => [loginForm.email, loginForm.password],
+    () => {
+
+        loginMessage.value = ''
+
+        loginError.value = false
+
+        Object.keys(loginErrors).forEach(key => {
+            delete loginErrors[key]
+        })
+
+    }
+)
 
 </script>

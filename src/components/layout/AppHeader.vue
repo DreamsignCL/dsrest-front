@@ -1,15 +1,10 @@
 <template>
     <header class="panel__header" aria-labelledby="page-title">
         <div class="panel__header-content">
-            <div>
-                <h1 id="page-title">
-                    {{ title }}
-                </h1>
-
-                <p v-if="description">
-                    {{ description }}
-                </p>
-            </div>
+            <h1 id="page-title">
+                <span v-if="beforeText">{{ beforeText }}</span>
+                {{ title }}
+            </h1>
 
             <div v-if="showUserMenu && user" class="dropdown dropdown--user-info">
                 <BaseButton
@@ -25,30 +20,22 @@
                 <transition name="dropdown">
                     <div 
                         v-if="isOpen"
+                        v-click-outside="closeMenu"
                         id="user-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
-                        <div class="user-card">
-                            <div class="user-card__item">
-                                <span>Nombre:</span>
-                                {{ user.nombre }}
-                            </div>
-                            <div class="user-card__item">
-                                <span>Rol:</span>
-                                {{ currentRole }}
-                            </div>
-                            <div class="user-card__item">
-                                <span>Local:</span>
+                        <div class="user-info">
+                            <div class="user-info__item">
                                 {{ local.nombreFantasia }}
                             </div>
+                            <div class="user-info__item">
+                                <span>{{ currentRole }}</span>
+                                {{ user.nombre }}
+                            </div>
+                            <div class="user-info__footer">
+                                <RouterLink to="editar-perfil">Editar perfil</RouterLink>
+                            </div>
                         </div>
-                        <nav>
-                            <ul>
-                                <li>
-                                    <RouterLink to="editar-perfil">Editar perfil</RouterLink>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </transition>
             </div>
@@ -59,8 +46,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, inject, computed } from 'vue'
+import { useDropdown } from '@/composables/useDropdown'
+import { inject, computed } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+
+const {
+    isOpen,
+    toggleMenu,
+    closeMenu
+} = useDropdown()
 
 const props = defineProps({
     title: {
@@ -68,7 +62,7 @@ const props = defineProps({
         default: '',
     },
 
-    description: {
+    beforeText: {
         type: String,
         default: '',
     },
@@ -93,34 +87,6 @@ const currentRole = computed(() => {
     )
 
     return role?.rol?.nombre ?? ''
-})
-
-/*
------- Dropdown Funcions--------------
-*/
-
-const isOpen = ref(false)
-
-const toggleMenu = () => {
-    isOpen.value = !isOpen.value
-}
-
-const closeMenu = () => {
-    isOpen.value = false
-}
-
-const handleEscape = (event) => {
-    if (event.key === 'Escape') {
-        closeMenu()
-    }
-}
-
-onMounted(() => {
-    document.addEventListener('keydown', handleEscape)
-})
-
-onUnmounted(() => {
-    document.removeEventListener('keydown', handleEscape)
 })
 
 </script>

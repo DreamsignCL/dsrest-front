@@ -83,20 +83,35 @@
     
             .panel__header {
                 flex: 0 0 auto;
-                padding: 2rem 2rem 1.5rem;
+                padding: 5rem 2rem 1rem 2rem;
                 border-bottom: 1px solid #e5e7eb;
-                text-align: left;
+                text-align: center;
 
                 .panel__header-content {
                     display: flex;
                     justify-content: space-between;
+                    align-items: center;
+                    
+                    h1 {
+                        margin: 0;
+                        font-size: 1.5rem;
+                        line-height: 1.2;
+                        font-weight: normal;
+                        width: 100%;
+
+                        span {
+                            display: block;
+                            color: var(--color-primary);
+                            font-size: 1rem;
+                            font-weight: bold;
+                        }
+                    }
+
+                    .dropdown {
+                        display: none;
+                    }
                 }
     
-                h1 {
-                    margin: 0 0 .5rem;
-                    font-size: 2rem;
-                    line-height: 1.2;
-                }
             }
     
             .panel__body {
@@ -175,6 +190,34 @@
 
         .panel {
             border-radius: 0;
+
+            .panel__content {
+                .panel__header {
+                    padding: 1rem 2rem;
+                    border-bottom: 1px solid #e5e7eb;
+                    text-align: left;
+
+                    .panel__header-content {
+                        justify-content: space-between;
+                        
+                        h1 {
+                            font-size: 2rem;
+                            font-weight: bold;
+
+                            span {
+                                display: block;
+                                color: var(--color-primary);
+                                font-size: 1rem;
+                            }
+                        }
+
+                        .dropdown {
+                            display: block;
+                        }
+                    }
+        
+                }
+            }
         }
     }
 }

@@ -4,7 +4,6 @@
             <BaseButton
                 type="button"
                 variant="primary"
-                @click="toggleMenu"
                 aria-label="Abrir modal QR">  
                 <QrCode :size="24" aria-hidden="true" />
             </BaseButton>
@@ -37,6 +36,7 @@
                 <transition name="dropdown">
                     <div 
                         v-if="isOpen"
+                        v-click-outside="closeMenu"
                         id="main-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
@@ -66,6 +66,7 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted, onUnmounted, inject } from 'vue'
 import Logo from '@/assets/img/logo.svg'
+import { useDropdown } from '@/composables/useDropdown'
 import MainMenu from '@/components/layout/MainMenu.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { QrCode, Menu, X } from 'lucide-vue-next'
@@ -73,6 +74,12 @@ import { QrCode, Menu, X } from 'lucide-vue-next'
 const router = useRouter()
 
 const local = inject('currentLocal')
+
+const {
+    isOpen,
+    toggleMenu,
+    closeMenu
+} = useDropdown()
 
 /*
 ------ LogOut Button Funcions--------------
@@ -85,33 +92,5 @@ const handleLogout = () => {
 
     router.push('/')
 }
-
-/*
------- Dropdown Funcions--------------
-*/
-
-const isOpen = ref(false)
-
-const toggleMenu = () => {
-    isOpen.value = !isOpen.value
-}
-
-const closeMenu = () => {
-    isOpen.value = false
-}
-
-const handleEscape = (event) => {
-    if (event.key === 'Escape') {
-        closeMenu()
-    }
-}
-
-onMounted(() => {
-    document.addEventListener('keydown', handleEscape)
-})
-
-onUnmounted(() => {
-    document.removeEventListener('keydown', handleEscape)
-})
 
 </script>

@@ -1,9 +1,6 @@
 <template>
     <div class="panel__content">
-        <AppHeader
-            :title="`Hola ${user?.nombre || ''}`"
-            description="Este es el resumen de tu negocio"
-        />
+        <AppHeader :title="user?.nombre || ''" beforeText="Bienvenido(a)" />
 
         <div class="panel__body" aria-label=""></div>
 
