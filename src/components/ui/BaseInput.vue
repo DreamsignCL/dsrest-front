@@ -16,6 +16,7 @@
                 :placeholder="placeholder"
                 :value="modelValue"
                 :required="required"
+                :aria-label="ariaLabel"
                 :aria-describedby="[
                     helper ? `${id}-helper` : null,
                     error ? `${id}-error` : null
@@ -74,6 +75,11 @@ const props = defineProps({
     },
 
     placeholder: {
+        type: String,
+        default: '',
+    },
+
+    ariaLabel: {
         type: String,
         default: '',
     },

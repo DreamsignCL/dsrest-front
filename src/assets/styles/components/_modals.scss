@@ -25,17 +25,32 @@
         border-radius: var(--border-radius-md);
         display: flex;
         flex-direction: column;
-        overflow: hidden;
+        //overflow: hidden;
         z-index: 2;
     }
 
     &__header {
-        padding: 1.5rem;
+        padding: .75rem 1rem;
         border-bottom: 1px solid var(--color-border);
+
+        h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .btn--close {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            position: absolute;
+            top:-10px;
+            right: -10px;
+        }
     }
 
     &__body {
-        padding: 1.5rem;
+        padding: 1rem;
         overflow-y: auto;
         flex: 1;
         display: flex;
@@ -44,10 +59,10 @@
     }
 
     &__footer {
-        padding: 1.5rem;
+        padding: 1rem;
         border-top: 1px solid var(--color-border);
         display:flex;
-        justify-content: space-between;
+        justify-content: center;
         gap: 1rem;
     }
 
@@ -55,6 +70,56 @@
         .modal__footer {
             button{
                 width: 50%;
+            }
+        }
+    }
+
+    /* Size */
+
+    &.modal--sm {
+        .modal__content {
+            max-width: 300px;
+        }
+    }
+
+    /* Color Variants */
+
+    &.modal--primary {
+        .modal__content {
+            .modal__header{
+                h5 {
+                    color: var(--color-primary);
+                }
+            }
+        }
+    }
+
+    &.modal--danger {
+        .modal__content {
+            .modal__header{
+                h5 {
+                    color: var(--color-danger);
+                }
+            }
+        }
+    }
+
+    &.modal--warning {
+        .modal__content {
+            .modal__header{
+                h5 {
+                    color: var(--color-warning);
+                }
+            }
+        }
+    }
+
+    &.modal--success {
+        .modal__content {
+            .modal__header{
+                h5 {
+                    color: var(--color-success);
+                }
             }
         }
     }
@@ -74,4 +139,16 @@
             }
         }
     }
+}
+
+/*Animation*/
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+    transition: 0.25s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
 }

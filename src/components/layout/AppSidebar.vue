@@ -17,7 +17,7 @@
                 </div>
             </div>
 
-            <div class="dropdown dropdown--main-menu">
+            <div class="dropdown dropdown--main-menu" v-click-outside="closeMenu">
                 <BaseButton
                     type="button"
                     variant="primary"
@@ -35,8 +35,7 @@
 
                 <transition name="dropdown">
                     <div 
-                        v-if="isOpen"
-                        v-click-outside="closeMenu"
+                        v-if="isOpen"                        
                         id="main-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
@@ -55,31 +54,42 @@
                 type="button"
                 variant="outline-white"
                 block
-                @click="handleLogout">  
+                @click="showLogoutModal = true">  
                 Cerrar Sesión
             </BaseButton>
         </div>
+
+        <ConfirmModal
+            v-model="showLogoutModal"
+            title="Cerrar sesión"
+            message="¿Estás seguro que deseas cerrar sesión?"
+            confirm-text="Si, cerrar"
+            confirm-variant="primary"
+            size="sm"
+            @confirm="handleLogout"
+        />
     </aside>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted, onUnmounted, inject } from 'vue'
+import { ref, inject } from 'vue'
 import Logo from '@/assets/img/logo.svg'
 import { useDropdown } from '@/composables/useDropdown'
 import MainMenu from '@/components/layout/MainMenu.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import { QrCode, Menu, X } from 'lucide-vue-next'
 
 const router = useRouter()
 
 const local = inject('currentLocal')
 
-const {
-    isOpen,
-    toggleMenu,
-    closeMenu
-} = useDropdown()
+const { isOpen, toggleMenu, closeMenu } = useDropdown({
+    closeOnRouteChange: true
+})
+
+const showLogoutModal = ref(false)
 
 /*
 ------ LogOut Button Funcions--------------

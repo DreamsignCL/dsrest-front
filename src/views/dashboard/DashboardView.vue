@@ -5,15 +5,6 @@
         <div class="panel__body" aria-label=""></div>
 
         <footer class="panel__footer">
-            <div class="panel__actions">
-                <RouterLink class="btn btn--link" to="/register">
-                    Crear cuenta
-                </RouterLink>
-        
-                <RouterLink class="btn btn--link" to="/forgot-password">
-                    ¿Olvidaste tu contraseña?
-                </RouterLink>
-            </div>
             <DsSignature />
         </footer>
     </div>

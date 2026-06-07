@@ -6,7 +6,7 @@
                 {{ title }}
             </h1>
 
-            <div v-if="showUserMenu && user" class="dropdown dropdown--user-info">
+            <div v-if="showUserMenu && user" class="dropdown dropdown--user-info" v-click-outside="closeMenu">
                 <BaseButton
                     type="button"
                     :aria-expanded="isOpen"
@@ -20,7 +20,7 @@
                 <transition name="dropdown">
                     <div 
                         v-if="isOpen"
-                        v-click-outside="closeMenu"
+                        
                         id="user-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
