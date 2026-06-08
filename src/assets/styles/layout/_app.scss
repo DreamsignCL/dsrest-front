@@ -126,6 +126,16 @@
                 flex-direction: column;
                 gap: 1rem;
                 padding: 1rem 1.25rem;
+
+                .panel__actions {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: .5rem;
+
+                    .btn {
+                        width: 100%;
+                    }
+                }
             }
 
             &--items-content {
