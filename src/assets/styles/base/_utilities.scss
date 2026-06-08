@@ -35,3 +35,9 @@
 .full-width {
     width: 100%;
 }
+
+.hide-long-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

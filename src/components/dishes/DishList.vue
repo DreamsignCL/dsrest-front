@@ -15,7 +15,7 @@
             No hay platos registrados.
         </div>
 
-        <DishCard
+        <CardDish
             v-for="dish in dishes"
             :key="dish.id"
             :dish="dish"
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import DishCard from '@/components/dishes/DishCard.vue'
+import CardDish from '@/components/dishes/CardDish.vue'
 
 defineProps({
     dishes: {

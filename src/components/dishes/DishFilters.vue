@@ -4,7 +4,6 @@
             type="button"
             class="btn--filter"
             variant="outline-primary"
-            :aria-expanded="isOpen"
             aria-label="Abrir filtros"
             aria-controls="filters-panel" 
             @click="$emit('openFilters')">
@@ -47,11 +46,3 @@ defineEmits([
     'openFilters',
 ])
 </script>
-
-<style scoped>
-.dish-filters {
-    display: flex;
-    gap: 1rem;
-    align-items: end;
-}
-</style>

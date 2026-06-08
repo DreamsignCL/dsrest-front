@@ -1,6 +1,6 @@
 <template>
   <header>
-    <button class="btn btn-header" type="button" @click="$emit('open-qr')">
+    <button class="btn" type="button" @click="$emit('open-qr')">
       <img src="../assets/img/qrcode-icon.svg" alt="QR Code" />
     </button>
 
