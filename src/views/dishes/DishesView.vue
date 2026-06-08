@@ -1,15 +1,25 @@
 <template>
-    <div class="panel__content">
+    <div class="panel__content panel__content--items-content">
         <AppHeader
             title="Platos"
             description="Administra la carta de tu local"
         />
 
-        <div class="panel__body panel__body--items-content" aria-label="Listado de platos">
+        <div class="panel__body" aria-label="Listado de platos">
             <DishFilters
                 v-model:search="filters.search"
                 @open-filters="showFilterModal = true"
             />
+
+            <div class="table table--dishes">
+                <div class="table-header">
+                    <span>Estado</span>
+                    <span>Imagen</span>
+                    <span>Nombre</span>
+                    <span>Precio</span>
+                    <span>Acciones</span>
+                </div>
+            </div>
 
             <DishList
                 :dishes="filteredDishes"

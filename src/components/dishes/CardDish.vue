@@ -1,18 +1,19 @@
 <template>
     <div 
-        class="card card-item card-item--dish" 
-        
+        class="card card-item card-item--dish"         
         :class="{ active: isOpen, disabled: !dish.estado }"
         ref="card" 
         v-click-outside="closeMenu">
 
-        <label class="switch switch--vertical">
-            <input 
-                type="checkbox"
-                :checked="dish.estado"
-                @change="$emit('toggle-status')" />
-            <span class="slider round"></span>
-        </label>
+        <div class="card__switch">
+            <label class="switch switch--vertical">
+                <input 
+                    type="checkbox"
+                    :checked="dish.estado"
+                    @change="$emit('toggle-status')" />
+                <span class="slider round"></span>
+            </label>
+        </div>
 
         <!-- Button trigger -->
         <div 
@@ -60,7 +61,7 @@
             role="menu">
 
             <button 
-                class="action-btn"
+                class="btn-action btn-action--edit"
                 role="menuitem"
                 aria-label="Editar elemento"
                 @click="$emit('edit')">
@@ -68,7 +69,7 @@
             </button>
 
             <button 
-                class="action-btn"
+                class="btn-action btn-action--delete"
                 role="menuitem"
                 aria-label="Eliminar elemento"
                 @click="$emit('delete')">
@@ -76,7 +77,7 @@
             </button>
 
             <button 
-                class="action-btn"
+                class="btn-action btn-action--close"
                 role="menuitem"
                 aria-label="Cerrar menú"
                 @click="closeMenu">

@@ -23,6 +23,12 @@
                     $event
                 )
             "/>
+            
+        <RouterLink
+            class="btn btn--primary"
+            to="/app/dishes/new">
+            Crear plato
+        </RouterLink>
     </div>
 </template>
 
