@@ -1,14 +1,10 @@
 <template>
     <div class="items-content__list">
-        <div
-            v-if="loading"
-            class="dish-list__loading">
-            Cargando platos...
+        <div v-if="loading">
+            <BaseSkeletonCard v-for="index in 6" :key="index" />
         </div>
 
-        <div
-            v-else-if="!dishes.length"
-            class="dish-list__empty">
+        <div v-else-if="!dishes.length" class="dish-list__empty">
             No hay platos registrados.
         </div>
 
@@ -25,6 +21,7 @@
 
 <script setup>
 import CardDish from '@/components/dishes/CardDish.vue'
+import BaseSkeletonCard from '@/components/ui/BaseSkeletonCard.vue'
 
 defineProps({
     dishes: {

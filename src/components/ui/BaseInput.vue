@@ -16,6 +16,7 @@
                 :placeholder="placeholder"
                 :value="modelValue"
                 :required="required"
+                :disabled="disabled"
                 :aria-label="ariaLabel"
                 :aria-describedby="[
                     helper ? `${id}-helper` : null,
@@ -77,6 +78,11 @@ const props = defineProps({
     placeholder: {
         type: String,
         default: '',
+    },
+
+    disabled: {
+        type: Boolean,
+        default: false,
     },
 
     ariaLabel: {

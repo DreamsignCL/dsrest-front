@@ -39,14 +39,14 @@
                         id="main-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
-                        <MainMenu @navigate="closeMenu" />
+                        <MainMenu @navigate="closeMenu" @logout="openLogoutModal"  />
                     </div>
                 </transition>
             </div>
         </div>
 
         <div class="app-sidebar__body">
-            <MainMenu />
+            <MainMenu @logout="openLogoutModal"/>
         </div>
 
         <div class="app-sidebar__footer">
@@ -66,22 +66,20 @@
             confirm-text="Si, cerrar"
             confirm-variant="primary"
             size="sm"
-            @confirm="handleLogout"
+            @confirm="logout"
         />
     </aside>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
-import Logo from '@/assets/img/logo.svg'
 import { useDropdown } from '@/composables/useDropdown'
+import { useAuth } from '@/composables/useAuth'
 import MainMenu from '@/components/layout/MainMenu.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
+import Logo from '@/assets/img/logo.svg'
 import { QrCode, Menu, X } from 'lucide-vue-next'
-
-const router = useRouter()
 
 const local = inject('currentLocal')
 
@@ -91,16 +89,13 @@ const { isOpen, toggleMenu, closeMenu } = useDropdown({
 
 const showLogoutModal = ref(false)
 
-/*
------- LogOut Button Funcions--------------
-*/
+const openLogoutModal = () => {
 
-const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    localStorage.removeItem('local')
+    closeMenu()
 
-    router.push('/')
+    showLogoutModal.value = true
 }
+
+const { logout } = useAuth()
 
 </script>

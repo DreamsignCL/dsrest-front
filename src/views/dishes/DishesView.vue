@@ -8,7 +8,14 @@
         <div class="panel__body" aria-label="Listado de platos">
             <DishFilters
                 v-model:search="filters.search"
-                @open-filters="showFilterModal = true"
+                @open-filters="openFiltersModal"
+            />
+
+            <DishFiltersModal
+                v-model="showFiltersModal"
+                :filters="filters"
+                :categories="categories"
+                @apply="handleApplyFilters"
             />
 
             <div class="table table--dishes">
@@ -62,14 +69,27 @@ import { useRouter } from 'vue-router'
 
 import AppHeader from '@/components/layout/AppHeader.vue'
 import DsSignature from '@/components/DsSignature.vue'
-
 import DishFilters from '@/components/dishes/DishFilters.vue'
 import DishList from '@/components/dishes/DishList.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
+import DishFiltersModal from '@/components/dishes/DishFiltersModal.vue'
 
 import { apiService } from '@/services/api.service'
 
 const router = useRouter()
+
+const showFiltersModal = ref(false)
+
+const openFiltersModal = () => {
+    showFiltersModal.value = true
+}
+
+const handleApplyFilters = newFilters => {
+    Object.assign(
+        filters,
+        newFilters
+    )
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -89,9 +109,9 @@ const isLoading = ref(true)
 
 const dishes = ref([])
 
-const showDeleteModal = ref(false)
+const categories = ref([])
 
-const showFilterModal = ref(false)
+const showDeleteModal = ref(false)
 
 const dishToDelete = ref(null)
 
@@ -104,7 +124,7 @@ const dishToDelete = ref(null)
 const filters = reactive({
     search: '',
     categories: [],
-    recommended: true,
+    recommended: false,
     sortBy: '',
     sortDirection: 'asc',
 })
@@ -121,17 +141,103 @@ const filteredDishes = computed(() => {
 
     /*
     |--------------------------------------------------------------------------
-    | Search Filter
+    | Search
     |--------------------------------------------------------------------------
     */
 
     if (filters.search.trim()) {
 
-        const query = filters.search.toLowerCase()
+        const query =
+            filters.search.toLowerCase()
 
-        result = result.filter(dish =>
-            dish.nombre?.toLowerCase().includes(query) ||
-            dish.descripcion?.toLowerCase().includes(query)
+        result = result.filter(
+            dish =>
+                dish.nombre
+                    ?.toLowerCase()
+                    .includes(query) ||
+
+                dish.descripcion
+                    ?.toLowerCase()
+                    .includes(query)
+        )
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Categories
+    |--------------------------------------------------------------------------
+    */
+
+    if (filters.categories.length) {
+
+        result = result.filter(
+            dish =>
+                filters.categories.includes(
+                    dish.categoriaPlatoId
+                )
+        )
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sorting
+    |--------------------------------------------------------------------------
+    */
+
+    if (filters.sortBy) {
+
+        result.sort((a, b) => {
+
+            let comparison = 0
+
+            switch (filters.sortBy) {
+
+                case 'name':
+
+                    comparison =
+                        (a.nombre || '')
+                            .localeCompare(
+                                b.nombre || ''
+                            )
+
+                    break
+
+                case 'price':
+
+                    comparison =
+                        (a.precio || 0) -
+                        (b.precio || 0)
+
+                    break
+
+                case 'date':
+
+                    comparison =
+                        new Date(
+                            a.createdAt
+                        ) -
+                        new Date(
+                            b.createdAt
+                        )
+
+                    break
+            }
+
+            return filters.sortDirection === 'desc'
+                ? comparison * -1
+                : comparison
+        })
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recommended
+    |--------------------------------------------------------------------------
+    */
+
+    if (filters.recommended) {
+        result = result.filter(
+            dish => dish.recomendacion_chef
         )
     }
 
@@ -169,6 +275,34 @@ const loadDishes = async () => {
 
         isLoading.value = false
 
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Load Categories
+|--------------------------------------------------------------------------
+*/
+
+const loadCategories = async () => {
+
+    if (!local?.value?.id) return
+
+    try {
+
+        const response =
+            await apiService.get(
+                `categorias-plato?localId=${local.value.id}`
+            )
+
+        categories.value = response
+
+    } catch (error) {
+
+        console.error(
+            'Error loading categories:',
+            error
+        )
     }
 }
 
@@ -264,7 +398,7 @@ const toggleDishStatus = async (dish) => {
 */
 
 onMounted(() => {
-
     loadDishes()
+    loadCategories()
 })
 </script>

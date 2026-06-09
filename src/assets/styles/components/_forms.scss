@@ -6,12 +6,19 @@ form {
 
 /*
 --------------------------
-----------Wrapper---------
+----------Wrappers---------
 --------------------------
 */
 
 .form-control-wrapper {
     position: relative;
+}
+
+.switch-wrapper{
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    cursor: pointer;
 }
 
 .field {
@@ -53,7 +60,8 @@ legend {
 --------------------------
 */
 
-.form-control {
+.form-control,
+.form-select {
     display: block;
     width: 100%;
     padding: .375rem .75rem;
@@ -117,23 +125,36 @@ legend {
     }
 }
 
-/* Textarea */
+/*
+--------------------------
+-------Form Select-------
+--------------------------
+*/
 
-textarea.form-control {
-    min-height: 120px;
-
-    resize: vertical;
-}
-
-/* Select */
-
-select.form-control {
-    cursor: pointer;
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
 }
 
 /*
 --------------------------
--------Checkbox---------
+---------Textarea---------
+--------------------------
+*/
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/*
+--------------------------
+---------Checkbox---------
 --------------------------
 */
 
@@ -200,19 +221,16 @@ select.form-control {
             }
         }
   
-        // Hover
         &:hover{
             .checkbox__box {
                 border-color: var(--color-primary);
             }
         }
   
-        // Focus
         &__input:focus-visible + .checkbox__box {
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
         }
   
-        // Checked
         &__input:checked + .checkbox__box {
             background-color: var(--color-primary);
             border-color: var(--color-primary);
@@ -222,12 +240,10 @@ select.form-control {
             }
         }
   
-        // Active click effect
         &:active &__box {
             transform: scale(0.96);
         }
   
-        // Disabled state
         &--disabled {
             cursor: not-allowed;
             opacity: 0.7;
@@ -242,7 +258,6 @@ select.form-control {
             }
         }
   
-        // Error state
         &--error {
             .checkbox__box {
                 border-color: var(--checkbox-error);
@@ -253,12 +268,102 @@ select.form-control {
                 border-color: var(--checkbox-error);
             }
         }
-  }
+    }
 }
 
 /*
 --------------------------
--------Switch---------
+----------Radio-----------
+--------------------------
+*/
+
+.radio-group {
+    display: flex;
+    gap: .5rem;
+
+    &--horizontal {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    &--vertical {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+.radio {
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    cursor: pointer;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked + .radio__control {
+            border-color: var(--color-primary);
+            background-color: var(--color-primary);
+
+            &::after {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        &:focus-visible + .radio__control {
+            box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), .2);
+        }
+
+        &:disabled + .radio__control {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        &:disabled ~ .radio__label {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.radio__control {
+    position: relative;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d5d9df;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all .2s ease;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #fff;
+        transform: translate(-50%, -50%) scale(.9) !important;
+        opacity: 0;
+        transition: all .2s ease;
+    }
+}
+
+.radio__label {
+    font-size: 1rem;
+    line-height: 1.2;
+    color: var(--color-text);
+}
+
+/*
+--------------------------
+----------Switch----------
 --------------------------
 */
 

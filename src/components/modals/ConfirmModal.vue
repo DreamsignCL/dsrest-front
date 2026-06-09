@@ -14,7 +14,7 @@
                 type="button"
                 variant="outline-primary"
                 size="sm"
-                @click="$emit('cancel')">
+                @click="handleCancel">
                 {{ cancelText }}                
             </BaseButton>
 
@@ -71,10 +71,17 @@ const emit = defineEmits([
     'cancel',
 ])
 
-const handleConfirm = () => {
-
-    emit('confirm')
-
+const closeModal = () => {
     emit('update:modelValue', false)
+}
+
+const handleConfirm = () => {
+    emit('confirm')
+    closeModal()
+}
+
+const handleCancel = () => {
+    emit('cancel')
+    closeModal()
 }
 </script>

@@ -7,7 +7,7 @@
             target="_blank"
             aria-label="Dreamsign">
             <img
-            src="https://dreamsign.cl/assets/logo-dreamsign-BtW70eZV.svg"
+            :src="DreamsignLogo"
             alt="Dreamsign"
             class="ds-logo"
             />
@@ -16,3 +16,7 @@
         <span>2026 - Todos los derechos reservados</span>
     </div>
 </template>
+
+<script setup>
+import DreamsignLogo from '@/assets/img/dreamsign.svg'
+</script>

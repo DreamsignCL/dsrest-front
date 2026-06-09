@@ -5,7 +5,8 @@
                 <RouterLink
                     :to="item.route"
                     class="main-menu__link"
-                    active-class="main-menu__link--active">
+                    active-class="main-menu__link--active"
+                    @click="emit('navigate')">
                     <component
                         :is="item.icon"
                         class="main-menu__icon"
@@ -22,7 +23,7 @@
                 <button
                     class="main-menu__link"
                     type="button"
-                    @click="handleLogout">  
+                    @click="emit('logout')">  
                     <LogOut class="main-menu__icon" :size="18" aria-hidden="true" />
                     <span>Cerrar Sesión</span>
                 </button>
@@ -32,7 +33,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { computed } from 'vue'
 import { usePermissions } from '@/composables/usePermissions'
 import {
@@ -46,8 +46,6 @@ import {
     Tags,
     LogOut,
 } from 'lucide-vue-next'
-
-const router = useRouter()
 
 const {hasRole, hasCategory,} = usePermissions()
 
@@ -133,11 +131,9 @@ const filteredNavigationItems = computed(() => {
     })
 })
 
-const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    localStorage.removeItem('local')
+const emit = defineEmits([
+    'navigate',
+    'logout',
+])
 
-    router.push('/')
-}
 </script>

@@ -124,6 +124,52 @@
             }
         }
     }
+
+    &--skeleton{
+        display: flex;
+        gap: 1rem;
+        padding: .5rem 2rem .5rem .5rem ;
+        border-radius: 12px;
+        background: var(--color-white);
+        border: 1px solid #F0F0F0;
+        border-radius: 1rem;
+        margin-bottom: .5rem;
+
+        .card__image,
+        .card__title,
+        .card__text {
+            background: #ececec;
+            animation: skeleton-loading 1.4s infinite;
+        }
+
+        .card__image {
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+        }
+
+        .card__content {
+            flex: 1;
+        }
+
+        .card__title {
+            height: 12px;
+            width: 60%;
+            margin-bottom: .5rem;
+            border-radius: 4px;
+        }
+
+        .card__text {
+            height: 10px;
+            width: 100%;
+            margin-bottom: .5rem;
+            border-radius: 4px;
+        }
+
+        .card__text--short {
+            width: 70%;
+        }
+    }
 }
 
 @include mq(md) {
@@ -209,5 +255,21 @@
                 }
             }
         }
+    }
+}
+
+/* Animations */
+
+@keyframes skeleton-loading {
+    0% {
+        opacity: .6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: .6;
     }
 }
