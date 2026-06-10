@@ -9,11 +9,9 @@
             </BaseButton>
 
             <div class="logo">
-                <div class="logo__image logo__image--dsrest">
-                    <img :src="Logo" alt="dsRest" />
-                </div>
-                <div class="logo__image logo__image--client">
+                <div class="logo__image">
                     <img v-if="local?.foto" :src="local.foto" :alt="local?.nombreFantasia" />
+                    <img v-else :src="NoLogo" :alt="local?.nombreFantasia" />
                 </div>
             </div>
 
@@ -78,7 +76,7 @@ import { useAuth } from '@/composables/useAuth'
 import MainMenu from '@/components/layout/MainMenu.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
-import Logo from '@/assets/img/logo.svg'
+import NoLogo from '@/assets/img/no-logo.png'
 import { QrCode, Menu, X } from 'lucide-vue-next'
 
 const local = inject('currentLocal')

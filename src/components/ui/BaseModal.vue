@@ -46,8 +46,8 @@
 
 <script setup>
 import { onMounted, onUnmounted, computed } from 'vue'
-import { X } from 'lucide-vue-next'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import { X } from 'lucide-vue-next'
 
 const props = defineProps({
     modelValue: {

@@ -1,16 +1,16 @@
 <template>
     <div class="field">
-        <label class="switch-wrapper" :class="`switch--${variant}`" :for="id">
+        <label class="switch-wrapper" :class="`switch--${variant}`" :for="inputId">
             <span class="switch" :class="`switch--${variant}`">
                 <input
-                    :id="id"
+                    :id="inputId"
                     type="checkbox"
                     :checked="modelValue"
                     :disabled="disabled"
                     :aria-label="label || ariaLabel"
                     :aria-describedby="
                         helper
-                            ? `${id}-helper`
+                            ? `${inputId}-helper`
                             : undefined
                     "
                     @change="updateValue"
@@ -23,14 +23,16 @@
             </span>
         </label>
 
-        <div v-if="helper" :id="`${id}-helper`" class="form-helper">
+        <div v-if="helper" :id="`${inputId}-helper`" class="form-helper">
             {{ helper }}
         </div>
     </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed, useId } from 'vue'
+
+const props = defineProps({
     id: {
         type: String,
         required: true,
@@ -68,6 +70,12 @@ defineProps({
         default: '',
     },
 })
+
+const generatedId = useId()
+
+const inputId = computed(() =>
+    props.id || generatedId
+)
 
 const emit = defineEmits([
     'update:modelValue',

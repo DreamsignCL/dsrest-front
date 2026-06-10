@@ -1,11 +1,11 @@
 <template>
     <div class="field">
-        <label v-if="label" :for="id" class="form-label">
+        <label v-if="label" :for="selectId" class="form-label">
             {{ label }} <span v-if="required" class="form-label__required">*</span>
         </label>
 
         <select
-            :id="id"
+            :id="selectId"
             class="form-select"
             :class="{ 'is-error': error }"
             :value="modelValue"
@@ -13,8 +13,8 @@
             :disabled="disabled"
             :aria-label="ariaLabel"
             :aria-describedby="[
-                helper ? `${id}-helper` : null,
-                error ? `${id}-error` : null
+                helper ? `${selectId}-helper` : null,
+                error ? `${selectId}-error` : null
             ].filter(Boolean).join(' ')"
             :aria-invalid="!!error"
             @change="updateValue">
@@ -31,18 +31,20 @@
             </option>
         </select>
 
-        <div :id="`${id}-helper`" v-if="helper" class="form-helper">
+        <div :id="`${selectId}-helper`" v-if="helper" class="form-helper">
             {{ helper }}
         </div>
         
-        <div v-if="error" :id="`${id}-error`" class="form-error" role="alert">
+        <div v-if="error" :id="`${selectId}-error`" class="form-error" role="alert">
             {{ error }}
         </div>
     </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed, useId } from 'vue'
+
+const props = defineProps({
     id: {
         type: String,
         required: true,
@@ -94,6 +96,12 @@ defineProps({
     },
 
 })
+
+const generatedId = useId()
+
+const selectId = computed(() =>
+    props.id || generatedId
+)
 
 const emit = defineEmits([
     'update:modelValue',

@@ -1,12 +1,12 @@
 <template>
     <div class="field">
-        <label v-if="label" class="form-label" :for="id">
+        <label v-if="label" class="form-label" :for="inputId">
             {{ label }} <span v-if="required" class="form-label__required">*</span>
         </label>
 
         <div class="form-control-wrapper">
             <input
-                :id="id"
+                :id="inputId"
                 class="form-control"
                 :class="{
                     'is-error': error,
@@ -19,8 +19,8 @@
                 :disabled="disabled"
                 :aria-label="ariaLabel"
                 :aria-describedby="[
-                    helper ? `${id}-helper` : null,
-                    error ? `${id}-error` : null
+                    helper ? `${inputId}-helper` : null,
+                    error ? `${inputId}-error` : null
                 ].filter(Boolean).join(' ')"
                 :aria-invalid="!!error"
                 @input="emit('update:modelValue', $event.target.value)"
@@ -30,23 +30,23 @@
                 type="button"
                 class="form-control__icon"
                 @click="togglePassword">
-                <Eye v-if="!showPassword" :size="18" />
-                <EyeOff v-else :size="18" />
+                <Eye v-if="!showPassword" :size="18" aria-hidden="true" />
+                <EyeOff v-else :size="18" aria-hidden="true" />
             </button>
         </div>
 
-        <div :id="`${id}-helper`" v-if="helper" class="form-helper">
+        <div :id="`${inputId}-helper`" v-if="helper" class="form-helper">
             {{ helper }}
         </div>
         
-        <div v-if="error" :id="`${id}-error`" class="form-error" role="alert">
+        <div v-if="error" :id="`${inputId}-error`" class="form-error" role="alert">
             {{ error }}
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 import {Eye,EyeOff,} from 'lucide-vue-next'
 
 const props = defineProps({
@@ -100,6 +100,12 @@ const props = defineProps({
         default: false,
     }
 })
+
+const generatedId = useId()
+
+const inputId = computed(() =>
+    props.id || generatedId
+)
 
 const emit = defineEmits([
     'update:modelValue',

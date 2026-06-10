@@ -1,7 +1,7 @@
 <template>
     <div class="items-content__list">
         <div v-if="loading">
-            <BaseSkeletonCard v-for="index in 6" :key="index" />
+            <SkeletonCardListItem v-for="index in 6" :key="index" />
         </div>
 
         <div v-else-if="!dishes.length" class="dish-list__empty">
@@ -21,7 +21,7 @@
 
 <script setup>
 import CardDish from '@/components/dishes/CardDish.vue'
-import BaseSkeletonCard from '@/components/ui/BaseSkeletonCard.vue'
+import SkeletonCardListItem from '@/components/skeletons/SkeletonCardListItem.vue'
 
 defineProps({
     dishes: {

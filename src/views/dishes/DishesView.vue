@@ -139,6 +139,10 @@ const filteredDishes = computed(() => {
 
     let result = [...dishes.value]
 
+    result.sort(
+        (a, b) => b.id - a.id
+    )
+
     /*
     |--------------------------------------------------------------------------
     | Search
@@ -169,7 +173,6 @@ const filteredDishes = computed(() => {
     */
 
     if (filters.categories.length) {
-
         result = result.filter(
             dish =>
                 filters.categories.includes(
@@ -193,33 +196,15 @@ const filteredDishes = computed(() => {
             switch (filters.sortBy) {
 
                 case 'name':
-
-                    comparison =
-                        (a.nombre || '')
-                            .localeCompare(
-                                b.nombre || ''
-                            )
-
+                    comparison = (a.nombre || '') .localeCompare( b.nombre || '')
                     break
 
                 case 'price':
-
-                    comparison =
-                        (a.precio || 0) -
-                        (b.precio || 0)
-
+                    comparison = (a.precio || 0) - (b.precio || 0)
                     break
 
                 case 'date':
-
-                    comparison =
-                        new Date(
-                            a.createdAt
-                        ) -
-                        new Date(
-                            b.createdAt
-                        )
-
+                    comparison = new Date( a.createdAt ) - new Date( b.createdAt)
                     break
             }
 
@@ -251,16 +236,12 @@ const filteredDishes = computed(() => {
 */
 
 const loadDishes = async () => {
-
     if (!local?.value?.id) {
-
         isLoading.value = false
-
         return
     }
 
     try {
-
         const response = await apiService.get(
             `platos/porlocal/${local.value.id}`
         )
@@ -272,9 +253,7 @@ const loadDishes = async () => {
         console.error('Error loading dishes:', error)
 
     } finally {
-
         isLoading.value = false
-
     }
 }
 
@@ -290,19 +269,12 @@ const loadCategories = async () => {
 
     try {
 
-        const response =
-            await apiService.get(
-                `categorias-plato?localId=${local.value.id}`
-            )
+        const response = await apiService.get(`categorias-plato?localId=${local.value.id}`)
 
         categories.value = response
 
     } catch (error) {
-
-        console.error(
-            'Error loading categories:',
-            error
-        )
+        console.error('Error loading categories:',error)
     }
 }
 
@@ -313,10 +285,7 @@ const loadCategories = async () => {
 */
 
 const editDish = (dish) => {
-
-    router.push(
-        `/app/dishes/edit/${dish.id}`
-    )
+    router.push(`/app/dishes/edit/${dish.id}`)
 }
 
 /*
@@ -326,37 +295,26 @@ const editDish = (dish) => {
 */
 
 const openDeleteModal = (dish) => {
-
     dishToDelete.value = dish
-
     showDeleteModal.value = true
 }
 
 const deleteDish = async () => {
-
     if (!dishToDelete.value) return
 
     try {
 
-        await apiService.delete(
-            `platos/${dishToDelete.value.id}`
-        )
+        await apiService.delete(`platos/${dishToDelete.value.id}`)
 
         dishes.value = dishes.value.filter(
             item => item.id !== dishToDelete.value.id
         )
 
     } catch (error) {
-
-        console.error(
-            'Error deleting dish:',
-            error
-        )
+        console.error('Error deleting dish:', error)
 
     } finally {
-
         showDeleteModal.value = false
-
         dishToDelete.value = null
     }
 }
@@ -373,21 +331,12 @@ const toggleDishStatus = async (dish) => {
 
     try {
 
-        await apiService.put(
-            `platos/${dish.id}`,
-            {
-                estado: newStatus,
-            }
-        )
+        await apiService.put(`platos/${dish.id}`,{ estado: newStatus,})
 
         dish.estado = newStatus
 
     } catch (error) {
-
-        console.error(
-            'Error updating dish status:',
-            error
-        )
+        console.error('Error updating dish status:',error)
     }
 }
 

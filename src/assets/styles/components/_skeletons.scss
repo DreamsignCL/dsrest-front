@@ -1,0 +1,134 @@
+/* --------------------------
+------Skeltons Elements-----
+---------------------------*/
+
+.skeleton-image,
+.skeleton-title,
+.skeleton-text,
+.skeleton-label,
+.skeleton-input,
+.skeleton-text-area {
+    background: #ececec;
+    animation: skeleton-loading 1.4s infinite;
+}
+
+.skeleton-image {
+    /* Size */
+    &--sm {
+        width: 50px;
+        height: 50px;
+    }
+
+    &--md {
+        width: 100px;
+        height: 100px;
+    }
+
+    &--lg {
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Border Radius */
+
+    &--rounded {
+        border-radius: .5rem;
+    }
+
+    &--rounded-circle {
+        border-radius: 100%;
+    }
+}
+
+.skeleton-title {
+    height: 12px;
+    width: 60%;
+    margin-bottom: .5rem;
+    border-radius: 4px;
+}
+
+.skeleton-text {
+    height: 10px;
+    width: 100%;
+    margin-bottom: .5rem;
+    border-radius: 4px;
+
+    &--sm {
+        width: 70%;
+    }
+}
+
+.skeleton-label {
+    height: 15px;
+    width: 40%;
+    border-radius: 4px;
+}
+
+.skeleton-input {
+    height: 38px;
+    width: 100%;
+    border-radius: 100px;
+}
+
+.skeleton-text-area {
+    height: 120px;
+    width: 100%;
+    border-radius: 1rem;
+}
+
+/* --------------------------
+------Skeltons Components-----
+---------------------------*/
+
+.skeleton-card {
+    &--list-item {
+        display: flex;
+        gap: 1rem;
+        padding: .5rem 2rem .5rem .5rem ;
+        border-radius: 12px;
+        background: var(--color-white);
+        border: 1px solid #F0F0F0;
+        border-radius: 1rem;
+        margin-bottom: .5rem;
+    }
+
+    &__content {
+        flex: 1;
+    }
+}
+
+.skeleton-field {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+/* --------------------------
+------Skeltons Views-------
+---------------------------*/
+
+.skeleton-view {
+    &--form {
+        &-image {
+            .skeleton-image-content {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+        }
+    }
+}
+
+/* --------------------------
+------Skeltons Animations----
+---------------------------*/
+
+@keyframes skeleton-loading {
+    0% {opacity: .6;}
+
+    50% {opacity: 1;}
+
+    100% {opacity: .6;}
+}

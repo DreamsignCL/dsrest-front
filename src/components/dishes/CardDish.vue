@@ -28,13 +28,14 @@
             @click="toggleMenu">
 
             <div class="card__image">
-                <img v-if="dish.foto" :src="dish.foto" :alt="dish.nombre">
-    
-                <div v-else class="card__placeholder">
-                    Sin imagen
+                <div class="image">
+                    <img v-if="dish.foto" :src="dish.foto" :alt="dish.nombre">
+                    <img v-else :src="NoImage" alt="Sin logotipo">
                 </div>
 
-                <ChefHat v-if="dish.recomendacion_chef" :size="18" class="card__featured" />
+                <span v-if="dish.recomendacion_chef" class="card__image-icon">
+                    <ChefHat :size="18" aria-hidden="true" />
+                </span>
             </div>
 
             <div class="card__info">
@@ -89,6 +90,7 @@
 
 <script setup>
 import { useDropdown } from '@/composables/useDropdown'
+import NoImage from '@/assets/img/no-image.jpg'
 import { Pencil, Trash2, ChefHat, X,} from 'lucide-vue-next'
 
 const props = defineProps({

@@ -6,16 +6,16 @@
                 'checkbox--disabled': disabled,
                 'checkbox--error': error,
             }"
-            :for="id">
+            :for="inputId">
 
             <input
-                :id="id"
+                :id="inputId"
                 class="checkbox__input"
                 type="checkbox"
                 :checked="modelValue"
                 :disabled="disabled"
                 :aria-invalid="!!error"
-                :aria-describedby="error ? `${id}-error` : undefined"
+                :aria-describedby="error ? `${inputId}-error` : undefined"
                 @change="handleChange"
             />
 
@@ -28,7 +28,7 @@
 
         <span 
             v-if="error" 
-            :id="`${id}-error`" 
+            :id="`${inputId}-error`" 
             class="form-error" 
             role="alert" 
             aria-live="polite">
@@ -38,6 +38,7 @@
 </template>
 
 <script setup>
+import { computed, useId } from 'vue'
 
 const props = defineProps({
     modelValue: {
@@ -65,6 +66,12 @@ const props = defineProps({
         default: '',
     },
 })
+
+const generatedId = useId()
+
+const inputId = computed(() =>
+    props.id || generatedId
+)
 
 const emit = defineEmits([
     'update:modelValue',

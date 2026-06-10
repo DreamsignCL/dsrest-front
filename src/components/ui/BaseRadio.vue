@@ -36,7 +36,7 @@
 
 <script setup>
 
-defineProps({
+const props = defineProps({
     modelValue: {
         type: [String, Number],
         default: '',
