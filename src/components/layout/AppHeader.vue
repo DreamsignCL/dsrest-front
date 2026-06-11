@@ -1,46 +1,74 @@
 <template>
     <header class="panel__header" aria-labelledby="page-title">
         <div class="panel__header-content">
-            <h1 id="page-title">
-                <span v-if="beforeText">{{ beforeText }}</span>
-                {{ title }}
-            </h1>
+            <div class="heading">
+                <h1 id="page-title">
+                    <span v-if="beforeText">
+                        {{ beforeText }}
+                    </span>
 
-            <div v-if="showUserMenu && user" class="dropdown dropdown--user-info" v-click-outside="closeMenu">
+                    {{ title }}
+                </h1>
+
+                <span v-if="description" class="description">
+                    {{ description }}
+                </span>
+            </div>
+
+            <div
+                v-if="showUserMenu && user"
+                class="dropdown dropdown--user-info"
+                v-click-outside="closeMenu">
+
                 <BaseButton
                     type="button"
                     :aria-expanded="isOpen"
                     aria-haspopup="menu"
                     aria-controls="user-menu-dropdown"
-                    :aria-label="isOpen ? 'Cerrar menú' : 'Abrir menú'" 
+                    :aria-label="
+                        isOpen
+                            ? 'Cerrar menú'
+                            : 'Abrir menú'
+                    "
                     @click="toggleMenu">
+
                     <img v-if="local?.foto" :src="local.foto" :alt="local?.nombreFantasia" />
+
+                    <img v-else :src="NoLogo" :alt="local?.nombreFantasia" />
+
                 </BaseButton>
 
                 <transition name="dropdown">
-                    <div 
+                      <div
                         v-if="isOpen"
-                        
                         id="user-menu-dropdown"
                         class="dropdown__menu"
                         role="menu">
+
                         <div class="user-info">
                             <div class="user-info__item">
                                 {{ local.nombreFantasia }}
                             </div>
+
                             <div class="user-info__item">
                                 <span>{{ currentRole }}</span>
                                 {{ user.nombre }}
                             </div>
+
                             <div class="user-info__footer">
-                                <RouterLink to="editar-perfil">Editar perfil</RouterLink>
+                                <RouterLink to="editar-perfil">
+                                    Editar perfil
+                                </RouterLink>
                             </div>
                         </div>
                     </div>
                 </transition>
             </div>
-
         </div>
+
+        <!-- NUEVO SLOT -->
+
+        <slot name="summary" />
 
     </header>
 </template>
@@ -49,6 +77,7 @@
 import { useDropdown } from '@/composables/useDropdown'
 import { inject, computed } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import NoLogo from '@/assets/img/no-logo.png'
 
 const {
     isOpen,
@@ -63,6 +92,11 @@ const props = defineProps({
     },
 
     beforeText: {
+        type: String,
+        default: '',
+    },
+
+    description: {
         type: String,
         default: '',
     },

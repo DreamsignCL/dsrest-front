@@ -63,6 +63,9 @@ const router = createRouter({
           name: 'dashboard',
           component: () => import('@/views/dashboard/DashboardView.vue'),
         },
+
+        //Dishes
+        
         {
           path: 'dishes',
           name: 'dishes',
@@ -78,10 +81,23 @@ const router = createRouter({
           name: 'edit-dish',
           component: () => import('@/views/dishes/EditDishView.vue'),
         },
+
+        //Orders
+        
         {
-          path: 'clients-attention',
-          name: 'clients-attention',
-          component: () => import('@/views/clients-attention/ClientsAttentionView.vue'),
+          path: 'orders',
+          name: 'orders',
+          component: () => import('@/views/orders/OrdersView.vue'),
+        },
+        {
+          path: 'orders/new',
+          name: 'new-order',
+          component: () => import('@/views/orders/NewOrderView.vue'),
+        },
+        {
+          path: 'orders/edit/:id',
+          name: 'edit-order',
+          component: () => import('@/views/orders/EditOrderView.vue'),
         },
       ]
     },

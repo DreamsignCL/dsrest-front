@@ -77,27 +77,33 @@
     
             .panel__header {
                 flex: 0 0 auto;
-                padding: 3.5rem 2rem .5rem 2rem;
+                padding: 3.5rem 1rem .5rem 1rem;
                 border-bottom: 1px solid #e5e7eb;
                 text-align: center;
 
                 .panel__header-content {
                     display: flex;
-                    justify-content: space-between;
+                    justify-content: center;
                     align-items: center;
-                    
-                    h1 {
-                        margin: 0;
-                        font-size: 1.5rem;
-                        line-height: 1.2;
-                        font-weight: normal;
-                        width: 100%;
 
-                        span {
-                            display: block;
-                            color: var(--color-primary);
-                            font-size: 1rem;
-                            font-weight: bold;
+                    .heading {
+                        h1 {
+                            margin: 0;
+                            font-size: 1.5rem;
+                            line-height: 1.2;
+                            font-weight: normal;
+                            width: 100%;
+    
+                            span {
+                                display: block;
+                                color: var(--color-primary);
+                                font-size: 1rem;
+                                font-weight: bold;
+                            }
+                        }
+
+                        span.description {
+                            display: none;
                         }
                     }
 
@@ -163,6 +169,11 @@
                         .btn--primary {
                             display: none;
                         }
+                    }
+
+                    .results-counter {
+                        text-align: center;
+                        font-size: .875rem;
                     }
     
                     .table-header {
@@ -252,15 +263,22 @@
 
                     .panel__header-content {
                         justify-content: space-between;
+                        align-items: center;
                         
-                        h1 {
-                            font-size: 1.5rem;
-                            font-weight: bold;
+                        .heading {
+                            h1 {
+                                font-size: 1.5rem;
+                                font-weight: bold;
+    
+                                span {
+                                    display: block;
+                                    color: var(--color-primary);
+                                    font-size: 1rem;
+                                }
+                            }
 
-                            span {
+                            span.description {
                                 display: block;
-                                color: var(--color-primary);
-                                font-size: 1rem;
                             }
                         }
 

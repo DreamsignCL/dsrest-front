@@ -65,9 +65,16 @@ const navigationItems = [
 
     {
         label: 'Atención Clientes',
+        route: '/app/orders',
+        icon: Users,
+        roles: ['Administrador'],
+    },
+
+    {
+        label: 'Atención Clientes',
         route: '/garzon',
         icon: Users,
-        roles: ['Administrador', 'Garzon'],
+        roles: ['Garzon'],
     },
 
     {
