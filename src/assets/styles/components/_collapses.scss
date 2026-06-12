@@ -4,7 +4,7 @@
     &--order-customer {
         padding: .5rem 1rem;
         border-radius: 1rem;
-        background: #009ee3;
+        background: #d6eafd;
         transition:
             background-color .2s ease,
             box-shadow .2s ease;
@@ -14,7 +14,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: #fff;
+            color: #4c85b6;
 
             &.active {
                 padding-bottom: .5rem ;
@@ -22,7 +22,7 @@
         }
 
         .collapse__body {
-            border-top: 1px solid #fff;
+            border-top: 1px solid #4c85b6;
             padding: 1rem 0 .5rem 0;
             display: flex;
             justify-content: space-between;
