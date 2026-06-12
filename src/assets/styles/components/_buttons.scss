@@ -44,25 +44,27 @@
 
     /* Veriants */
 
-    &.btn--primary {
+    &--primary {
         --btn-bg: var(--color-primary);
         --btn-color: #ffffff;
+        border-color: var(--color-primary);
 
         &:hover {
             --btn-bg: var(--color-primary-dark);
         }
     }
 
-    &.btn--secondary {
+    &--secondary {
         --btn-bg: var(--color-secondary);
         --btn-color: var(--color-dark);
+        border-color: var(--color-secondary);
 
         &:hover {
             --btn-bg: var(--color-secondary-dark);
         }
     }
 
-    &.btn--danger {
+    &--danger {
         --btn-bg: var(--color-danger);
         --btn-color: #ffffff;
 
@@ -71,12 +73,12 @@
         }
     }
 
-    &.btn--warning {
+    &--warning {
         --btn-bg: var(--color-warning);
         --btn-color: var(--color-dark);
     }
 
-    &.btn--link {
+    &--link {
         --btn-bg: transparent;
         --btn-color: var(--color-primary);
         text-decoration: underline;
@@ -84,15 +86,32 @@
 
     /* Ghost */
 
-    &.btn--ghost {
+    &--ghost {
         --btn-bg: transparent;
         --btn-border: transparent;
         --btn-color: var(--color-primary);
     }
 
+    &--add-items {
+        background-color: transparent;
+        border: 1px solid var(--color-gray-dark);
+        color: var(--color-primary);
+        width: 100%;
+        justify-content: space-between;
+
+        .btn__icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--color-gray-dark);
+            border-radius: 2rem;
+            padding: .25rem;
+        }
+    }
+
     /* Outline */
 
-    &.btn--outline-primary {
+    &--outline-primary {
         --btn-bg: transparent;
         --btn-border: var(--color-primary);
         --btn-color: var(--color-primary);
@@ -103,7 +122,18 @@
         }
     }
 
-    &.btn--outline-white {
+    &--outline-secondary {
+        --btn-bg: transparent;
+        --btn-border: var(--color-secondary);
+        --btn-color: var(--color-secondary);
+
+        &:hover {
+            --btn-bg: var(--color-secondary);
+            --btn-color: #fff;
+        }
+    }
+
+    &--outline-white {
         --btn-bg: transparent;
         --btn-border: #fff;
         --btn-color: #fff;
@@ -116,14 +146,14 @@
 
     /* Sizes */
 
-    &.btn--sm {
+    &--sm {
+        min-height: 31px;
         padding: .25rem .5rem;
         font-size: .875rem;
         line-height: 1.25;
-        gap: .375rem;
     }
 
-    &.btn--lg {
+    &--lg {
         padding: .75rem 1.25rem;
         font-size: 1.125rem;
         line-height: 1.5;
@@ -132,7 +162,7 @@
 
     /* Full width */
 
-    &.btn--block {
+    &--block {
         width: 100%;
     }
 }

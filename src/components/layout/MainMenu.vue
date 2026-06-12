@@ -35,6 +35,7 @@
 <script setup>
 import { computed } from 'vue'
 import { usePermissions } from '@/composables/usePermissions'
+import { useBusinessRules } from '@/composables/useBusinessRules'
 import {
     LayoutDashboard,
     UtensilsCrossed,
@@ -48,6 +49,7 @@ import {
 } from 'lucide-vue-next'
 
 const {hasRole, hasCategory,} = usePermissions()
+const { rules } = useBusinessRules()
 
 const navigationItems = [
     {
@@ -101,6 +103,7 @@ const navigationItems = [
         route: '/mesas',
         icon: TableProperties,
         roles: ['Administrador'],
+        requiresTables: true,
     },
 
     {
@@ -112,6 +115,7 @@ const navigationItems = [
             'Categoria 3',
             'Categoria 4',
         ],
+        requiresTables: true,
     },
 
     {
@@ -123,9 +127,12 @@ const navigationItems = [
 ]
 
 const filteredNavigationItems = computed(() => {
-
     return navigationItems.filter(item => {
-
+        
+        const tablesAllowed =
+            !item.requiresTables ||
+            rules.value.usesTables
+        
         const roleAllowed =
             !item.roles ||
             item.roles.some(role => hasRole(role))
@@ -134,7 +141,11 @@ const filteredNavigationItems = computed(() => {
             !item.categories ||
             item.categories.some(category => hasCategory(category))
 
-        return roleAllowed && categoryAllowed
+        return (
+            roleAllowed &&
+            categoryAllowed &&
+            tablesAllowed
+        )
     })
 })
 

@@ -8,10 +8,7 @@
             <input
                 :id="inputId"
                 class="form-control"
-                :class="{
-                    'is-error': error,
-                    'has-icon': type === 'password',
-                }"
+                :class="classes"
                 :type="inputType"
                 :placeholder="placeholder"
                 :value="modelValue"
@@ -98,8 +95,24 @@ const props = defineProps({
     required: {
         type: Boolean,
         default: false,
-    }
+    },
+
+    size: {
+        type: String,
+        default: null,
+        validator: (value) => ['sm', 'lg'].includes(value),
+    },
 })
+
+const classes = computed(() => [
+  'form-control',
+  `form-control--${props.variant}`,
+  props.size ? `form-control--${props.size}` : null,
+  {
+    'is-error': props.error,
+    'has-icon': props.type === 'password',
+  },
+])
 
 const generatedId = useId()
 

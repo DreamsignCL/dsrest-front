@@ -79,4 +79,38 @@
             */
         }
     }
+
+    &--order-totals {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+    
+        .summary__item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: .875rem;
+            border: 2px solid #dadada;
+            padding: .3rem .5rem;
+            border-radius: .5rem;
+            width: 100%;
+
+            background: #EEF7FF;
+            border-color: #D6EAFD;
+
+            .summary__icon {
+                color: #4c85b6;
+            }
+
+            .summary__label {
+                font-size: .73rem;
+                color: #4c85b6;
+            }
+
+            .summary__value {
+                font-size: .8rem;
+            }
+        }
+    }
 }

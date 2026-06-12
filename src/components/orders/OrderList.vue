@@ -1,7 +1,7 @@
 <template>
     <div class="items-content__list">
         <div v-if="loading">
-            <SkeletonCardListItem v-for="index in 6" :key="index" />
+            <SkeletonCardListItem2 v-for="index in 6" :key="index" />
         </div>
 
         <div v-else-if="!orders.length" class="dish-list__empty">
@@ -21,7 +21,7 @@
 
 <script setup>
 import CardOrder from '@/components/orders/CardOrder.vue'
-import SkeletonCardListItem from '@/components/skeletons/SkeletonCardListItem.vue'
+import SkeletonCardListItem2 from '@/components/skeletons/SkeletonCardListItem2.vue'
 
 defineProps({
     orders: {

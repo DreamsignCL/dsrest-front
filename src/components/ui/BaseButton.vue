@@ -19,7 +19,8 @@ const props = defineProps({
 
     size: {
         type: String,
-        default: 'md',
+        default: null,
+        validator: (value) => ['sm', 'lg'].includes(value),
     },
 
     block: {
@@ -46,7 +47,7 @@ const props = defineProps({
 const classes = computed(() => [
     'btn',
     `btn--${props.variant}`,
-    `btn--${props.size}`,
+    props.size ? `btn--${props.size}` : null,
     {
         'btn--block': props.block,
     },

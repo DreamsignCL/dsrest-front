@@ -51,6 +51,7 @@
 
 <script setup>
 import { ref, reactive, computed, inject, onMounted, } from 'vue'
+import { useBusinessRules } from '@/composables/useBusinessRules'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import OrdersSummary from '@/components/orders/OrdersSummary.vue'
 import DsSignature from '@/components/DsSignature.vue'
@@ -60,6 +61,8 @@ import BaseResultsCounter from '@/components/ui/BaseResultsCounter.vue'
 import OrderList from '@/components/orders/OrderList.vue'
 
 import { apiService } from '@/services/api.service'
+
+const { rules } = useBusinessRules()
 
 /*
 |--------------------------------------------------------------------------
@@ -107,10 +110,7 @@ const filters = reactive({
 
 const supportsZones = computed(() => {
 
-    return true
-
-    // Más adelante:
-    // return local.value?.tipo !== 'cafeteria'
+    return rules.value.usesZones
 })
 
 /*
@@ -418,6 +418,8 @@ onMounted(() => {
 
     loadOrders()
 
-    loadZones()
+    if (rules.value.usesZones) {
+        loadZones()
+    }
 })
 </script>
