@@ -198,6 +198,20 @@
                     flex-direction: column;
                     padding: 1rem 1.25rem;
                     gap: .875rem;
+
+                    .order-items {
+                        display: flex;
+                        flex-direction: column;
+                        max-height: 70vh;
+
+                        &__header {}
+
+                        &__list {
+                            height: 90vh;
+                            overflow: auto;
+
+                        }
+                    }
                 }
             }
         }

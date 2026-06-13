@@ -8,13 +8,19 @@
         <div class="panel__body">
             <OrderCustomerCollapse v-model="customerName" />
 
-            <hr aria-hidden="true">
-
-            <OrderItemsSection :items="orderItems" @add="showDishModal = true" />
+            <OrderItemsSection 
+                :items="orderItems" 
+                @add="showDishModal = true" 
+                @increase="increaseQuantity"
+                @decrease="decreaseQuantity"
+                @remove="removeItem"
+            />
 
             <OrderDishSelectorModal
+                title="Agregar platos"
                 v-model="showDishModal"
                 :dishes="dishes"
+                :categories="categories"
                 @confirm="handleAddItems"
             />
         </div>
@@ -68,6 +74,7 @@ const customerName = ref('')
 const showDishModal = ref(false)
 const dishes = ref([])
 const orderItems = ref([])
+const categories = ref([])
 
 /*
 |--------------------------------------------------------------------------
@@ -129,16 +136,74 @@ const loadDishes = async () => {
 
 /*
 |--------------------------------------------------------------------------
+| Categories
+|--------------------------------------------------------------------------
+*/
+
+const loadCategories = async () => {
+
+    if (!local?.value?.id) return
+
+    try {
+
+        const response = await apiService.get(`categorias-plato?localId=${local.value.id}`)
+
+        categories.value = response
+
+    } catch (error) {
+        console.error('Error loading categories:',error)
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
 | Order Items
 |--------------------------------------------------------------------------
 */
 
 const handleAddItems = items => {
     orderItems.value = items
-    console.log(
-        'Items agregados:',
-        orderItems.value
-    )
+}
+
+const increaseQuantity = itemId => {
+    const item =
+        orderItems.value.find(
+            item =>
+                item.id === itemId
+        )
+
+    if (!item) {
+        return
+    }
+
+    item.quantity++
+}
+
+const decreaseQuantity = itemId => {
+    const item =
+        orderItems.value.find(
+            item =>
+                item.id === itemId
+        )
+
+    if (!item) {
+        return
+    }
+
+    item.quantity--
+
+    if (item.quantity <= 0) {
+
+        removeItem(itemId)
+    }
+}
+
+const removeItem = itemId => {
+    orderItems.value =
+        orderItems.value.filter(
+            item =>
+                item.id !== itemId
+        )
 }
 
 /*
@@ -149,5 +214,6 @@ const handleAddItems = items => {
 
 onMounted(() => {
     loadDishes()
+    loadCategories()
 })
 </script>

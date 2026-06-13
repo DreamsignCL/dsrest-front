@@ -23,25 +23,46 @@
             <div
                 v-for="item in items"
                 :key="item.id"
-                class="order-items__card">
+                class="card card-item card-item--order-dish">
 
-                <div class="order-items__info">
-                    <strong>{{ item.name }}</strong>
-
-                    <span>
-                        Cantidad:
-                        {{ item.quantity }}
-                    </span>
+                <div class="card__content">
+                    <div class="card__quantity">
+                        x{{ item.quantity }}
+                    </div>
+    
+                    <div class="card__info">
+                        <div>{{ item.name }}</div>
+                        <div>{{ formatCurrency(item.price) }} | <strong>{{formatCurrency(item.price * item.quantity)}}</strong></div>
+                        <button 
+                            class="btn btn--delete" 
+                            @click="emit('remove', item.id)">
+                            Quitar
+                        </button>
+                    </div>
                 </div>
 
-                <strong>{{ formatCurrency(item.total) }}</strong>
+                <div class="card__actions">
+                    <button
+                        type="button"
+                        class="quantity-btn"
+                        @click="emit('decrease', item.id)">
+                        <Minus aria-hidden="true" />
+                    </button>
+
+                    <button
+                        type="button"
+                        class="quantity-btn"
+                        @click="emit('increase', item.id)">
+                        <Plus aria-hidden="true" />
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 </template>
 
 <script setup>
-import { Plus,} from 'lucide-vue-next'
+import { Plus, Minus} from 'lucide-vue-next'
 
 defineProps({
     items: {
@@ -52,10 +73,12 @@ defineProps({
 
 const emit = defineEmits([
     'add',
+    'increase',
+    'decrease',
+    'remove',
 ])
 
 const formatCurrency = value => {
-
     return Number(value || 0)
         .toLocaleString(
             'es-CL',
@@ -65,11 +88,5 @@ const formatCurrency = value => {
                 maximumFractionDigits: 0,
             }
         )
-}
-
-const openDishModal = () => {
-    console.log(
-        'Abrir modal platos'
-    )
 }
 </script>

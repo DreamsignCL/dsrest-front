@@ -47,7 +47,7 @@ import { computed, useId } from 'vue'
 const props = defineProps({
     id: {
         type: String,
-        required: true,
+        default: '',
     },
 
     label: {

@@ -82,6 +82,130 @@
                 }
             }
         }
+
+        .list-modal {
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+
+            &__header {
+                display: flex;
+                gap: .5rem;
+            }
+            
+            &__body{
+                overflow: auto;
+
+                .list-modal-item {
+                    padding: .5rem 0;
+                    border-bottom: 1px solid var(--color-gray);
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    gap: .5rem;
+                    -webkit-tap-highlight-color: transparent;
+
+                    &__content {
+                        display: flex;
+                        gap: .75rem;
+                        width: 100%;
+
+                        .image {
+                            min-width: 30px;
+                            height: 30px;
+                            border-radius: .5rem;
+                            overflow: hidden;
+                            
+                            img {
+                                width: 30px;
+                                height: 30px;
+                            }
+                        }
+            
+                        .info {
+                            display: block;
+                            text-align: left;
+                            line-height: 1.1;
+                            font-size: .8125rem;
+                            gap: .5rem;
+                        }
+                    }
+
+                    &__price {
+                        min-width: 60px;
+                        font-size: .875rem;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-end;
+                        align-items: center;
+                        text-align: right;
+
+                        .current-price {
+                            color: var(--color-primary);
+                        }
+
+                        .old-price {
+                            font-size: .75rem;
+                            text-decoration: line-through;
+                            color: gray;
+                        }
+                    }
+
+                    &__check {
+                        width: 28px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+
+                        .selector-badge {
+                            position: relative;
+                            width: 28px;
+                            height: 28px;
+
+                            transform-style: preserve-3d;
+                            transition:
+                                transform 400ms cubic-bezier(.34,1.56,.64,1),
+                                background-color 400ms ease;
+
+                            border-radius: 50%;
+                            background: var(--color-primary);
+
+                            &--selected {
+                                transform: rotateY(180deg);
+                                background: var(--color-success);
+                            }
+                        }
+
+                        .selector-badge__face {
+                            position: absolute;
+                            inset: 0;
+
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+                            color: white;
+                            font-weight: 700;
+
+                            backface-visibility: hidden;
+                            -webkit-backface-visibility: hidden;
+                        }
+
+                        .selector-badge__face--front {
+                            transform: rotateY(0deg);
+                        }
+
+                        .selector-badge__face--back {
+                            transform: rotateY(180deg);
+                        }
+                    }
+                }
+            }
+        }
+
+        .list-count {
+            text-align: center;
+        }
     }
 
     &__footer {

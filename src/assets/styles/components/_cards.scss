@@ -227,6 +227,60 @@
 
             }
         }
+
+        &.card-item--order-dish {
+            background-image: none;
+            padding: .5rem;
+            border-radius: 6rem;
+            justify-content: space-between;
+
+            .card__content {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                gap: .5rem;
+
+                .card__quantity {
+                    background-color: var(--color-primary-dark);
+                    min-width: 35px;
+                    height: 35px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 2rem;
+                    color: #fff;
+                }
+    
+                .card__info {
+                    font-size: .875rem;
+
+                    .btn--delete {
+                        background-color: transparent;
+                        color: var(--color-danger);
+                        text-decoration: underline;
+                        padding: 0;
+                    }
+                }
+            }
+
+            .card__actions {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap:.5rem;
+
+                button {
+                    background-color: var(--color-secondary);
+                    border-radius: 100%;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 1rem;
+                }
+            }
+        }
     }
 }
 
