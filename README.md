@@ -1,32 +1,10 @@
 # dsRest Frontend
 
-Sistema POS y gestión de pedidos para restaurantes desarrollado con Vue.js.
-
-## 🚀 Tecnologías utilizadas
-
-- Vue 3
-- Vue Router
-- Vite
-- Bootstrap 5
-- ESLint
-- JavaScript
-- API REST
+Frontend administrativo de dsRest desarrollado con Vue 3, Vue Router, Pinia, Vite y SASS.
 
 ---
 
-# 📦 Instalación del proyecto
-
-Clonar repositorio:
-
-```bash
-git clone URL_DEL_REPOSITORIO
-```
-
-Entrar al proyecto:
-
-```bash
-cd nombre-del-proyecto
-```
+# Instalación
 
 Instalar dependencias:
 
@@ -34,9 +12,7 @@ Instalar dependencias:
 npm install
 ```
 
----
-
-# ▶️ Ejecutar proyecto en desarrollo
+Iniciar entorno de desarrollo:
 
 ```bash
 npm run dev
@@ -44,7 +20,61 @@ npm run dev
 
 ---
 
-# 🏗️ Compilar para producción
+# Tecnologías
+
+* Vue 3
+* Vue Router
+* Pinia
+* Vite
+* SASS
+* ESLint
+* Prettier
+
+---
+
+# Comandos de desarrollo
+
+## Desarrollo
+
+```bash
+npm run dev
+```
+
+Inicia Vite en modo desarrollo.
+
+---
+
+## Desarrollo móvil
+
+```bash
+npm run dev:mobile
+```
+
+Expone el servidor de desarrollo en la red local para pruebas desde dispositivos móviles.
+
+---
+
+## Compilar para producción
+
+```bash
+npm run build
+```
+
+Genera la versión optimizada dentro de:
+
+```text
+dist/
+```
+
+---
+
+## Vista previa de producción
+
+```bash
+npm run preview
+```
+
+Permite probar localmente el resultado generado por:
 
 ```bash
 npm run build
@@ -52,86 +82,283 @@ npm run build
 
 ---
 
-# 🔍 ESLint
-
-Ejecutar revisión ESLint:
+## ESLint
 
 ```bash
 npm run lint
 ```
 
-Corregir automáticamente errores y warnings soportados:
+Ejecuta ESLint y corrige automáticamente los problemas detectados.
 
-```bash
-npm run lint -- --fix
-```
+Uso recomendado:
 
----
-
-# 📝 Exportar resultado ESLint a archivo TXT
-
-Guardar reporte ESLint en un archivo:
-
-```bash
-npm run lint > eslint-report.txt
-```
-
-Guardar también errores:
-
-```bash
-npm run lint > eslint-report.txt 2>&1
-```
-
-Con auto-fix y exportación:
-
-```bash
-npm run lint -- --fix > eslint-fix-report.txt 2>&1
-```
+* Antes de realizar commits.
+* Después de refactorizaciones importantes.
+* Antes de abrir Pull Requests.
 
 ---
 
-# 📁 Estructura general del proyecto
+## Prettier
+
+```bash
+npm run format
+```
+
+Aplica el formato oficial del proyecto sobre:
 
 ```text
 src/
-│
-├── assets/
-├── components/
-├── views/
-├── router/
-├── services/
-├── composables/
-├── helpers/
-└── styles/
 ```
 
-Ver archivo completo: [estructura.txt](./estructura.txt)
+---
+
+## Compilación SASS
+
+```bash
+npm run sass
+```
+
+Compila:
+
+```text
+src/assets/styles/main.scss
+```
+
+hacia:
+
+```text
+src/assets/css/style.css
+```
+
+Características:
+
+* Observa cambios automáticamente.
+* Genera CSS comprimido.
+* No genera source maps.
+* Silencia advertencias de dependencias externas.
 
 ---
 
-# 📌 Notas importantes
+# Flujo de trabajo recomendado
 
-- El proyecto actualmente se encuentra en etapa de desarrollo.
-- ESLint fue incorporado posteriormente al proyecto para mejorar calidad y mantenimiento.
-- Actualmente el proyecto mantiene:
-    - 0 errores ESLint
-    - warnings controlados y pendientes de optimización futura
+Mantener dos terminales abiertas durante el desarrollo.
+
+### Terminal 1
+
+```bash
+npm run dev
+```
+
+### Terminal 2
+
+```bash
+npm run sass
+```
+
+Esto permite:
+
+* Recarga automática de componentes Vue.
+* Compilación automática de estilos SASS.
 
 ---
 
-# 🔮 Mejoras futuras
+# Verificación antes de realizar un commit
 
-- Modularización de componentes grandes
-- Implementación de composables reutilizables
-- Optimización de estados globales
-- Mejoras UX/UI
-- Integración de pagos
-- Impresión de comandas
-- WebSockets / tiempo real
-- Dashboard administrativo
+Ejecutar:
+
+```bash
+npm run lint
+npm run format
+npm run build
+```
+
+Objetivos:
+
+* Detectar errores de sintaxis.
+* Mantener consistencia de formato.
+* Confirmar que la aplicación compila correctamente.
 
 ---
 
-# 👨‍💻 Desarrollo
+# Principios del proyecto
 
-Proyecto desarrollado por Dreamsign.
+## Mobile First
+
+Todas las vistas y componentes deben diseñarse primero para dispositivos móviles y luego adaptarse a escritorio.
+
+---
+
+## Single Source of Truth
+
+Cada dato debe tener un único propietario.
+
+Los componentes hijos reciben información mediante props y notifican cambios mediante emits.
+
+---
+
+## Configuración sobre Convención
+
+El comportamiento de la aplicación debe depender de configuraciones operativas y no de supuestos asociados al tipo de negocio.
+
+Ejemplo:
+
+```js
+useBusinessConfig()
+```
+
+---
+
+## Componentes reutilizables
+
+Antes de crear un nuevo componente se debe evaluar si puede incorporarse al Design System.
+
+---
+
+## Separación de responsabilidades
+
+La estructura del proyecto se organiza en:
+
+```text
+components/ui
+```
+
+Componentes reutilizables y agnósticos al negocio.
+
+```text
+components/layout
+```
+
+Componentes estructurales de la aplicación.
+
+```text
+components/*
+```
+
+Componentes específicos de cada módulo.
+
+---
+
+## Convención CSS
+
+Se utiliza metodología BEM.
+
+Ejemplo:
+
+```text
+app-content
+app-content__header
+app-content__body
+app-content__footer
+```
+
+---
+
+## SASS Centralizado
+
+El proyecto no utiliza estilos SASS embebidos dentro de los componentes.
+
+Toda la capa visual debe mantenerse dentro del Design System ubicado en:
+
+```text
+src/assets/styles/
+```
+
+La compilación genera:
+
+```text
+src/assets/css/style.css
+```
+
+que posteriormente es consumido por la aplicación.
+
+---
+
+# Estructura de documentación
+
+La documentación técnica y arquitectónica del proyecto se encuentra en:
+
+```text
+docs/
+```
+
+## Arquitectura
+
+```text
+docs/architecture.md
+```
+
+Describe la estructura general de la aplicación, layouts y organización de vistas.
+
+---
+
+## Convenciones
+
+```text
+docs/conventions.md
+```
+
+Reglas de nomenclatura, organización de componentes y criterios de desarrollo.
+
+---
+
+## Decisiones de arquitectura
+
+```text
+docs/decisions.md
+```
+
+Registro histórico de decisiones importantes tomadas durante el desarrollo.
+
+---
+
+## Configuración operativa
+
+```text
+docs/business-config.md
+```
+
+Documentación de useBusinessConfig y configuraciones que afectan el comportamiento del sistema.
+
+---
+
+## Gestión de estado
+
+```text
+docs/state-management.md
+```
+
+Reglas para el manejo de estado, props, emits y flujo de datos.
+
+---
+
+## Módulo de pedidos
+
+```text
+docs/orders-module.md
+```
+
+Arquitectura, flujo y decisiones específicas del módulo de pedidos.
+
+---
+
+## Componentes UI
+
+```text
+docs/ui-components.md
+```
+
+Referencia de componentes reutilizables y Design System.
+
+---
+
+# Mantenimiento de la documentación
+
+La documentación forma parte del proyecto.
+
+Toda modificación relevante de arquitectura, componentes reutilizables, configuraciones operativas o patrones de desarrollo debe reflejarse en la carpeta:
+
+```text
+docs/
+```
+
+antes de considerarse finalizada.

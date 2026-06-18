@@ -1,12 +1,14 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { apiService } from '@/services/api.service'
 import InnerHeader from '@/components/InnerHeader.vue'
+import Signature from '@/components/Signature.vue'
 
 const router = useRouter()
 const usuario = ref(null)
 const local = ref(null)
+const empresa = ref(null)
 const isLoading = ref(true)
 const activeTab = ref('personal') // 'personal' or 'business'
 
@@ -15,15 +17,34 @@ const formPersonal = ref({
   nombre: '',
   telefono: '',
   contrasena: '',
-  repetirContrasena: '',
+  repetirContrasena: ''
 })
 
 const formNegocio = ref({
   nombre: '',
   nombreFantasia: '',
   direccion: '',
-  tipo: '',
-  logotipo: null,
+  logotipo: null
+})
+
+const formEmpresa = ref({
+  tipoNegocio: '',
+  usaMesas: 'si',
+  usaNombreCliente: 'no'
+})
+
+// Lista dinámica cargada desde la API
+const tiposNegocio = ref([])
+// Flag para evitar que el watch sobreescriba los valores cargados desde la API
+const cargandoEmpresa = ref(false)
+
+watch(() => formEmpresa.value.tipoNegocio, (nuevoNombre) => {
+  if (cargandoEmpresa.value) return // No autosugerir durante la carga inicial
+  const tipo = tiposNegocio.value.find(t => t.nombre === nuevoNombre)
+  if (tipo) {
+    formEmpresa.value.usaMesas = tipo.sugerenciaUsaMesas || 'si'
+    formEmpresa.value.usaNombreCliente = tipo.sugerenciaUsaNombreCliente || 'no'
+  }
 })
 
 // Imagen de logo preview
@@ -33,12 +54,12 @@ const logoPreview = ref(null)
 const errorMessages = ref({
   personal: {
     contrasena: '',
-    general: '',
+    general: ''
   },
   negocio: {
-    general: '',
+    general: ''
   },
-  success: '',
+  success: ''
 })
 
 const obtenerDatos = async () => {
@@ -53,12 +74,12 @@ const obtenerDatos = async () => {
     formPersonal.value.telefono = userLS?.telefono || ''
 
     // 2. Buscar el local desde localStorage o desde user
-    const localLS = JSON.parse(localStorage.getItem('local'))
+    let localLS = JSON.parse(localStorage.getItem('local'))
     let localEncontrado = null
 
     if (localLS && localLS.id) {
       // Si el local guardado está incompleto, pide el objeto completo a la API
-      if (!localLS.nombreFantasia || !localLS.direccion || !localLS.tipo) {
+      if (!localLS.nombreFantasia || !localLS.direccion) {
         try {
           const localApi = await apiService.get(`locales/${localLS.id}`)
           if (localApi) {
@@ -67,14 +88,14 @@ const obtenerDatos = async () => {
           } else {
             localEncontrado = localLS
           }
-        } catch {
+        } catch (e) {
           localEncontrado = localLS
         }
       } else {
         localEncontrado = localLS
       }
     } else if (userLS?.rolesLocales?.length > 0) {
-      const rolLocal = userLS.rolesLocales.find((rl) => rl.local)
+      const rolLocal = userLS.rolesLocales.find(rl => rl.local)
       if (rolLocal && rolLocal.local) {
         localEncontrado = rolLocal.local
       }
@@ -90,9 +111,7 @@ const obtenerDatos = async () => {
           localEncontrado = localApi
           localStorage.setItem('local', JSON.stringify(localApi))
         }
-      } catch (error) {
-        console.warn('No se pudo cargar información adicional del local', error)
-      }
+      } catch (e) {}
     }
 
     local.value = localEncontrado
@@ -101,7 +120,6 @@ const obtenerDatos = async () => {
       formNegocio.value.nombre = localEncontrado.nombre || ''
       formNegocio.value.nombreFantasia = localEncontrado.nombreFantasia || ''
       formNegocio.value.direccion = localEncontrado.direccion || ''
-      formNegocio.value.tipo = localEncontrado.tipo || ''
       if (localEncontrado.foto) {
         logoPreview.value = localEncontrado.foto
       } else {
@@ -112,7 +130,6 @@ const obtenerDatos = async () => {
       formNegocio.value.nombre = ''
       formNegocio.value.nombreFantasia = ''
       formNegocio.value.direccion = ''
-      formNegocio.value.tipo = ''
       logoPreview.value = null
     }
 
@@ -125,10 +142,31 @@ const obtenerDatos = async () => {
         formPersonal.value.nombre = userData.nombre || ''
         formPersonal.value.telefono = userData.telefono || ''
       }
-    } catch (error) {
-      console.warn('No se pudo refrescar el usuario desde la API', error)
-    }
-  } catch {
+    } catch (e) {}
+
+    // 4. Cargar tipos de negocio disponibles
+    try {
+      const tipos = await apiService.get('tipos-negocio')
+      if (Array.isArray(tipos)) tiposNegocio.value = tipos
+    } catch (e) {}
+
+    // 5. Cargar datos de la empresa (configuración operativa)
+    try {
+      if (local.value?.id) {
+        const empresaData = await apiService.get(`empresas/por-local/${local.value.id}`)
+        if (empresaData) {
+          empresa.value = empresaData
+          cargandoEmpresa.value = true
+          formEmpresa.value.tipoNegocio = empresaData.tipoNegocio || ''
+          formEmpresa.value.usaMesas = empresaData.usaMesas || 'si'
+          formEmpresa.value.usaNombreCliente = empresaData.usaNombreCliente || 'no'
+          await nextTick()
+          cargandoEmpresa.value = false
+        }
+      }
+    } catch (e) {}
+
+  } catch (error) {
     errorMessages.value.personal.general = 'Error al cargar los datos del perfil'
   } finally {
     isLoading.value = false
@@ -147,7 +185,7 @@ const seleccionarLogo = (event) => {
   const file = event.target.files[0]
   if (file) {
     formNegocio.value.logotipo = file
-
+    
     const reader = new FileReader()
     reader.onload = (e) => {
       logoPreview.value = e.target.result
@@ -164,10 +202,8 @@ const guardarDatos = async () => {
   errorMessages.value.negocio.general = ''
 
   try {
-    if (
-      formPersonal.value.contrasena &&
-      formPersonal.value.contrasena !== formPersonal.value.repetirContrasena
-    ) {
+    if (formPersonal.value.contrasena && 
+        formPersonal.value.contrasena !== formPersonal.value.repetirContrasena) {
       errorMessages.value.personal.contrasena = 'Las contraseñas no coinciden'
       isLoading.value = false
       return
@@ -176,7 +212,7 @@ const guardarDatos = async () => {
     if (activeTab.value === 'personal') {
       const datosPersonales = {
         nombre: formPersonal.value.nombre,
-        telefono: formPersonal.value.telefono,
+        telefono: formPersonal.value.telefono
       }
 
       if (formPersonal.value.contrasena) {
@@ -190,7 +226,7 @@ const guardarDatos = async () => {
 
         usuario.value = {
           ...usuario.value,
-          ...datosPersonales,
+          ...datosPersonales
         }
 
         localStorage.setItem('user', JSON.stringify(usuario.value))
@@ -207,34 +243,40 @@ const guardarDatos = async () => {
         nombre: formNegocio.value.nombre || local.value.nombre,
         nombreFantasia: formNegocio.value.nombreFantasia || local.value.nombreFantasia,
         direccion: formNegocio.value.direccion,
-        tipo: formNegocio.value.tipo,
-        foto: logoPreview.value || local.value.foto,
+        tipo: formEmpresa.value.tipoNegocio || local.value.tipo || null,
+        foto: logoPreview.value || local.value.foto
       }
-
-      console.log('🟡 Datos del negocio antes de enviar:', datosNegocio)
 
       await apiService.put(`locales/${local.value.id}`, datosNegocio)
 
-      console.log('✅ Respuesta exitosa de la API. Actualizando local.value...')
-
       local.value = {
         ...local.value,
-        ...datosNegocio,
+        ...datosNegocio
       }
 
-      console.log('🔵 local.value después de la actualización:', local.value)
-
       localStorage.setItem('local', JSON.stringify(local.value))
+
+      // Guardar configuración operativa de la empresa
+      if (empresa.value?.id) {
+        const datosEmpresa = {
+          tipoNegocio: formEmpresa.value.tipoNegocio || null,
+          usaMesas: formEmpresa.value.usaMesas,
+          usaNombreCliente: formEmpresa.value.usaNombreCliente,
+        }
+        const respEmpresa = await apiService.put(`empresas/${empresa.value.id}`, datosEmpresa)
+        if (respEmpresa?.empresa) {
+          empresa.value = { ...empresa.value, ...respEmpresa.empresa }
+        }
+      }
+
       errorMessages.value.success = 'Datos del negocio guardados correctamente'
     }
   } catch (error) {
     console.error('❌ Error al guardar datos:', error)
     if (activeTab.value === 'personal') {
-      errorMessages.value.personal.general =
-        'Error al guardar los datos personales: ' + error.message
+      errorMessages.value.personal.general = 'Error al guardar los datos personales: ' + error.message
     } else {
-      errorMessages.value.negocio.general =
-        'Error al guardar los datos del negocio: ' + error.message
+      errorMessages.value.negocio.general = 'Error al guardar los datos del negocio: ' + error.message
     }
   } finally {
     isLoading.value = false
@@ -270,18 +312,16 @@ onMounted(() => {
 
         <div class="page-content__body">
           <div class="tabs">
-            <div
-              class="tab"
-              :class="{ active: activeTab === 'personal' }"
-              @click="cambiarTab('personal')"
-            >
+            <div 
+              class="tab" 
+              :class="{ active: activeTab === 'personal' }" 
+              @click="cambiarTab('personal')">
               Datos personales
             </div>
-            <div
-              class="tab"
-              :class="{ active: activeTab === 'business' }"
-              @click="cambiarTab('business')"
-            >
+            <div 
+              class="tab" 
+              :class="{ active: activeTab === 'business' }" 
+              @click="cambiarTab('business')">
               Datos del negocio
             </div>
           </div>
@@ -295,90 +335,70 @@ onMounted(() => {
                 {{ errorMessages.success }}
               </div>
 
-              <button
+              <button 
                 class="btn btn-outline-primary rounded-pill"
-                @click="errorMessages.success = ''"
-              >
+                @click="errorMessages.success = ''">
                 Volver al formulario
               </button>
             </div>
-
+            
             <!-- Formulario datos personales -->
-            <form
-              v-if="activeTab === 'personal' && !errorMessages.success"
-              @submit.prevent="guardarDatos"
-            >
+            <form v-if="activeTab === 'personal' && !errorMessages.success" @submit.prevent="guardarDatos">
               <div class="form-container form-container--no-header">
                 <div class="form-container__body">
                   <!-- RUT -->
                   <div class="mb-3">
                     <label class="form-label" for="user-rut">RUT</label>
-                    <input
-                      id="user-rut"
-                      class="form-control"
-                      type="text"
-                      :value="usuario?.rut || 'No disponible'"
-                      aria-label="Campo de RUT deshabilitado"
-                      disabled
-                      readonly
-                    />
+                    <input id="user-rut" class="form-control" type="text" :value="usuario?.rut || 'No disponible'" aria-label="Campo de RUT deshabilitado" disabled readonly>
                   </div>
 
                   <!-- Email -->
                   <div class="mb-3">
                     <label class="form-label" for="user-email">Correo electrónico</label>
-                    <input
-                      id="user-email"
-                      class="form-control"
-                      type="text"
-                      :value="usuario?.correo || 'No disponible'"
-                      aria-label="Campo de Correo deshabilitado"
-                      disabled
-                      readonly
-                    />
+                    <input id="user-email" class="form-control" type="text" :value="usuario?.correo || 'No disponible'" aria-label="Campo de Correo deshabilitado" disabled readonly>
                   </div>
 
                   <!-- Nombre -->
                   <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre</label>
-                    <input
-                      id="nombre"
-                      v-model="formPersonal.nombre"
-                      type="text"
-                      class="form-control"
+                    <input 
+                      type="text" 
+                      id="nombre" 
+                      v-model="formPersonal.nombre" 
+                      class="form-control" 
                       placeholder="Nombre completo"
                     />
                   </div>
 
                   <div class="mb-3">
                     <label for="telefono" class="form-label">Teléfono</label>
-                    <input
-                      id="telefono"
-                      v-model="formPersonal.telefono"
-                      type="tel"
-                      class="form-control"
+                    <input 
+                      type="tel" 
+                      id="telefono" 
+                      v-model="formPersonal.telefono" 
+                      class="form-control" 
                       placeholder="Teléfono de contacto"
                     />
                   </div>
 
                   <div class="mb-3">
                     <label for="contrasena" class="form-label">Contraseña</label>
-                    <input
-                      id="contrasena"
-                      v-model="formPersonal.contrasena"
-                      type="password"
-                      class="form-control"
+                    <input 
+                      type="password" 
+                      id="contrasena" 
+                      v-model="formPersonal.contrasena" 
+                      class="form-control" 
                       placeholder="Dejar en blanco para mantener"
                     />
                   </div>
 
                   <div class="mb-3">
                     <label for="repetirContrasena" class="form-label">Repetir contraseña</label>
-                    <input
-                      id="repetirContrasena"
-                      v-model="formPersonal.repetirContrasena"
-                      type="password"
-                      class="form-control"
+                    <input 
+                      type="password" 
+                      id="repetirContrasena" 
+                      v-model="formPersonal.repetirContrasena" 
+                      class="form-control" 
                       placeholder="Confirmar contraseña"
                     />
                     <div v-if="errorMessages.personal.contrasena" class="error-message">
@@ -392,11 +412,7 @@ onMounted(() => {
                 </div>
 
                 <div class="form-container__footer">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-block rounded-pill"
-                    @click="volver"
-                  >
+                  <button type="button" class="btn btn-outline-primary btn-block rounded-pill" @click="volver">
                     Volver
                   </button>
                   <button type="submit" class="btn btn-primary btn-block rounded-pill">
@@ -405,49 +421,30 @@ onMounted(() => {
                 </div>
               </div>
             </form>
-
+            
             <!-- Formulario datos del negocio -->
-            <form
-              v-if="activeTab === 'business' && !errorMessages.success"
-              @submit.prevent="guardarDatos"
-            >
+            <form v-if="activeTab === 'business' && !errorMessages.success" @submit.prevent="guardarDatos">
               <div class="form-container form-container--no-header">
                 <div class="form-container__body">
                   <!-- RUT -->
                   <div class="mb-3">
                     <label class="form-label" for="company-rut">RUT empresa</label>
-                    <input
-                      id="company-rut"
-                      class="form-control"
-                      type="text"
-                      :value="local?.rut || 'No disponible'"
-                      aria-label="Campo de RUT deshabilitado"
-                      disabled
-                      readonly
-                    />
+                    <input id="company-rut" class="form-control" type="text" :value="local?.rut || 'No disponible'" aria-label="Campo de RUT deshabilitado" disabled readonly>
                   </div>
 
                   <!-- Razón social -->
                   <div class="mb-3">
                     <label class="form-label" for="company-name">Razón social</label>
-                    <input
-                      id="company-name"
-                      class="form-control"
-                      type="text"
-                      :value="local?.nombre || 'No disponible'"
-                      aria-label="Campo de Razón social deshabilitado"
-                      disabled
-                      readonly
-                    />
+                    <input id="company-name" class="form-control" type="text" :value="local?.nombre || 'No disponible'" aria-label="Campo de Razón social deshabilitado" disabled readonly>
                   </div>
-
+                  
                   <div class="mb-3">
                     <label for="nombreFantasia" class="form-label">Nombre de fantasía</label>
-                    <input
-                      id="nombreFantasia"
-                      v-model="formNegocio.nombreFantasia"
-                      type="text"
-                      class="form-control"
+                    <input 
+                      type="text" 
+                      id="nombreFantasia" 
+                      v-model="formNegocio.nombreFantasia" 
+                      class="form-control" 
                       placeholder="Nombre de fantasía del local"
                     />
                   </div>
@@ -455,29 +452,14 @@ onMounted(() => {
                   <div class="mb-3">
                     <label class="form-label">Logotipo</label>
                     <div class="file-upload">
-                      <input
-                        id="foto"
-                        type="file"
-                        accept="image/*"
-                        class="file-upload__input"
-                        @change="seleccionarLogo"
-                      />
+                      <input type="file" accept="image/*" id="foto" @change="seleccionarLogo" class="file-upload__input" />
                       <label for="foto" class="file-upload__label">
                         <div v-if="logoPreview" class="file-upload__preview">
                           <img :src="logoPreview" alt="Vista previa" />
                         </div>
                         <div v-else class="file-upload__placeholder">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M12 5v14"></path>
                             <path d="M5 12h14"></path>
                           </svg>
@@ -508,42 +490,52 @@ onMounted(() => {
                     />
                   </div>
                   -->
-
+                  
                   <div class="mb-3">
                     <label for="direccion" class="form-label">Dirección</label>
-                    <input
-                      id="direccion"
-                      v-model="formNegocio.direccion"
-                      type="text"
-                      class="form-control"
+                    <input 
+                      type="text" 
+                      id="direccion" 
+                      v-model="formNegocio.direccion" 
+                      class="form-control" 
                       placeholder="Dirección del negocio"
                     />
                   </div>
+                  
+                  <div class="mb-3">
+                    <label for="tipoNegocio" class="form-label">Tipo de negocio</label>
+                    <select id="tipoNegocio" class="form-select" v-model="formEmpresa.tipoNegocio">
+                      <option value="">Sin especificar</option>
+                      <option v-for="tipo in tiposNegocio" :key="tipo.id" :value="tipo.nombre">{{ tipo.nombre }}</option>
+                    </select>
+                    <small class="form-text text-muted">Al seleccionar un tipo se sugieren valores automáticamente.</small>
+                  </div>
 
                   <div class="mb-3">
-                    <label for="tipo" class="form-label">Tipo</label>
-                    <select id="tipo" v-model="formNegocio.tipo" class="form-select">
-                      <option value="" disabled>Selecciona tipo</option>
-                      <option value="Restaurant">Restaurant</option>
-                      <option value="Café">Café</option>
-                      <option value="Bar">Bar</option>
-                      <option value="Comida Rápida">Comida Rápida</option>
-                      <option value="Pizzería">Pizzería</option>
-                      <option value="Sushi">Sushi</option>
-                      <option value="otro">Otro</option>
+                    <label for="usaMesas" class="form-label">¿Usa mesas?</label>
+                    <select id="usaMesas" class="form-select" v-model="formEmpresa.usaMesas">
+                      <option value="si">Sí</option>
+                      <option value="no">No</option>
+                      <option value="opcional">Opcional</option>
                     </select>
                   </div>
 
+                  <div class="mb-3">
+                    <label for="usaNombreCliente" class="form-label">¿Usa nombre de cliente?</label>
+                    <select id="usaNombreCliente" class="form-select" v-model="formEmpresa.usaNombreCliente">
+                      <option value="si">Sí</option>
+                      <option value="no">No</option>
+                      <option value="opcional">Opcional</option>
+                    </select>
+                  </div>
+                  <!-- Fin configuración operativa -->
+                  
                   <div v-if="errorMessages.negocio.general" class="alert alert-danger">
                     {{ errorMessages.negocio.general }}
                   </div>
                 </div>
                 <div class="form-container__footer">
-                  <button
-                    type="button"
-                    class="btn btn-outline-primary btn-block rounded-pill"
-                    @click="volver"
-                  >
+                  <button type="button" class="btn btn-outline-primary btn-block rounded-pill" @click="volver">
                     Volver
                   </button>
                   <button type="submit" class="btn btn-primary btn-block rounded-pill">

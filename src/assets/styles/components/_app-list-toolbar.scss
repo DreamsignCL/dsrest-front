@@ -1,0 +1,61 @@
+@use '../abstracts' as *;
+
+.list-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: .5rem;
+
+    &__top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+    }
+
+    &__controls {
+        display: flex;
+        flex: 1;
+        gap: .75rem;
+
+        .field {
+            margin: 0;
+            width: 100%;
+        }
+    }
+    
+    &__meta {
+        width: 100%;
+        text-align: center;
+    }
+
+    &__actions {
+        display: none;
+    }
+
+    &__header {
+        display: none;
+    }
+}
+
+@include mq(md) {
+    .list-toolbar {
+        &__top {
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+    
+        &__meta {
+            width: auto;
+            white-space: nowrap;
+        }
+    
+        &__actions {
+            display: flex;
+            margin-left: auto;
+        }
+    
+        &__header {
+            display: block;
+        }
+    }
+}

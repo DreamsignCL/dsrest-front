@@ -18,12 +18,17 @@ const plato = ref({
   precio_comparacion: '',
   categoria: '',
   recomendacion_chef: false,
-  localId: null,
+  localId: null
 })
 
 const fotoPreview = ref(null)
 
-const categorias = ['Entrada', 'Plato de fondo', 'Postre', 'Bebida']
+const categorias = [
+  'Entrada',
+  'Plato de fondo',
+  'Postre',
+  'Bebida'
+]
 
 // Nueva referencia para almacenar la lista de platos
 const platos = ref([])
@@ -118,17 +123,15 @@ const comprimirImagen = (base64Image, maxWidth = 600, quality = 0.6) => {
 const handleFotoChange = (event) => {
   const file = event.target.files[0]
   if (file) {
-    if (file.size > 5000000) {
-      // 5MB
-      errorMessage.value =
-        'La imagen es demasiado grande. Por favor seleccione una imagen más pequeña.'
+    if (file.size > 5000000) { // 5MB
+      errorMessage.value = 'La imagen es demasiado grande. Por favor seleccione una imagen más pequeña.'
       return
     }
 
     const reader = new FileReader()
     reader.onload = (e) => {
       const base64String = e.target.result
-      comprimirImagen(base64String).then((imagenComprimida) => {
+      comprimirImagen(base64String).then(imagenComprimida => {
         fotoPreview.value = imagenComprimida
         plato.value.foto = imagenComprimida
       })
@@ -138,12 +141,7 @@ const handleFotoChange = (event) => {
 }
 
 const guardarPlato = async () => {
-  if (
-    !plato.value.nombre ||
-    !plato.value.descripcion ||
-    !plato.value.precio ||
-    !plato.value.categoria
-  ) {
+  if (!plato.value.nombre || !plato.value.descripcion || !plato.value.precio || !plato.value.categoria) {
     errorMessage.value = 'Por favor complete todos los campos obligatorios'
     return
   }
@@ -166,6 +164,10 @@ const guardarPlato = async () => {
 
 const irAAdmin = () => {
   router.push('/platos')
+}
+
+const cargarOtroPlato = () => {
+  router.push('/platos/nuevo')
 }
 
 onMounted(() => {
@@ -192,9 +194,7 @@ onMounted(() => {
           <div class="content">
             <div class="content-header pt-5 pb-4">
               <h2 class="fw-normal">¡Crea tu primer plato!</h2>
-              <p v-if="local?.nombre" class="text-muted">
-                Para: {{ local.nombreFantasia || local.nombre }}
-              </p>
+              <p v-if="local?.nombre" class="text-muted">Para: {{ local.nombreFantasia || local.nombre }}</p>
             </div>
 
             <div v-if="errorMessage" class="alert alert-danger">
@@ -208,34 +208,20 @@ onMounted(() => {
             </div>
 
             <div v-else class="content-body">
-              <form class="form" @submit.prevent="guardarPlato">
+              <form @submit.prevent="guardarPlato" class="form">
                 <!-- Foto -->
                 <div class="mb-4">
                   <label class="form-label">Foto</label>
                   <div class="file-upload">
-                    <input
-                      id="foto"
-                      type="file"
-                      accept="image/*"
-                      class="file-upload-input"
-                      @change="handleFotoChange"
-                    />
+                    <input type="file" accept="image/*" id="foto" @change="handleFotoChange"
+                      class="file-upload-input" />
                     <label for="foto" class="file-upload-label">
                       <div v-if="fotoPreview" class="file-upload-preview">
                         <img :src="fotoPreview" alt="Vista previa" />
                       </div>
                       <div v-else class="file-upload-placeholder">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M12 5v14"></path>
                           <path d="M5 12h14"></path>
                         </svg>
@@ -247,52 +233,29 @@ onMounted(() => {
                 <!-- Nombre -->
                 <div class="mb-4">
                   <label for="nombre" class="form-label">Nombre</label>
-                  <input
-                    id="nombre"
-                    v-model="plato.nombre"
-                    type="text"
-                    placeholder="Nombre del plato"
-                    class="form-control"
-                    required
-                  />
+                  <input type="text" id="nombre" v-model="plato.nombre" placeholder="Nombre del plato"
+                    class="form-control" required />
                 </div>
 
                 <!-- Descripción -->
                 <div class="mb-4">
                   <label for="descripcion" class="form-label">Descripción</label>
-                  <textarea
-                    id="descripcion"
-                    v-model="plato.descripcion"
-                    placeholder="Descripción del plato"
-                    class="form-control"
-                    rows="3"
-                    required
-                  ></textarea>
+                  <textarea id="descripcion" v-model="plato.descripcion" placeholder="Descripción del plato"
+                    class="form-control" rows="3" required></textarea>
                 </div>
 
                 <!-- Precio -->
                 <div class="mb-4">
                   <label for="precio" class="form-label">Precio</label>
-                  <input
-                    id="precio"
-                    v-model="plato.precio"
-                    type="number"
-                    placeholder="Precio en pesos"
-                    class="form-control"
-                    required
-                  />
+                  <input type="number" id="precio" v-model="plato.precio" placeholder="Precio en pesos"
+                    class="form-control" required />
                 </div>
 
                 <!-- Precio de comparación -->
                 <div class="mb-4">
                   <label for="precio_comparacion" class="form-label">Precio de comparación</label>
-                  <input
-                    id="precio_comparacion"
-                    v-model="plato.precio_comparacion"
-                    type="number"
-                    placeholder="Precio anterior (opcional)"
-                    class="form-control"
-                  />
+                  <input type="number" id="precio_comparacion" v-model="plato.precio_comparacion"
+                    placeholder="Precio anterior (opcional)" class="form-control" />
                 </div>
 
                 <!-- Categoría -->
@@ -300,11 +263,7 @@ onMounted(() => {
                   <label for="categoria" class="form-label">Categoría</label>
                   <select id="categoria" v-model="plato.categoria" class="form-select" required>
                     <option value="" disabled selected>Selecciona categoría</option>
-                    <option
-                      v-for="categoria in categorias"
-                      :key="categoria"
-                      :value="categoria.toLowerCase()"
-                    >
+                    <option v-for="categoria in categorias" :key="categoria" :value="categoria.toLowerCase()">
                       {{ categoria }}
                     </option>
                   </select>
@@ -314,7 +273,7 @@ onMounted(() => {
                 <div class="switch-group">
                   <label class="form-label">Recomendación del chef</label>
                   <label class="switch">
-                    <input v-model="plato.recomendacion_chef" type="checkbox" />
+                    <input type="checkbox" v-model="plato.recomendacion_chef">
                     <span class="slider round"></span>
                   </label>
                 </div>
@@ -322,11 +281,7 @@ onMounted(() => {
                 <div class="content-footer">
                   <div class="d-grid gap-2">
                     <!-- Submit button -->
-                    <button
-                      type="submit"
-                      class="btn btn-primary rounded-pill"
-                      :disabled="isLoading"
-                    >
+                    <button type="submit" class="btn btn-primary rounded-pill" :disabled="isLoading">
                       {{ isLoading ? 'Guardando...' : 'Cargar' }}
                     </button>
                   </div>
@@ -340,5 +295,5 @@ onMounted(() => {
   </div>
 
   <!-- Modal QR -->
-  <QrModal :is-open="showQrModal" :local-nombre="localNombre" @close="irAAdmin" />
+  <QrModal :isOpen="showQrModal" :localNombre="localNombre" @close="irAAdmin" />
 </template>

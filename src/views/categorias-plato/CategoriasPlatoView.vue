@@ -30,7 +30,7 @@ const obtenerCategorias = async () => {
   if (!localId.value) return
   try {
     const res = await apiService.get(`categorias-plato?localId=${localId.value}`)
-    categorias.value = res.map((cat) => ({ ...cat, isActive: false }))
+    categorias.value = res.map(cat => ({ ...cat, isActive: false }))
   } catch (error) {
     console.error('Error al obtener categorías:', error)
   } finally {
@@ -41,11 +41,13 @@ const obtenerCategorias = async () => {
 const categoriasFiltradas = computed(() => {
   if (!searchQuery.value.trim()) return categorias.value
   const query = searchQuery.value.toLowerCase()
-  return categorias.value.filter((cat) => cat.nombre.toLowerCase().includes(query))
+  return categorias.value.filter(cat =>
+    cat.nombre.toLowerCase().includes(query)
+  )
 })
 
 const toggleItemActive = (categoria) => {
-  categorias.value.forEach((c) => {
+  categorias.value.forEach(c => {
     if (c.id !== categoria.id) c.isActive = false
   })
   categoria.isActive = !categoria.isActive
@@ -54,7 +56,7 @@ const toggleItemActive = (categoria) => {
 const toggleEstado = async (categoria) => {
   try {
     await apiService.patch(`categorias-plato/${categoria.id}/estado`, {
-      localId: localId.value,
+      localId: localId.value
     })
     await obtenerCategorias()
   } catch (error) {
@@ -72,12 +74,8 @@ const editarCategoria = (id) => {
   router.push(`/categorias-plato/${id}/editar`)
 }
 
-const abrirQrModal = () => {
-  showQrModal.value = true
-}
-const cerrarQrModal = () => {
-  showQrModal.value = false
-}
+const abrirQrModal = () => { showQrModal.value = true }
+const cerrarQrModal = () => { showQrModal.value = false }
 
 const localNombre = computed(() => {
   const localStr = localStorage.getItem('local')
@@ -120,10 +118,10 @@ onMounted(() => {
             <form>
               <input
                 id="search"
-                v-model="searchQuery"
                 class="form-control"
                 type="search"
                 placeholder="Buscar..."
+                v-model="searchQuery"
               />
             </form>
           </div>
@@ -136,11 +134,11 @@ onMounted(() => {
             </div>
 
             <button
-              v-for="categoria in categoriasFiltradas"
               v-else
-              :key="categoria.id"
+              v-for="categoria in categoriasFiltradas"
               class="element-item"
               type="button"
+              :key="categoria.id"
               :class="{ active: categoria.isActive }"
               :style="{ opacity: categoria.estado ? 1 : 0.5 }"
               @click="toggleItemActive(categoria)"
@@ -165,11 +163,7 @@ onMounted(() => {
                 <button class="btn btn-option" @click.stop="editarCategoria(categoria.id)">
                   <img src="../../assets/img/edit-icon.svg" alt="Editar" />
                 </button>
-                <button
-                  v-if="categoria.estado"
-                  class="btn btn-option"
-                  @click.stop="toggleEstado(categoria)"
-                >
+                <button v-if="categoria.estado" class="btn btn-option" @click.stop="toggleEstado(categoria)">
                   <img src="../../assets/img/delete-icon.svg" alt="Desactivar" />
                 </button>
                 <button class="btn btn-option" @click.stop="categoria.isActive = false">
@@ -191,12 +185,7 @@ onMounted(() => {
       </div>
     </main>
 
-    <QrModal
-      :is-open="showQrModal"
-      :local-nombre="localNombre"
-      :local-foto="local?.foto"
-      @close="cerrarQrModal"
-    />
+    <QrModal :isOpen="showQrModal" :localNombre="localNombre" :localFoto="local?.foto" @close="cerrarQrModal" />
 
     <ConfirmModal
       :show="showConfirmModal"

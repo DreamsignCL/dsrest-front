@@ -138,10 +138,10 @@ onMounted(async () => {
             <form @submit.prevent>
               <input
                 id="search"
-                v-model="searchQuery"
                 class="form-control"
                 type="search"
                 placeholder="Buscar..."
+                v-model="searchQuery"
               />
             </form>
           </div>
@@ -155,11 +155,11 @@ onMounted(async () => {
             </div>
 
             <button
-              v-for="categoria in categoriasFiltradas"
               v-else
-              :key="categoria.id"
+              v-for="categoria in categoriasFiltradas"
               class="element-item"
               type="button"
+              :key="categoria.id"
               :class="{ active: categoria.isActive }"
               :style="{ opacity: categoria.estado ? 1 : 0.5 }"
               @click="toggleItemActive(categoria)"
@@ -184,11 +184,7 @@ onMounted(async () => {
                 <button class="btn btn-option" @click.stop="abrirEditarCategoria(categoria)">
                   <img src="../assets/img/edit-icon.svg" alt="Editar" />
                 </button>
-                <button
-                  v-if="categoria.estado"
-                  class="btn btn-option"
-                  @click.stop="toggleEstado(categoria)"
-                >
+                <button v-if="categoria.estado" class="btn btn-option" @click.stop="toggleEstado(categoria)">
                   <img src="../assets/img/delete-icon.svg" alt="Desactivar" />
                 </button>
                 <button class="btn btn-option" @click.stop="categoria.isActive = false">
@@ -213,17 +209,12 @@ onMounted(async () => {
     <CategoriaProductoModal
       ref="categoriaModalRef"
       :show="showCategoriaModal"
-      :categoria-editar="categoriaEditar"
+      :categoriaEditar="categoriaEditar"
       @guardar="guardarCategoria"
       @cancel="cerrarCategoriaModal"
     />
 
-    <QrModal
-      :is-open="showQrModal"
-      :local-nombre="localNombre"
-      :local-foto="local?.foto"
-      @close="showQrModal = false"
-    />
+    <QrModal :isOpen="showQrModal" :localNombre="localNombre" :localFoto="local?.foto" @close="showQrModal = false" />
 
     <ConfirmModal
       :show="showConfirmModal"

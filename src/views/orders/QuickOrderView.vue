@@ -1,59 +1,80 @@
 <template>
-    <div class="panel__content panel__content--new-order">
-        <AppHeader
-            title="Nuevo pedido"
-            description="Completa la información para generar un nuevo pedido"
+    <div class="app-view__toolbar">
+        <OrderCustomerCollapse
+            :model-value="props.customerName"
+            @update:model-value="
+                emit(
+                    'update:customerName',
+                    $event
+                )
+            "
         />
 
-        <div class="panel__body">
-            <OrderCustomerCollapse v-model="customerName" />
-
-            <OrderItemsSection 
-                :items="orderItems" 
-                @add="showDishModal = true" 
+        <button
+            class="btn btn--add-items"
+            type="button"
+            aria-label="Agregar plato al pedido"
+            aria-haspopup="dialog"
+            @click="showDishModal = true">
+            Agregar plato al pedido
+            
+            <span class="btn__icon" aria-hidden="true">
+                <Plus :size="18" aria-hidden="true" />
+            </span>
+        </button>
+    </div>
+    
+    <div class="app-view__content">
+        <div class="app-view__list app-view__list--added-dishes" :class="!props.items.length ? 'app-view__list--added-dishes--empty' : ''">
+            <div v-if="!props.items.length" class="app-view__empty">
+                No hay platos agregados
+            </div>
+            
+            <OrderItemCard
+                v-for="item in props.items"
+                :key="item.id"
+                :item="item"
                 @increase="increaseQuantity"
                 @decrease="decreaseQuantity"
                 @remove="removeItem"
             />
-
-            <OrderDishSelectorModal
-                title="Agregar platos"
-                v-model="showDishModal"
-                :dishes="dishes"
-                :categories="categories"
-                @confirm="handleAddItems"
-            />
         </div>
-
-        <footer class="panel__footer">
-            <OrderTotals :subtotal="subtotal" :tip="tipAmount" />
-
-            <div class="panel__actions">
-                <RouterLink to="/app/orders" class="btn btn--outline-primary">Volver</RouterLink>
-
-                <BaseButton
-                    type="submit"
-                    variant="primary"
-                    :disabled="isLoading">
-                    Guardar pedido
-                </BaseButton>
-            </div>
-            
-            <DsSignature />
-        </footer>
     </div>
+    
+    <OrderDishSelectorModal
+        title="Agregar platos"
+        v-model="showDishModal"
+        :added-dish-ids="props.items.map(item => item.id)"
+        :dishes="dishes"
+        :categories="categories"
+        @confirm="handleAddItems"
+    />
 </template>
 
 <script setup>
-import {ref,computed,inject,onMounted,} from 'vue'
-import AppHeader from '@/components/layout/AppHeader.vue'
+import {ref, inject,onMounted,} from 'vue'
 import OrderCustomerCollapse from '@/components/orders/OrderCustomerCollapse.vue'
-import OrderItemsSection from '@/components/orders/OrderItemsSection.vue'
-import OrderTotals from '@/components/orders/OrderTotals.vue'
 import OrderDishSelectorModal from '@/components/orders/OrderDishSelectorModal.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import DsSignature from '@/components/DsSignature.vue'
+import OrderItemCard from '@/components/orders/OrderItemCard.vue'
+import { Plus } from 'lucide-vue-next'
 import { apiService } from '@/services/api.service'
+
+const props = defineProps({
+    customerName: {
+        type: String,
+        default: '',
+    },
+
+    items: {
+        type: Array,
+        default: () => [],
+    },
+})
+
+const emit = defineEmits([
+    'update:customerName',
+    'update:items',
+])
 
 /*
 |--------------------------------------------------------------------------
@@ -69,41 +90,10 @@ const local = inject('currentLocal')
 |--------------------------------------------------------------------------
 */
 
-const isLoading = ref(false)
-const customerName = ref('')
 const showDishModal = ref(false)
 const dishes = ref([])
-const orderItems = ref([])
 const categories = ref([])
 
-/*
-|--------------------------------------------------------------------------
-| Computed
-|--------------------------------------------------------------------------
-*/
-
-const subtotal = computed(() => {
-    return orderItems.value.reduce(
-        (total, item) => {
-
-            return (
-                total +
-                (
-                    Number(item.price || 0) *
-                    Number(item.quantity || 0)
-                )
-            )
-
-        },
-        0
-    )
-})
-
-const tipAmount = computed(() => {
-    return Math.round(
-        subtotal.value * 0.1
-    )
-})
 
 /*
 |--------------------------------------------------------------------------
@@ -162,48 +152,70 @@ const loadCategories = async () => {
 */
 
 const handleAddItems = items => {
-    orderItems.value = items
+    emit(
+        'update:items',
+        [
+            ...props.items,
+            ...items,
+        ]
+    )
 }
 
 const increaseQuantity = itemId => {
-    const item =
-        orderItems.value.find(
-            item =>
-                item.id === itemId
-        )
+    const updatedItems =
+        props.items.map(item => {
 
-    if (!item) {
-        return
-    }
+            if (item.id !== itemId) {
+                return item
+            }
 
-    item.quantity++
+            return {
+                ...item,
+                quantity: item.quantity + 1,
+            }
+        })
+
+    emit(
+        'update:items',
+        updatedItems
+    )
 }
 
 const decreaseQuantity = itemId => {
-    const item =
-        orderItems.value.find(
-            item =>
-                item.id === itemId
-        )
+    const updatedItems =
+        props.items
+            .map(item => {
+                if (item.id !== itemId) {
+                    return item
+                }
 
-    if (!item) {
-        return
-    }
+                return {
+                    ...item,
+                    quantity: item.quantity - 1,
+                }
+            })
 
-    item.quantity--
+            .filter(
+                item => item.quantity > 0
+            )
 
-    if (item.quantity <= 0) {
-
-        removeItem(itemId)
-    }
+    emit(
+        'update:items',
+        updatedItems
+    )
 }
 
 const removeItem = itemId => {
-    orderItems.value =
-        orderItems.value.filter(
+    const updatedItems =
+        props.items.filter(
             item =>
                 item.id !== itemId
         )
+
+    emit(
+        'update:items',
+        updatedItems
+    )
 }
 
 /*

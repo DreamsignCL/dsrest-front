@@ -1,0 +1,48 @@
+@use '../abstracts' as *;
+
+.ds-signature {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    font-size: .75rem;
+
+    span {
+        display: none;
+    }
+
+    a {
+        -webkit-transition: .2s ease-in-out all;
+        -o-transition: .2s ease-in-out all;
+        transition: .2s ease-in-out all;
+        display: block;
+        margin: 0 auto;
+
+        .ds-logo {
+            width: 105px;
+            transition: filter 0.3s ease-in-out;
+        }
+    }
+
+    h2 {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(100%);
+        border: 0;
+    }
+}
+
+@include mq(md) {
+    .ds-signature {
+        span {
+            display: inline-block;
+        }
+
+        a {
+            margin: 0;
+        }
+    }
+}

@@ -1,5 +1,7 @@
+@use '../abstracts' as *;
+
 /* =========================================
-   Utilities
+   Hidden
 ========================================= */
 
 .hidden {
@@ -20,6 +22,18 @@
     border: 0;
 }
 
+.hide-long-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================
+   Text
+========================================= */
+
+/* Align */
+
 .text-center {
     text-align: center;
 }
@@ -36,8 +50,19 @@
     width: 100%;
 }
 
-.hide-long-text {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* Color */
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-danger {
+    color: var(--color-danger);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-success {
+    color: var(--color-success);
 }

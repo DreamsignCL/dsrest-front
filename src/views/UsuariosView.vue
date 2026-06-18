@@ -23,19 +23,15 @@ const relationModalRelations = ref([]) // [{ id, type }] type: 'localUsuarioCate
 
 const handleClickOutside = (event) => {
   if (mostrarMenu.value !== null) {
-    const menuElement = document.getElementById(`options-menu-${mostrarMenu.value}`)
-    const menuTriggerButton = document.getElementById(`menu-trigger-${mostrarMenu.value}`)
+    const menuElement = document.getElementById(`options-menu-${mostrarMenu.value}`);
+    const menuTriggerButton = document.getElementById(`menu-trigger-${mostrarMenu.value}`);
 
-    if (
-      menuElement &&
-      !menuElement.contains(event.target) &&
-      menuTriggerButton &&
-      !menuTriggerButton.contains(event.target)
-    ) {
-      mostrarMenu.value = null
+    if (menuElement && !menuElement.contains(event.target) &&
+      menuTriggerButton && !menuTriggerButton.contains(event.target)) {
+      mostrarMenu.value = null;
     }
   }
-}
+};
 
 // ACTUALIZADO: obtener local según cómo se guarda user en localStorage
 const obtenerLocalYUsuario = async () => {
@@ -80,7 +76,9 @@ const obtenerUsuariosPorLocal = async () => {
     const response = await apiService.get(`usuarios/usuarios-local/${local.value.id}`)
 
     if (response && usuario.value) {
-      usuarios.value = response.usuarios.filter((user) => user.id !== usuario.value.id)
+      usuarios.value = response.usuarios.filter(
+        (user) => user.id !== usuario.value.id
+      )
     } else if (response) {
       usuarios.value = response.usuarios
     }
@@ -98,7 +96,7 @@ const irANuevoUsuario = () => {
 // Método para alternar la visibilidad de las opciones
 const toggleUserActive = (usuario) => {
   // Cerrar todos los demás menús primero
-  usuarios.value.forEach((u) => {
+  usuarios.value.forEach(u => {
     if (u.id !== usuario.id) {
       u.isActive = false
     }
@@ -108,24 +106,23 @@ const toggleUserActive = (usuario) => {
 }
 
 const editarUsuario = (id) => {
-  const usuarioItem = usuarios.value.find((u) => u.id === id)
+  const usuarioItem = usuarios.value.find(u => u.id === id)
   if (!usuarioItem) return
 
   // Verifica si está asociado a más de un local
   const localesRelacionados = new Set()
   if (usuarioItem.localUsuarioCategorias && usuarioItem.localUsuarioCategorias.length > 0) {
-    usuarioItem.localUsuarioCategorias.forEach((luc) => localesRelacionados.add(luc.localId))
+    usuarioItem.localUsuarioCategorias.forEach(luc => localesRelacionados.add(luc.localId))
   }
   if (usuarioItem.usuarioRolesLocales && usuarioItem.usuarioRolesLocales.length > 0) {
-    usuarioItem.usuarioRolesLocales.forEach((url) => localesRelacionados.add(url.localId))
+    usuarioItem.usuarioRolesLocales.forEach(url => localesRelacionados.add(url.localId))
   }
 
   // Si está en más de un local y uno de ellos es el local de la sesión, bloquea edición
   if (localesRelacionados.size > 1 && localesRelacionados.has(local.value.id)) {
     relationModalType.value = 'edit'
     relationModalUser.value = usuarioItem
-    relationModalMessage.value =
-      'No puedes editar los datos de este usuario porque está asociado a otro local.'
+    relationModalMessage.value = 'No puedes editar los datos de este usuario porque está asociado a otro local.'
     showRelationModal.value = true
     mostrarMenu.value = null
     return
@@ -140,29 +137,28 @@ const confirmarEliminarUsuario = (usuarioItem) => {
   // Verifica si está asociado a más de un local
   const localesRelacionados = new Set()
   if (usuarioItem.localUsuarioCategorias && usuarioItem.localUsuarioCategorias.length > 0) {
-    usuarioItem.localUsuarioCategorias.forEach((luc) => localesRelacionados.add(luc.localId))
+    usuarioItem.localUsuarioCategorias.forEach(luc => localesRelacionados.add(luc.localId))
   }
   if (usuarioItem.usuarioRolesLocales && usuarioItem.usuarioRolesLocales.length > 0) {
-    usuarioItem.usuarioRolesLocales.forEach((url) => localesRelacionados.add(url.localId))
+    usuarioItem.usuarioRolesLocales.forEach(url => localesRelacionados.add(url.localId))
   }
 
   // Si está en más de un local y uno de ellos es el local de la sesión, muestra modal especial
   if (localesRelacionados.size > 1 && localesRelacionados.has(local.value.id)) {
     relationModalType.value = 'delete'
     relationModalUser.value = usuarioItem
-    relationModalMessage.value =
-      'Este usuario está asociado a otro local. ¿Deseas eliminar solo la relación con este local?'
+    relationModalMessage.value = 'Este usuario está asociado a otro local. ¿Deseas eliminar solo la relación con este local?'
     // Busca las relaciones a eliminar (del local de la sesión)
     const relations = []
     if (usuarioItem.localUsuarioCategorias) {
-      usuarioItem.localUsuarioCategorias.forEach((luc) => {
+      usuarioItem.localUsuarioCategorias.forEach(luc => {
         if (luc.localId === local.value.id) {
           relations.push({ id: luc.id, type: 'localUsuarioCategoria' })
         }
       })
     }
     if (usuarioItem.usuarioRolesLocales) {
-      usuarioItem.usuarioRolesLocales.forEach((url) => {
+      usuarioItem.usuarioRolesLocales.forEach(url => {
         if (url.localId === local.value.id) {
           relations.push({ id: url.id, type: 'usuarioRolLocal' })
         }
@@ -208,7 +204,7 @@ const eliminarRelacionesUsuario = async () => {
     showRelationModal.value = false
     relationModalUser.value = null
     relationModalRelations.value = []
-  } catch {
+  } catch (error) {
     alert('Error al eliminar la relación. Intente nuevamente.')
   }
 }
@@ -225,32 +221,44 @@ const cerrarRelationModal = () => {
 }
 
 const formatFecha = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const year = date.getFullYear()
-  return `${day}-${month}-${year}`
-}
+  if (!dateString) return '';
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+};
 
 onMounted(() => {
-  obtenerLocalYUsuario()
-  document.addEventListener('click', handleClickOutside)
+  obtenerLocalYUsuario();
+  document.addEventListener('click', handleClickOutside);
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('click', handleClickOutside);
+})
+
+const localNombre = computed(() => {
+  return local.value?.nombreFantasia || local.value?.nombre || 'Mi Local'
 })
 
 const filteredUsers = computed(() => {
   if (!searchTerm.value) {
-    return usuarios.value
+    return usuarios.value;
   }
-  const lowerCaseSearchTerm = searchTerm.value.toLowerCase()
-  return usuarios.value.filter((usuarioItem) =>
+  const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
+  return usuarios.value.filter(usuarioItem =>
     usuarioItem.nombre.toLowerCase().includes(lowerCaseSearchTerm)
-  )
-})
+  );
+});
+
+const toggleMenu = (id) => {
+  if (mostrarMenu.value === id) {
+    mostrarMenu.value = null
+  } else {
+    mostrarMenu.value = id
+  }
+}
 </script>
 
 <template>
@@ -273,12 +281,7 @@ const filteredUsers = computed(() => {
 
         <div class="page-content__body">
           <div class="list-filters">
-            <input
-              v-model="searchTerm"
-              class="form-control"
-              type="search"
-              placeholder="Buscar garzón por nombre..."
-            />
+            <input class="form-control" type="search" v-model="searchTerm" placeholder="Buscar garzón por nombre..." />
           </div>
 
           <div class="element-list">
@@ -289,15 +292,12 @@ const filteredUsers = computed(() => {
               <p>No hay garzones que coincidan con tu búsqueda o no hay garzones en este local.</p>
             </div>
 
-            <button
-              v-for="usuarioItem in filteredUsers"
-              v-else
-              :key="usuarioItem.id"
+            <button v-else v-for="usuarioItem in filteredUsers" 
               class="element-item element-item--waiter"
               type="button"
-              :class="{ active: usuarioItem.isActive }"
-              @click="toggleUserActive(usuarioItem)"
-            >
+              :key="usuarioItem.id" 
+              :class="{ active: usuarioItem.isActive }" 
+              @click="toggleUserActive(usuarioItem)">
               <!--
                 <pre>{{ JSON.stringify(usuarioItem, null, 2) }}</pre>
               -->
@@ -308,18 +308,22 @@ const filteredUsers = computed(() => {
                 </label>
               </div>
               <div class="element-item__text">
-                {{ usuarioItem.nombre }}<br />
+                {{ usuarioItem.nombre }}<br>
                 <span>
-                  {{
-                    usuarioItem.usuarioRolesLocales && usuarioItem.usuarioRolesLocales.length > 0
-                      ? usuarioItem.usuarioRolesLocales.find(
-                          (url) => url.localId === local?.id && url.rol && url.rol.nombre
-                        )?.rol.nombre || 'Sin rol'
-                      : 'Sin rol'
-                  }}
+                {{
+                  usuarioItem.usuarioRolesLocales && usuarioItem.usuarioRolesLocales.length > 0
+                    ? (
+                      usuarioItem.usuarioRolesLocales.find(
+                        url => url.localId === local?.id && url.rol && url.rol.nombre
+                      )?.rol.nombre || 'Sin rol'
+                    )
+                    : 'Sin rol'
+                }}
                 </span>
               </div>
-              <div class="element-item__text"></div>
+              <div class="element-item__text">
+                
+              </div>
               <div class="element-item__text">
                 {{ formatFecha(usuarioItem.createdAt) }}
               </div>
@@ -350,11 +354,7 @@ const filteredUsers = computed(() => {
       </div>
     </main>
 
-    <div
-      v-if="showDeleteModal"
-      class="modal animate__animated animate__fadeIn"
-      @click="cancelarEliminarUsuario"
-    >
+    <div v-if="showDeleteModal" class="modal animate__animated animate__fadeIn" @click="cancelarEliminarUsuario">
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Eliminar garzón</h4>
@@ -362,33 +362,18 @@ const filteredUsers = computed(() => {
         </div>
         <div class="modal-body">
           <p>
-            <strong class="text-danger"
-            >La siguiente acción no se puede deshacer y eliminará todas sus relaciones.</strong
-            ><br />
-            ¿Estás seguro que deseas eliminar a <strong>{{ usuarioToDelete?.nombre }}</strong
-            >?
+            <strong class="text-danger">La siguiente acción no se puede deshacer y eliminará todas sus relaciones.</strong><br>
+            ¿Estás seguro que deseas eliminar a <strong>{{ usuarioToDelete?.nombre }}</strong>?
           </p>
         </div>
         <div class="modal-footer justify-content-center">
-          <button
-            class="btn btn-outline-primary rounded-pill"
-            type="button"
-            @click="cancelarEliminarUsuario"
-          >
-            Cancelar
-          </button>
-          <button class="btn btn-danger rounded-pill" type="button" @click="eliminarUsuario">
-            Sí, eliminar
-          </button>
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cancelarEliminarUsuario">Cancelar</button>
+          <button class="btn btn-danger rounded-pill" type="button" @click="eliminarUsuario">Sí, eliminar</button>
         </div>
       </div>
     </div>
 
-    <div
-      v-if="showRelationModal"
-      class="modal animate__animated animate__fadeIn"
-      @click="cerrarRelationModal"
-    >
+    <div v-if="showRelationModal" class="modal animate__animated animate__fadeIn" @click="cerrarRelationModal">
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Eliminar relación</h4>
@@ -405,28 +390,16 @@ const filteredUsers = computed(() => {
           </p>
         </div>
         <div v-if="relationModalType === 'delete'" class="modal-footer justify-content-center">
-          <button
-            class="btn btn-outline-primary rounded-pill"
-            type="button"
-            @click="cerrarRelationModal"
-          >
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cerrarRelationModal">
             Cancelar
           </button>
-          <button
-            class="btn btn-danger rounded-pill"
-            type="button"
-            @click="eliminarRelacionesUsuario"
-          >
+          <button class="btn btn-danger rounded-pill" type="button" @click="eliminarRelacionesUsuario">
             Sí, eliminar relación
           </button>
         </div>
 
         <div v-else class="modal-footer justify-content-center">
-          <button
-            class="btn btn-outline-primary rounded-pill"
-            type="button"
-            @click="cerrarRelationModal"
-          >
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cerrarRelationModal">
             Cerrar
           </button>
         </div>

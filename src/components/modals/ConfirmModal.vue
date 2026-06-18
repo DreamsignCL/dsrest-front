@@ -3,6 +3,7 @@
         :model-value="modelValue"
         :title="title"
         :variant="confirmVariant"
+        type="confirm"
         @update:modelValue="$emit('update:modelValue', $event)"
     >
         <p class="confirm-modal__message">

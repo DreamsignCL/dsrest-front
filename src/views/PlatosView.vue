@@ -31,9 +31,7 @@ const obtenerCategorias = async () => {
     categorias.value = res
     // Iniciar todos los filtros activados
     const filtros = {}
-    res.forEach((cat) => {
-      filtros[cat.id] = true
-    })
+    res.forEach(cat => { filtros[cat.id] = true })
     filtros['recomendados'] = true
     filtrosCategorias.value = filtros
   } catch (error) {
@@ -47,24 +45,23 @@ const platosFiltrados = computed(() => {
   // Filtro de búsqueda
   if (searchQuery.value.trim()) {
     const q = searchQuery.value.toLowerCase()
-    resultado = resultado.filter(
-      (p) =>
-        p.nombre.toLowerCase().includes(q) ||
-        (p.descripcion && p.descripcion.toLowerCase().includes(q))
+    resultado = resultado.filter(p =>
+      p.nombre.toLowerCase().includes(q) ||
+      (p.descripcion && p.descripcion.toLowerCase().includes(q))
     )
   }
 
   // Filtro de categorías
   const hayFiltrosActivos = Object.keys(filtrosCategorias.value).length > 0
   if (hayFiltrosActivos) {
-    resultado = resultado.filter((p) => {
+    resultado = resultado.filter(p => {
       // Recomendados del chef
       if (p.recomendacion_chef && filtrosCategorias.value['recomendados']) return true
       // Por categoría via FK
       if (p.categoriaPlatoId && filtrosCategorias.value[p.categoriaPlatoId]) return true
       // Por categoría string legacy
       if (p.categoria) {
-        const catObj = categorias.value.find((c) => c.nombre === p.categoria)
+        const catObj = categorias.value.find(c => c.nombre === p.categoria)
         if (catObj && filtrosCategorias.value[catObj.id]) return true
       }
       return false
@@ -91,9 +88,7 @@ const aplicarFiltros = () => {
 
 const resetearFiltros = () => {
   const filtros = {}
-  categorias.value.forEach((cat) => {
-    filtros[cat.id] = true
-  })
+  categorias.value.forEach(cat => { filtros[cat.id] = true })
   filtros['recomendados'] = true
   filtrosCategorias.value = filtros
   ordenarPor.value = ''
@@ -126,9 +121,9 @@ const obtenerPlatos = async () => {
     }
     // Usar el nuevo endpoint
     const data = await apiService.get(`platos/porlocal/${localId}`)
-    platos.value = data.map((plato) => ({
+    platos.value = data.map(plato => ({
       ...plato,
-      isActive: false,
+      isActive: false
     }))
   } catch (error) {
     console.error('Error al obtener platos:', error)
@@ -140,23 +135,23 @@ const obtenerPlatos = async () => {
 const obtenerUsuario = async () => {
   try {
     // Obtener el usuario desde localStorage
-    const userStr = localStorage.getItem('user')
+    const userStr = localStorage.getItem('user');
     if (userStr) {
-      usuario.value = JSON.parse(userStr)
+      usuario.value = JSON.parse(userStr);
     }
 
     // Llamar al endpoint para obtener los locales
-    const localesData = await apiService.get('locales/mis-locales')
+    const localesData = await apiService.get('locales/mis-locales');
     if (localesData && localesData.length > 0) {
       // Tomar el primer local
-      const primerLocal = localesData[0]
-      local.value = primerLocal
-      console.log('Local cargado desde API:', local.value)
+      const primerLocal = localesData[0];
+      local.value = primerLocal;
+      console.log('Local cargado desde API:', local.value);
     } else {
-      console.warn('No se encontraron locales para el usuario.')
+      console.warn('No se encontraron locales para el usuario.');
     }
   } catch (error) {
-    console.error('Error al obtener el local desde la API:', error)
+    console.error('Error al obtener el local desde la API:', error);
   }
 }
 
@@ -201,7 +196,7 @@ const cancelarEliminarPlato = () => {
 // Método para alternar la visibilidad de las opciones
 const toggleDishActive = (plato) => {
   // Cerrar todos los demás menús primero
-  platos.value.forEach((p) => {
+  platos.value.forEach(p => {
     if (p.id !== plato.id) {
       p.isActive = false
     }
@@ -232,13 +227,13 @@ const localNombre = computed(() => {
 
 // Función para cambiar el estado del plato (activo/inactivo)
 const toggleEstadoPlato = async (plato) => {
-  const nuevoEstado = !plato.estado
+  const nuevoEstado = !plato.estado;
   try {
-    await apiService.put(`platos/${plato.id}`, { estado: nuevoEstado })
-    plato.estado = nuevoEstado
+    await apiService.put(`platos/${plato.id}`, { estado: nuevoEstado });
+    plato.estado = nuevoEstado;
   } catch (error) {
-    alert('No se pudo cambiar el estado del plato')
-    console.error(error)
+    alert('No se pudo cambiar el estado del plato');
+    console.error(error);
   }
 }
 
@@ -264,28 +259,18 @@ onMounted(() => {
           </div>
 
           <div class="title">
-            <strong class="text-primary">Bienvenido(a)</strong><br />
+            <strong class="text-primary">Bienvenido(a)</strong><br>
             <h2 class="fw-normal">{{ usuario?.nombre || '[*Nombre de Usuario*]' }}</h2>
           </div>
         </div>
 
         <div class="page-content__body">
           <div class="list-filters">
-            <button
-              class="btn btn-outline-secondary btn-filter"
-              type="button"
-              @click="openFilterModal"
-            >
-              <img src="../assets/img/filter-icon.svg" alt="" />
+            <button class="btn btn-outline-secondary btn-filter" type="button" @click="openFilterModal">
+              <img src="../assets/img/filter-icon.svg" alt="">
             </button>
             <form @submit.prevent>
-              <input
-                id="search"
-                v-model="searchQuery"
-                class="form-control"
-                type="search"
-                placeholder="Buscar..."
-              />
+              <input id="search" class="form-control" type="search" placeholder="Buscar..." v-model="searchQuery">
             </form>
           </div>
           <div class="element-list">
@@ -296,49 +281,36 @@ onMounted(() => {
               No hay platos disponibles
             </div>
 
-            <button
-              v-for="plato in platosFiltrados"
-              v-else
-              :key="plato.id"
+            <button v-else v-for="plato in platosFiltrados" 
               class="element-item element-item--dish"
               type="button"
-              :class="{ active: plato.isActive }"
-              @click="toggleDishActive(plato)"
-            >
+              :key="plato.id" 
+              :class="{ active: plato.isActive }" 
+              @click="toggleDishActive(plato)">
               <!--
                 <pre>{{ JSON.stringify(plato, null, 2) }}</pre>
               -->
               <div class="element-item__switch" @click.stop>
                 <label class="switch switch--vertical">
-                  <input
-                    type="checkbox"
-                    :checked="plato.estado"
-                    @change="toggleEstadoPlato(plato)"
-                  />
+                  <input type="checkbox" :checked="plato.estado" @change="toggleEstadoPlato(plato)" />
                   <span class="slider round"></span>
                 </label>
               </div>
 
-              <div
+              <div 
                 class="element-item__image"
-                :style="{
-                  backgroundImage: plato.foto
-                    ? 'url(' + plato.foto + ')'
-                    : 'url(assets/no-image.png)',
-                }"
-              ></div>
+                v-bind:style="{ backgroundImage: plato.foto ? 'url(' + plato.foto + ')' : 'url(assets/no-image.png)' }">
+              </div>
               <div class="element-item__text">
                 <h3>{{ plato.nombre }}</h3>
                 <p>{{ plato.descripcion }}</p>
               </div>
               <div class="element-item__icon">
-                <img v-if="plato.recomendacion_chef" src="../assets/img/crown-icon.svg" alt="" />
+                <img v-if="plato.recomendacion_chef" src="../assets/img/crown-icon.svg" alt="">
               </div>
               <div class="element-item__price">
                 <div class="current-price">${{ plato.precio }}</div>
-                <div v-if="plato.precio_comparacion" class="prev-price">
-                  ${{ plato.precio_comparacion }}
-                </div>
+                <div class="prev-price" v-if="plato.precio_comparacion">${{ plato.precio_comparacion }}</div>
               </div>
               <div class="element-item__options-menu">
                 <button class="btn btn-option" @click="editarPlato(plato.id)">
@@ -357,7 +329,9 @@ onMounted(() => {
 
         <div class="page-content__footer">
           <div class="d-grid gap-2">
-            <button class="btn btn-primary rounded-pill" @click="irANuevoPlato">Nuevo plato</button>
+            <button class="btn btn-primary rounded-pill" @click="irANuevoPlato">
+              Nuevo plato
+            </button>
           </div>
           <Signature />
         </div>
@@ -365,19 +339,10 @@ onMounted(() => {
     </main>
 
     <!-- Modal QR -->
-    <QrModal
-      :is-open="showQrModal"
-      :local-nombre="localNombre"
-      :local-foto="local?.foto"
-      @close="cerrarQrModal"
-    />
+    <QrModal :isOpen="showQrModal" :localNombre="localNombre" :localFoto="local?.foto" @close="cerrarQrModal" />
 
     <!-- Modal de filtros -->
-    <div
-      v-if="showFilterModal"
-      class="modal animate__animated animate__fadeIn"
-      @click="closeFilterModal"
-    >
+    <div v-if="showFilterModal" class="modal animate__animated animate__fadeIn" @click="closeFilterModal">
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Orden y filtros</h4>
@@ -387,7 +352,7 @@ onMounted(() => {
           <form @submit.prevent>
             <div class="mb-3">
               <label class="form-label" for="list-order">Ordenar por:</label>
-              <select id="list-order" v-model="ordenarPor" class="form-select form-select-sm">
+              <select id="list-order" class="form-select form-select-sm" v-model="ordenarPor">
                 <option value="">Selecciona</option>
                 <option value="nombre">Abecedario</option>
                 <option value="fecha">Fecha</option>
@@ -396,62 +361,33 @@ onMounted(() => {
             </div>
             <div class="d-flex justify-content-start gap-3 mb-3">
               <div class="form-check">
-                <input
-                  id="proprity-order1"
-                  v-model="ordenDireccion"
-                  class="form-check-input"
-                  type="radio"
-                  name="proprity-order"
-                  value="asc"
-                />
-                <label class="form-check-label" for="proprity-order1"> Ascendente </label>
+                <input id="proprity-order1" class="form-check-input" type="radio" name="proprity-order" value="asc" v-model="ordenDireccion">
+                <label class="form-check-label" for="proprity-order1">
+                  Ascendente
+                </label>
               </div>
               <div class="form-check">
-                <input
-                  id="proprity-order2"
-                  v-model="ordenDireccion"
-                  class="form-check-input"
-                  type="radio"
-                  name="proprity-order"
-                  value="desc"
-                />
-                <label class="form-check-label" for="proprity-order2"> Descendente </label>
+                <input class="form-check-input" type="radio" name="proprity-order" id="proprity-order2" value="desc" v-model="ordenDireccion">
+                <label class="form-check-label" for="proprity-order2">
+                  Descendente
+                </label>
               </div>
             </div>
             <div class="text-start mb-3">
               Filtrar por:
               <div v-for="cat in categorias" :key="cat.id" class="form-check form-switch mb-1">
-                <input
-                  :id="'show-cat-' + cat.id"
-                  v-model="filtrosCategorias[cat.id]"
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                />
+                <input class="form-check-input" type="checkbox" role="switch" :id="'show-cat-' + cat.id" v-model="filtrosCategorias[cat.id]">
                 <label class="form-check-label" :for="'show-cat-' + cat.id">{{ cat.nombre }}</label>
               </div>
               <div class="form-check form-switch">
-                <input
-                  id="show-recomendados"
-                  v-model="filtrosCategorias['recomendados']"
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                />
-                <label
-class="form-check-label" for="show-recomendados"
-                  >Recomendados del chef</label
-                >
+                <input class="form-check-input" type="checkbox" role="switch" id="show-recomendados" v-model="filtrosCategorias['recomendados']">
+                <label class="form-check-label" for="show-recomendados">Recomendados del chef</label>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer justify-content-center">
-          <button
-            class="btn btn-outline-primary rounded-pill"
-            type="button"
-            @click="resetearFiltros"
-          >
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="resetearFiltros">
             Limpiar
           </button>
           <button class="btn btn-primary rounded-pill" type="button" @click="aplicarFiltros">
@@ -462,11 +398,7 @@ class="form-check-label" for="show-recomendados"
     </div>
 
     <!-- Modal de confirmación para eliminar plato -->
-    <div
-      v-if="showDeleteModal"
-      class="modal animate__animated animate__fadeIn"
-      @click="cancelarEliminarPlato"
-    >
+    <div v-if="showDeleteModal" class="modal animate__animated animate__fadeIn" @click="cancelarEliminarPlato">
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Eliminar plato</h4>
@@ -474,17 +406,11 @@ class="form-check-label" for="show-recomendados"
         </div>
         <div class="modal-body">
           <p>
-            <strong class="text-danger">La siguiente acción no se puede deshacer.</strong><br />
-            ¿Estás seguro que deseas eliminar el plato <strong>{{ platoToDelete?.nombre }}</strong
-            >?
-          </p>
+            <strong class="text-danger">La siguiente acción no se puede deshacer.</strong><br>
+            ¿Estás seguro que deseas eliminar el plato <strong>{{ platoToDelete?.nombre }}</strong>?</p>
         </div>
         <div class="modal-footer justify-content-center">
-          <button
-            class="btn btn-outline-primary rounded-pill"
-            type="button"
-            @click="cancelarEliminarPlato"
-          >
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cancelarEliminarPlato">
             Cancelar
           </button>
           <button class="btn btn-danger rounded-pill" type="button" @click="eliminarPlato">

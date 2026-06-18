@@ -99,6 +99,7 @@ const router = createRouter({
           name: 'edit-order',
           component: () => import('@/views/orders/EditOrderView.vue'),
         },
+        
       ]
     },
     {

@@ -1,11 +1,11 @@
 <template>
-    <div class="panel__content">
-        <AppHeader
-            title="Nuevo plato"
-            description="Completa la información del plato"
-        />
-
-        <div class="panel__body">
+    <AppContentHeader
+        title="Nuevo plato"
+        description="Completa la información del plato"
+    />
+    
+    <div class="app-content__body" aria-label="Crear nuevo plato">
+        <section class="app-view app-view--form">
             <DishForm
                 :form="form"
                 :categories="categories"
@@ -13,47 +13,46 @@
                 @update:form="Object.assign(form, $event)"
                 @submit="openCreateModal"
             />
-        </div>
-
-        <footer class="panel__footer">
-            <div class="panel__actions">
-                <RouterLink to="/app/dishes" class="btn btn--outline-primary">Volver</RouterLink>
-
-                <BaseButton
-                    type="submit"
-                    variant="primary"
-                    form="dish-form"
-                    :disabled="isLoading">
-                    Crear plato
-                </BaseButton>
-            </div>
-            <DsSignature />
-        </footer>
-
-        <ConfirmModal
-            v-model="showCreateModal"
-            title="Crear plato"
-            :message="`¿Deseas crear el plato <strong>'${form.name}</strong>'?`"
-            confirm-text="Crear plato"
-            cancel-text="Cancelar"
-            confirm-variant="primary"
-            @confirm="createDish"
-        />
-
-        <BaseLoader v-if="isLoading" text="Guardando plato..." />
+        </section>
     </div>
+
+    <AppContentFooter>
+        <template #actions>
+            <RouterLink to="/app/dishes" class="btn btn--outline-primary">Volver</RouterLink>
+
+            <BaseButton
+                type="submit"
+                variant="primary"
+                form="dish-form"
+                :disabled="isLoading">
+                Crear plato
+            </BaseButton>
+        </template>
+    </AppContentFooter>
+    
+    <ConfirmModal
+        v-model="showCreateModal"
+        title="Crear plato"
+        :message="`¿Deseas crear el plato <strong>'${form.name}</strong>'?`"
+        confirm-text="Crear plato"
+        cancel-text="Cancelar"
+        confirm-variant="primary"
+        @confirm="createDish"
+    />
+
+    <BaseLoader v-if="isLoading" text="Guardando plato..." />
 </template>
 
 <script setup>
 import { ref, reactive, inject, onMounted, } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFile } from '@/composables/useFile'
-import AppHeader from '@/components/layout/AppHeader.vue'
+import AppContentHeader from '@/components/layout/AppContentHeader.vue'
 import DishForm from '@/components/dishes/DishForm.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
-import DsSignature from '@/components/DsSignature.vue'
 
 import { apiService } from '@/services/api.service'
 
@@ -140,7 +139,7 @@ const validateForm = () => {
         key => delete errors[key]
     )
 
-    if (!form.name.trim()) {
+    if (!form.name?.trim()){
         errors.name = 'Debes ingresar un nombre'
     }
 
@@ -193,7 +192,9 @@ const createDish = async () => {
             descripcion: form.description,
             foto: image,
             precio: Number(form.price),
-            precio_comparacion: form.comparePrice ? Number(form.comparePrice): null,
+            precio_comparacion: form.comparePrice
+                ? Number(form.comparePrice)
+                : null,
             categoriaPlatoId: Number(form.categoryId),
             localId: local.value.id,
             recomendacion_chef: form.recommended,

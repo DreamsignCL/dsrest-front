@@ -7,35 +7,21 @@
 
     <div class="form-container__body">
       <!-- Logo/Foto del local usando el componente ImageUploader -->
-      <ImageUploader
-        id="local-logo"
-        label="Logotipo"
-        :initial-preview="fotoPreview"
-        @update:image="handleImageUpdate"
-        @error="handleImageError"
-      />
+      <ImageUploader label="Logotipo" id="local-logo" :initial-preview="fotoPreview" @update:image="handleImageUpdate"
+        @error="handleImageError" />
 
       <!-- RUT Empresa con autocompletado -->
       <div class="mb-3">
         <label class="form-label" for="local-rut">RUT empresa</label>
         <div :class="{ 'loading-empresa': buscandoEmpresa }">
-          <input
-            id="local-rut"
-            class="form-control"
-            type="text"
-            :value="form.rut"
-            placeholder="12.345.678-9"
-            :class="{ 'input-error': localErrors.rut || errorBusquedaEmpresa }"
-            @input="updateRut($event)"
-          />
+          <input id="local-rut" class="form-control" type="text" :value="form.rut" @input="updateRut($event)"
+            placeholder="12.345.678-9" :class="{ 'input-error': localErrors.rut || errorBusquedaEmpresa }" />
         </div>
         <span v-if="localErrors.rut" class="error-message animate__animated animate__fadeInUp">
           {{ localErrors.rut }}
         </span>
-        <span
-          v-if="errorBusquedaEmpresa && !localErrors.rut"
-          class="error-message animate__animated animate__fadeInUp"
-        >
+        <span v-if="errorBusquedaEmpresa && !localErrors.rut"
+          class="error-message animate__animated animate__fadeInUp">
           {{ errorBusquedaEmpresa }}
         </span>
 
@@ -49,152 +35,128 @@
       <!-- Nombre de fantasia -->
       <div class="mb-3">
         <label class="form-label" for="nombreFantasia">Nombre de fantasía</label>
-        <input
-          id="nombreFantasia"
-          class="form-control"
-          type="text"
-          :value="form.nombreFantasia"
-          placeholder="Como quieres que conozcan tu local"
-          :class="{ 'input-error': localErrors.nombreFantasia }"
+        <input id="nombreFantasia" class="form-control" type="text" :value="form.nombreFantasia"
           @input="$emit('update:form', { ...form, nombreFantasia: $event.target.value })"
-        />
-        <span
-          v-if="localErrors.nombreFantasia"
-          class="error-message animate__animated animate__fadeInUp"
-        >{{ localErrors.nombreFantasia }}</span
-        >
+          placeholder="Como quieres que conozcan tu local" :class="{ 'input-error': localErrors.nombreFantasia }" />
+        <span v-if="localErrors.nombreFantasia" class="error-message animate__animated animate__fadeInUp">{{
+          localErrors.nombreFantasia }}</span>
       </div>
 
       <!-- Dirección -->
       <div class="mb-3">
         <label class="form-label" for="direccion">Dirección</label>
-        <input
-          id="direccion"
-          class="form-control"
-          type="text"
-          :value="form.direccion"
-          placeholder="Dirección del local"
-          :class="{ 'input-error': localErrors.direccion }"
-          @input="$emit('update:form', { ...form, direccion: $event.target.value })"
-        />
-        <span
-          v-if="localErrors.direccion"
-          class="error-message animate__animated animate__fadeInUp"
-        >{{ localErrors.direccion }}</span
-        >
+        <input id="direccion" class="form-control" type="text" :value="form.direccion"
+          @input="$emit('update:form', { ...form, direccion: $event.target.value })" placeholder="Dirección del local"
+          :class="{ 'input-error': localErrors.direccion }" />
+        <span v-if="localErrors.direccion" class="error-message animate__animated animate__fadeInUp">{{
+          localErrors.direccion }}</span>
       </div>
 
       <!-- Tipo -->
       <div class="mb-3">
         <label class="form-label" for="tipo">Tipo</label>
-        <select
-          id="tipo"
-          class="form-select"
-          :value="form.tipo"
-          :class="{ 'input-error': localErrors.tipo }"
+        <select id="tipo" class="form-select" :value="form.tipo"
           @change="$emit('update:form', { ...form, tipo: $event.target.value })"
-        >
+          :class="{ 'input-error': localErrors.tipo }">
           <option value="" disabled selected>Selecciona tipo</option>
           <option v-for="tipo in tipos" :key="tipo" :value="tipo">
             {{ tipo }}
           </option>
         </select>
         <span v-if="localErrors.tipo" class="error-message animate__animated animate__fadeInUp">{{
-          localErrors.tipo
-        }}</span>
+          localErrors.tipo }}</span>
       </div>
     </div>
 
     <div class="form-container__footer">
-      <button class="btn btn-outline-primary rounded-pill" @click="$emit('back')">Atrás</button>
-      <button class="btn btn-primary rounded-pill" :disabled="isLoading" @click="$emit('register')">
+      <button @click="$emit('back')" class="btn btn-outline-primary rounded-pill">
+        Atrás
+      </button>
+      <button @click="$emit('register')" class="btn btn-primary rounded-pill" :disabled="isLoading">
         {{ isLoading ? 'Registrando...' : 'Registrar' }}
       </button>
     </div>
 
-    <div
-      v-if="registerMessage"
-      class="message"
-      :class="{ 'error-message animate__animated animate__fadeInUp': registerError }"
-    >
+    <div v-if="registerMessage" class="message"
+      :class="{ 'error-message animate__animated animate__fadeInUp': registerError }">
       {{ registerMessage }}
     </div>
   </div>
 </template>
 
 <script>
-import ImageUploader from '../common/ImageUploader.vue'
+import ImageUploader from '../common/ImageUploader.vue';
 
 export default {
-  name: 'RegisterLocalForm',
+  name: "RegisterLocalForm",
   components: {
-    ImageUploader,
+    ImageUploader
   },
   props: {
     form: {
       type: Object,
-      required: true,
+      required: true
     },
     fotoPreview: {
       type: String,
-      default: null,
+      default: null
     },
     isLoading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     localErrors: {
       type: Object,
-      default: () => ({}),
+      default: () => ({})
     },
     registerMessage: {
       type: String,
-      default: '',
+      default: ""
     },
     registerError: {
       type: Boolean,
-      default: false,
+      default: false
     },
     nombreEmpresa: {
       type: String,
-      default: '',
+      default: ""
     },
     buscandoEmpresa: {
       type: Boolean,
-      default: false,
+      default: false
     },
     errorBusquedaEmpresa: {
       type: String,
-      default: '',
+      default: ""
     },
     tipos: {
       type: Array,
-      required: true,
-    },
+      required: true
+    }
   },
-  emits: ['back', 'register', 'buscar-empresa', 'update:form', 'error'],
   methods: {
     updateRut(event) {
-      const rutFormateado = this.formatRut(event.target.value)
-      this.$emit('update:form', { ...this.form, rut: rutFormateado })
-      this.$emit('buscar-empresa')
+      const rutFormateado = this.formatRut(event.target.value);
+      this.$emit("update:form", { ...this.form, rut: rutFormateado });
+      this.$emit('buscar-empresa');
     },
     handleImageUpdate(imageData) {
-      this.$emit('update:form', { ...this.form, foto: imageData })
+      this.$emit('update:form', { ...this.form, foto: imageData });
     },
     handleImageError(error) {
-      this.$emit('error', { foto: error })
+      this.$emit('error', { foto: error });
     },
     formatRut(rut) {
-      rut = rut.replace(/[^\dkK]/g, '').toUpperCase()
-      rut = rut.slice(0, 9)
-      if (rut.length < 2) return rut
-      const cuerpo = rut.slice(0, -1)
-      const dv = rut.slice(-1)
+      rut = rut.replace(/[^\dkK]/g, '').toUpperCase();
+      rut = rut.slice(0, 9);
+      if (rut.length < 2) return rut;
+      const cuerpo = rut.slice(0, -1);
+      const dv = rut.slice(-1);
 
-      return `${cuerpo}-${dv}`
+      return `${cuerpo}-${dv}`;
     },
   },
+  emits: ["back", "register", "buscar-empresa", "update:form", "error"]
 }
 </script>
 
@@ -211,7 +173,7 @@ export default {
 }
 
 .loading-empresa::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 10px;
   top: 50%;

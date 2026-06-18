@@ -5,16 +5,22 @@
 
         <div class="list-modal">
             <div class="list-modal__header">
-                <BaseInput 
-                    v-model="search" 
-                    type="search" 
-                    aria-label="Filtra de acuerdo al nombre del plato"
-                    placeholder="Nombre del plato..." />
-                <BaseSelect 
-                    v-model="selectedCategory" 
-                    placeholder="Categoría" 
-                    aria-label="Seleccioma la categoría del plato"
-                    :options="categoryOptions" />
+                <div class="list-filter">
+                    <BaseInput 
+                        v-model="search" 
+                        type="search" 
+                        aria-label="Filtra de acuerdo al nombre del plato"
+                        placeholder="Nombre del plato..." />
+                    <BaseSelect 
+                        v-model="selectedCategory" 
+                        placeholder="Categoría" 
+                        aria-label="Seleccioma la categoría del plato"
+                        :options="categoryOptions" />
+                </div>
+
+                <div class="list-count">
+                    Se han seleccionado <strong>{{ selectedCount }}</strong> plato<span v-if="selectedCount !== 1">s</span>
+                </div>
             </div>
 
             <div v-if="filteredDishes.length" class="list-modal__body">
@@ -24,7 +30,8 @@
                     type="button"
                     class="list-modal-item"
                     :class="{
-                        'list-modal__item--selected': isSelected(dish.id)
+                        'list-modal__item--selected': isSelected(dish.id),
+                        'list-modal__item--added': isAlreadyAdded(dish.id),
                     }"
                     @click="toggleDish(dish)">
                     <div class="list-modal-item__content">
@@ -34,6 +41,9 @@
                         </div>
                         <div class="info">
                             <span class="info__title">{{ dish.nombre }}</span>
+                            <span v-if="isAlreadyAdded(dish.id)" class="text-success">
+                                Agregado
+                            </span>
                         </div>
                     </div>
                     <div class="list-modal-item__price">
@@ -48,7 +58,11 @@
                     <div class="list-modal-item__check">
                         <div
                             class="selector-badge"
-                            :class="{ 'selector-badge--selected': isSelected(dish.id) }">
+                            :class="{
+                                'selector-badge--selected':
+                                    isSelected(dish.id) ||
+                                    isAlreadyAdded(dish.id)
+                            }">
                             <span class="selector-badge__face selector-badge__face--front">
                                 <Plus :size="14" />
                             </span>
@@ -65,8 +79,6 @@
                 No se encontraron platos
             </div>
         </div>
-
-        <div class="list-count">Se han seleccionado {{ selectedCount }} plato<span v-if="selectedCount !== 1">s</span></div>
 
         <template #footer>
             <BaseButton
@@ -89,6 +101,7 @@
 
 <script setup>
 import {ref, computed,} from 'vue'
+import { useToast } from '@/composables/useToast'
 import { Check, Plus } from 'lucide-vue-next'
 import BaseModal from '@/components/ui/BaseModal.vue'
 import BaseInput from '@/components/ui/BaseInput.vue'
@@ -111,12 +124,25 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+
+    addedDishIds: {
+        type: Array,
+        default: () => [],
+    },
 })
+
+const { showToast } = useToast()
 
 const emit = defineEmits([
     'update:modelValue',
     'confirm',
 ])
+
+const isAlreadyAdded = dishId => {
+    return props.addedDishIds.includes(
+        dishId
+    )
+}
 
 const search = ref('')
 const selectedCategory = ref('')
@@ -171,7 +197,24 @@ const isSelected = dishId => {
     )
 }
 
+const showAlreadyAddedMessage = () => {
+
+    showToast({
+        message:
+            'Este plato ya se encuentra agregado al pedido.',
+        variant: 'info',
+    })
+}
+
 const toggleDish = dish => {
+
+    if (isAlreadyAdded(dish.id)) {
+
+        showAlreadyAddedMessage()
+
+        return
+    }
+
     const exists =
         selectedDishIds.value.includes(
             dish.id

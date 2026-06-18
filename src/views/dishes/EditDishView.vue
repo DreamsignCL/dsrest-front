@@ -1,12 +1,24 @@
 <template>
-    <div class="panel__content">
-        <AppHeader
-            title="Editar plato"
-            description="Actualiza la información del plato"
-        />
+    <AppContentHeader
+        before-text="Editar plato"
+        :title="dishName || 'Cargando...'"
+        description="Actualiza la información del plato">
 
-        <div class="panel__body">
+        <template #summary>
+            <div class="summary summary--edit-dish">
+                <div class="summary__item">
+                    <span
+                        class="badge"
+                        :class="form.state ? 'tag--success' : 'tag--danger'">
+                        {{ form.state ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </div>
+            </div>
+        </template>
+    </AppContentHeader>
 
+    <div class="app-content__body" aria-label="Editar plato">
+        <section class="app-view app-view--form">
             <SkeletonViewFormImage v-if="isLoadingDish" />
 
             <DishForm
@@ -17,60 +29,47 @@
                 @update:form="Object.assign(form, $event)"
                 @submit="openUpdateModal"
             />
-
-        </div>
-
-        <footer class="panel__footer">
-
-            <div class="panel__actions">
-
-                <RouterLink
-                    to="/app/dishes"
-                    class="btn btn--outline-primary">
-                    Volver
-                </RouterLink>
-
-                <BaseButton
-                    type="submit"
-                    variant="primary"
-                    form="dish-form"
-                    :disabled="isSubmitting">
-                    Guardar cambios
-                </BaseButton>
-            </div>
-
-            <DsSignature />
-
-        </footer>
-
-        <ConfirmModal
-            v-model="showUpdateModal"
-            title="Actualizar plato"
-            :message="`¿Deseas actualizar el plato '${form.name}'?`"
-            confirm-text="Guardar cambios"
-            cancel-text="Cancelar"
-            confirm-variant="primary"
-            @confirm="updateDish"
-        />
-
-        <BaseLoader
-            v-if="isSubmitting"
-            text="Actualizando plato..."
-        />
+        </section>
     </div>
+
+    <AppContentFooter>
+        <template #actions>
+            <RouterLink to="/app/dishes" class="btn btn--outline-primary">Volver</RouterLink>
+
+            <BaseButton
+                type="submit"
+                variant="primary"
+                form="dish-form"
+                :disabled="isSubmitting">
+                Guardar
+            </BaseButton>
+        </template>
+    </AppContentFooter>
+
+     <ConfirmModal
+        v-model="showUpdateModal"
+        title="Actualizar plato"
+        :message="`¿Deseas guardar los cambios en el plato '${dishName}'?`"
+        confirm-text="Si, guardar"
+        cancel-text="Cancelar"
+        confirm-variant="primary"
+        @confirm="updateDish"
+    />
+
+    <BaseLoader v-if="isSubmitting" text="Actualizando plato..." />
 </template>
 
 <script setup>
 import { ref, reactive, inject, onMounted, } from 'vue'
 import { useRoute, useRouter, } from 'vue-router'
 import { useFile } from '@/composables/useFile'
-import AppHeader from '@/components/layout/AppHeader.vue'
+import AppContentHeader from '@/components/layout/AppContentHeader.vue'
 import SkeletonViewFormImage from '@/components/skeletons/SkeletonViewFormImage.vue'
 import DishForm from '@/components/dishes/DishForm.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import BaseLoader from '@/components/ui/BaseLoader.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
-import DsSignature from '@/components/DsSignature.vue'
+import BaseLoader from '@/components/ui/BaseLoader.vue'
 
 import { apiService } from '@/services/api.service'
 
@@ -101,6 +100,8 @@ const showUpdateModal = ref(false)
 
 const categories = ref([])
 
+const dishName = ref('')
+
 const errors = reactive({})
 
 const form = reactive({
@@ -125,7 +126,7 @@ const validateForm = () => {
         key => delete errors[key]
     )
 
-    if (!form.name.trim()) {
+    if (!form.name?.trim()) {
         errors.name = 'Debes ingresar un nombre'
     }
 
@@ -176,6 +177,8 @@ const loadDish = async () => {
 
         const dish = await apiService.get(`platos/${route.params.id}`)
 
+        dishName.value = dish.nombre
+
         form.name = dish.nombre || ''
 
         form.description = dish.descripcion || ''
@@ -184,11 +187,13 @@ const loadDish = async () => {
 
         form.categoryId = dish.categoriaPlatoId || ''
 
-        form.price = dish.precio || ''
+        form.price = dish.precio?.toString() || ''
 
-        form.comparePrice = dish.precio_comparacion || ''
+        form.comparePrice = dish.precio_comparacion?.toString() || ''
 
         form.recommended = dish.recomendacion_chef || false
+
+        form.state = dish.estado
 
     } catch (error) {
 

@@ -1,0 +1,69 @@
+@use '../abstracts' as *;
+
+.collapse {
+    &--order-customer {
+        padding: 0rem 1rem;
+        border-radius: 1rem;
+        background: #d6eafd;
+        transition:
+            background-color .2s ease,
+            box-shadow .2s ease;
+
+        & > button {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #4c85b6;
+            padding: .2rem 0;
+        }
+
+        .collapse__body {
+            border-top: 1px solid #4c85b6;
+            padding: .5rem 0 .5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: .5rem;
+
+            .field {
+                margin-bottom: 0;
+                width: 90%;
+
+                label {
+                    color: #fff;
+                }
+            }
+
+            button {
+                width: 30%;
+                color: var(--color-text);
+                text-align: center;
+            }
+
+        }
+    }
+}
+
+/*Animation*/
+
+.collapse-enter-active,
+.collapse-leave-active {
+    transition:
+        max-height .25s ease,
+        opacity .25s ease,
+        padding .25s ease;
+    overflow: hidden;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+    max-height: 0;
+    opacity: 0;
+}
+
+.collapse-enter-to,
+.collapse-leave-from {
+    max-height: 200px;
+    opacity: 1;
+}

@@ -1,15 +1,10 @@
 <template>
     <main class="layout-app" role="main">
-
         <AppSidebar />
 
-        <div class="panel" aria-label="Contenido">
+        <div class="app-content" aria-label="Contenido">
             <RouterView v-slot="{ Component }">
-                <transition
-                    name="app-fade"
-                    mode="out-in">
-                    <component :is="Component" />
-                </transition>
+                <component :is="Component" />
             </RouterView>
         </div>
     </main>

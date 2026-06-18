@@ -1,68 +1,103 @@
 <template>
-    <div class="panel__content panel__content--items-content">
-        <AppHeader
-            title="Atención a clientes"
-            description="Administra los pedidos de tu local">
+    <AppContentHeader
+        title="Atención a clientes"
+        description="Administra los pedidos de tu local">
 
-            <template #summary>
-                <OrdersSummary :orders="filteredOrders" />
-            </template>
+        <template #summary>
+            <OrdersSummary :orders="filteredOrders" />
+        </template>
+    </AppContentHeader>
 
-        </AppHeader>
+    <div class="app-content__body" aria-label="Listado de pedidos">
+        <section class="app-view app-view--list">
+            <div class="app-view__toolbar">
+                <AppListToolbar
+                    v-model:search="filters.search"
+                    search-id="order-search"
+                    search-placeholder="Buscar pedidos..."
+                    search-label="Buscar pedidos"
+                    :total="filteredOrders.length"
+                    total-label="pedidos"
+                    action-label="Crear pedido"
+                    action-link="/app/orders/new"
+                    @open-filters="openFiltersModal">
 
-        <div class="panel__body">
-            <OrderFilters
-                v-model:search="filters.search"
-                @open-filters="openFiltersModal"
-            />
+                    <template #table-header>
+                        <div class="table-header">
+                            <span>N°</span>
+                            <span>Cliente</span>
+                            <span>Mesa</span>
+                            <span>Garzón</span>
+                            <span>Total</span>
+                            <span>Estado</span>
+                        </div>
+                    </template>
 
-            <OrderFiltersModal
-                v-model="showFiltersModal"
-                :filters="filters"
-                :zones="zones"
-                :supports-zones="supportsZones"
-                @apply="handleApplyFilters"
-            />
-
-            <BaseResultsCounter
-                :count="filteredOrders.length"
-                label="pedidos"
-            />
-
-           <OrderList
-                :orders="filteredOrders"
-                :loading="isLoading"
-            />
-
-        </div>
-
-        <footer class="panel__footer">
-            <div class="panel__actions">
-                <RouterLink
-                    class="btn btn--primary btn--block"
-                    to="/app/orders/new">
-                    Nuevo pedido
-                </RouterLink>
+                </AppListToolbar>
             </div>
-            <DsSignature />
-        </footer>
+
+            <div class="app-view__content">
+                <template v-if="isLoading">
+                    <SkeletonCardListItem2 v-for="index in 6" :key="index" />
+                </template>
+
+                <div v-else-if="!filteredOrders.length" class="app-view__empty">
+                    No hay pedidos registrados.
+                </div>
+
+                <div class="app-view__list">
+                    <AppListItem
+                        v-for="order in filteredOrders"
+                        :key="order.id"
+                        :show-switch="false"
+                        class="list-item--order"
+                        @edit="editOrder(order)"
+                        @delete="openDeleteModal(order)"
+                        @toggle-status="toggleOrderStatus(order)">
+
+                        <template #content>
+                            <OrderItemContent :order="order" />
+                        </template>
+                    </AppListItem>
+                </div>
+            </div>
+        </section>
     </div>
+
+    <AppContentFooter>
+        <template #actions>
+            <RouterLink
+                class="btn btn--primary btn--block"
+                to="/app/orders/new">
+                Crear pedido
+            </RouterLink>
+        </template>
+    </AppContentFooter>
+
+    <OrderFiltersModal
+        v-model="showFiltersModal"
+        :filters="filters"
+        :zones="zones"
+        :supports-zones="supportsZones"
+        @apply="handleApplyFilters"
+    />
 </template>
 
 <script setup>
 import { ref, reactive, computed, inject, onMounted, } from 'vue'
-import { useBusinessRules } from '@/composables/useBusinessRules'
-import AppHeader from '@/components/layout/AppHeader.vue'
+import { useBusinessConfig } from '@/composables/useBusinessConfig'
+import AppContentHeader from '@/components/layout/AppContentHeader.vue'
 import OrdersSummary from '@/components/orders/OrdersSummary.vue'
-import DsSignature from '@/components/DsSignature.vue'
-import OrderFilters from '@/components/orders/OrderFilters.vue'
-import OrderFiltersModal from '@/components/orders/OrderFiltersModal.vue'
-import BaseResultsCounter from '@/components/ui/BaseResultsCounter.vue'
-import OrderList from '@/components/orders/OrderList.vue'
+import AppListToolbar from '@/components/layout/AppListToolbar.vue'
+import SkeletonCardListItem2 from '@/components/skeletons/SkeletonCardListItem2.vue'
+import AppListItem from '@/components/layout/AppListItem.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
+import OrderFiltersModal from '@/features/orders/OrderFiltersModal.vue'
+import OrderItemContent from '@/features/orders/OrderItemContent.vue'
 
 import { apiService } from '@/services/api.service'
 
-const { rules } = useBusinessRules()
+const { config } = useBusinessConfig()
 
 /*
 |--------------------------------------------------------------------------
@@ -109,8 +144,7 @@ const filters = reactive({
 */
 
 const supportsZones = computed(() => {
-
-    return rules.value.usesZones
+    return config.value.usesZones
 })
 
 /*
@@ -120,7 +154,6 @@ const supportsZones = computed(() => {
 */
 
 const openFiltersModal = () => {
-
     showFiltersModal.value = true
 }
 
@@ -418,7 +451,7 @@ onMounted(() => {
 
     loadOrders()
 
-    if (rules.value.usesZones) {
+    if (config.value.usesZones) {
         loadZones()
     }
 })

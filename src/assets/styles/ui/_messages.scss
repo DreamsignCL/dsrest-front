@@ -1,0 +1,25 @@
+@use '../abstracts' as *;
+
+.message {
+    padding: .75rem 1rem;
+    background-color: #ebebeb;
+    border-radius: 7px;
+    margin-bottom: .5rem;
+    font-size: .875rem;
+
+    &--primary {
+        background-color: #dff6ff;
+    }
+
+    &--warning {
+        background-color: #fffbe9;
+    }
+
+    &--danger {
+        background-color: #ffe9e9;
+    }
+
+    &--success {
+        background-color: #eaffe9;
+    }
+}

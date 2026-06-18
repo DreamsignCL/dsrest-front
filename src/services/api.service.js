@@ -1,5 +1,5 @@
 // Obtener la URL base de la API desde las variables de entorno
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL;
 console.log(API_URL)
 /**
  * Servicio para realizar peticiones a la API
@@ -10,7 +10,7 @@ export const apiService = {
    * @returns {string|null} Token de autenticación
    */
   getToken() {
-    return localStorage.getItem('token')
+    return localStorage.getItem('token');
   },
 
   /**
@@ -19,26 +19,26 @@ export const apiService = {
    * @returns {Promise} Promesa con la respuesta
    */
   async get(endpoint) {
-    const token = this.getToken()
+    const token = this.getToken();
     const headers = {
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${API_URL}/${endpoint}`, {
       method: 'GET',
-      headers,
-    })
+      headers
+    });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(error.message || `Error en petición GET a ${endpoint}`)
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `Error en petición GET a ${endpoint}`);
     }
 
-    return response.json()
+    return response.json();
   },
 
   /**
@@ -48,32 +48,32 @@ export const apiService = {
    * @returns {Promise} Promesa con la respuesta
    */
   async post(endpoint, data) {
-    const token = this.getToken()
+    const token = this.getToken();
     const headers = {
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${API_URL}/${endpoint}`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(data),
-    })
+      body: JSON.stringify(data)
+    });
 
-    const responseData = await response.json().catch(() => ({}))
+    const responseData = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       // Lanza un objeto de error con status y data
-      const error = new Error(responseData.message || `Error ${response.status} en ${endpoint}`)
-      error.status = response.status
-      error.data = responseData
-      throw error
+      const error = new Error(responseData.message || `Error ${response.status} en ${endpoint}`);
+      error.status = response.status;
+      error.data = responseData;
+      throw error;
     }
 
-    return responseData
+    return responseData;
   },
 
   /**
@@ -83,27 +83,27 @@ export const apiService = {
    * @returns {Promise} Promesa con la respuesta
    */
   async put(endpoint, data) {
-    const token = this.getToken()
+    const token = this.getToken();
     const headers = {
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${API_URL}/${endpoint}`, {
       method: 'PUT',
       headers,
-      body: JSON.stringify(data),
-    })
+      body: JSON.stringify(data)
+    });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(error.message || `Error en petición PUT a ${endpoint}`)
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `Error en petición PUT a ${endpoint}`);
     }
 
-    return response.json()
+    return response.json();
   },
 
   /**
@@ -112,26 +112,26 @@ export const apiService = {
    * @returns {Promise} Promesa con la respuesta
    */
   async delete(endpoint) {
-    const token = this.getToken()
+    const token = this.getToken();
     const headers = {
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${API_URL}/${endpoint}`, {
       method: 'DELETE',
-      headers,
-    })
+      headers
+    });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(error.message || `Error en petición DELETE a ${endpoint}`)
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `Error en petición DELETE a ${endpoint}`);
     }
 
-    return response.json()
+    return response.json();
   },
 
   /**
@@ -141,26 +141,29 @@ export const apiService = {
    * @returns {Promise} Promesa con la respuesta
    */
   async patch(endpoint, data) {
-    const token = this.getToken()
+    const token = this.getToken();
     const headers = {
-      'Content-Type': 'application/json',
-    }
+      'Content-Type': 'application/json'
+    };
 
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`
+      headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(`${API_URL}/${endpoint}`, {
       method: 'PATCH',
       headers,
-      body: JSON.stringify(data),
-    })
+      body: JSON.stringify(data)
+    });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(error.message || `Error en petición PATCH a ${endpoint}`)
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.message || `Error en petición PATCH a ${endpoint}`);
     }
 
-    return response.json()
-  },
-}
+    return response.json();
+  }
+
+
+};
+

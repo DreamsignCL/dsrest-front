@@ -1,18 +1,18 @@
 <template>
-    <div class="panel__content">
-        <AppHeader :title="user?.nombre || ''" beforeText="Bienvenido(a)" />
+    <AppContentHeader 
+        beforeText="Bienvenido(a)" 
+        :title="user?.nombre || ''" 
+    />
 
-        <div class="panel__body" aria-label=""></div>
-
-        <footer class="panel__footer">
-            <DsSignature />
-        </footer>
+    <div class="app-content__body" aria-label="KPI's del local">
     </div>
+
+    <AppContentFooter />
 </template>
 
 <script setup>
-import AppHeader from '@/components/layout/AppHeader.vue'
-import DsSignature from '@/components/DsSignature.vue'
+import AppContentHeader from '@/components/layout/AppContentHeader.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue';
 import { inject } from 'vue'
 
 const user = inject('currentUser')

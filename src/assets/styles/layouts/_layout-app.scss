@@ -1,0 +1,20 @@
+@use '../abstracts' as *;
+
+.layout-app {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    overflow: hidden;
+    min-height: 0;
+    background: rgb(0, 158, 227);
+    background: linear-gradient(37deg, rgba(0, 158, 227, 1) 0%, rgba(0, 87, 125, 1) 100%);
+}
+
+@include mq(md) {
+    .layout-app {
+        grid-template-columns: minmax(260px, 1fr) minmax(0, 5fr);
+        grid-template-rows: none;
+        background: #fff;
+    }
+}

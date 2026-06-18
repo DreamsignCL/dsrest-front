@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { apiService } from '@/services/api.service'
 import InnerHeader from '@/components/InnerHeader.vue'
+import Signature from '@/components/Signature.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -16,7 +17,7 @@ const usuario = ref({
   rut: '',
   correo: '',
   localId: null,
-  categoriaId: null,
+  categoriaId: null
 })
 
 const formData = ref({
@@ -27,7 +28,7 @@ const formData = ref({
   contrasena: '',
   repetirContrasena: '',
   localId: null,
-  categoriaId: null,
+  categoriaId: null
 })
 
 const localLogoSrc = ref('../assets/img/no-logo.png')
@@ -43,15 +44,8 @@ onMounted(async () => {
   }
 
   const loggedInUser = JSON.parse(localStorage.getItem('user'))
-  if (
-    loggedInUser &&
-    loggedInUser.localUsuarioCategorias &&
-    loggedInUser.localUsuarioCategorias.length > 0
-  ) {
-    if (
-      loggedInUser.localUsuarioCategorias[0].local &&
-      loggedInUser.localUsuarioCategorias[0].local.foto
-    ) {
+  if (loggedInUser && loggedInUser.localUsuarioCategorias && loggedInUser.localUsuarioCategorias.length > 0) {
+    if (loggedInUser.localUsuarioCategorias[0].local && loggedInUser.localUsuarioCategorias[0].local.foto) {
       localLogoSrc.value = loggedInUser.localUsuarioCategorias[0].local.foto
     }
   }
@@ -76,7 +70,11 @@ const cargarDatosUsuario = async (id) => {
 
     // Buscar el rol correspondiente a ese localId
     let rolNombre = 'Desconocido'
-    if (data.usuarioRolesLocales && data.usuarioRolesLocales.length > 0 && sessionLocalId) {
+    if (
+      data.usuarioRolesLocales &&
+      data.usuarioRolesLocales.length > 0 &&
+      sessionLocalId
+    ) {
       const rolLocal = data.usuarioRolesLocales.find(
         (url) => url.localId === sessionLocalId && url.rol && url.rol.nombre
       )
@@ -91,7 +89,7 @@ const cargarDatosUsuario = async (id) => {
       correo: data.correo,
       rol: rolNombre,
       localId: null,
-      categoriaId: null,
+      categoriaId: null
     }
 
     formData.value = {
@@ -102,7 +100,7 @@ const cargarDatosUsuario = async (id) => {
       contrasena: '',
       repetirContrasena: '',
       localId: null,
-      categoriaId: null,
+      categoriaId: null
     }
 
     if (data.localUsuarioCategorias && data.localUsuarioCategorias.length > 0) {
@@ -116,23 +114,17 @@ const cargarDatosUsuario = async (id) => {
     }
   } catch (error) {
     console.error('Error al cargar datos del usuario:', error)
-    errorMessage.value =
-      'Error al cargar los datos del usuario. Asegúrate de que el ID es correcto o que el usuario existe.'
+    errorMessage.value = 'Error al cargar los datos del usuario. Asegúrate de que el ID es correcto o que el usuario existe.'
   }
 }
 
-const rutRegex = /^(\d{1,2}\.?\d{3}\.?\d{3}-[\dkK])$/
+const rutRegex = /^(\d{1,2}\.?\d{3}\.?\d{3}-[\dkK])$/;
 
 const triggerSaveConfirmation = () => {
   errorMessage.value = ''
   successMessage.value = ''
 
-  if (
-    !formData.value.nombre ||
-    !formData.value.telefono ||
-    !formData.value.rut ||
-    !formData.value.correo
-  ) {
+  if (!formData.value.nombre || !formData.value.telefono || !formData.value.rut || !formData.value.correo) {
     errorMessage.value = 'Por favor, complete todos los campos obligatorios.'
     return
   }
@@ -155,16 +147,15 @@ const triggerSaveConfirmation = () => {
   }
 
   if (!formData.value.localId || !formData.value.categoriaId) {
-    errorMessage.value =
-      'No se pudo determinar el local o la categoría del usuario a editar. Verifique los datos cargados.'
+    errorMessage.value = 'No se pudo determinar el local o la categoría del usuario a editar. Verifique los datos cargados.'
     return
   }
 
-  showSaveConfirmModal.value = true
+  showSaveConfirmModal.value = true; 
 }
 
 const guardarUsuario = async () => {
-  showSaveConfirmModal.value = false
+  showSaveConfirmModal.value = false; 
 
   try {
     const payload = {
@@ -174,7 +165,7 @@ const guardarUsuario = async () => {
       correo: formData.value.correo,
       ...(formData.value.contrasena && { contrasena: formData.value.contrasena }),
       localId: formData.value.localId,
-      categoriaId: formData.value.categoriaId,
+      categoriaId: formData.value.categoriaId
     }
 
     const response = await apiService.put(`usuarios/${userId.value}`, payload)
@@ -189,14 +180,12 @@ const guardarUsuario = async () => {
     }
   } catch (error) {
     console.error('Error al guardar usuario:', error)
-    errorMessage.value =
-      error.response?.data?.message ||
-      'Error al actualizar el usuario. Verifique los datos e intente nuevamente.'
+    errorMessage.value = error.response?.data?.message || 'Error al actualizar el usuario. Verifique los datos e intente nuevamente.'
   }
 }
 
 const cancelSave = () => {
-  showSaveConfirmModal.value = false
+  showSaveConfirmModal.value = false;
 }
 
 const volver = () => {
@@ -235,9 +224,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="nombre">Nombre Completo</label>
                   <input
+                    type="text"
                     id="nombre"
                     v-model="formData.nombre"
-                    type="text"
                     placeholder="Ingrese nombre completo"
                     class="form-control"
                   />
@@ -246,9 +235,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="telefono">Teléfono</label>
                   <input
+                    type="text"
                     id="telefono"
                     v-model="formData.telefono"
-                    type="text"
                     placeholder="Ingrese número de teléfono"
                     class="form-control"
                   />
@@ -257,9 +246,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="rut">RUT</label>
                   <input
+                    type="text"
                     id="rut"
                     v-model="formData.rut"
-                    type="text"
                     class="form-control"
                     disabled
                   />
@@ -268,9 +257,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="correo">Correo electrónico</label>
                   <input
+                    type="email"
                     id="correo"
                     v-model="formData.correo"
-                    type="email"
                     class="form-control"
                     disabled
                   />
@@ -279,9 +268,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="contrasena">Contraseña</label>
                   <input
+                    type="password"
                     id="contrasena"
                     v-model="formData.contrasena"
-                    type="password"
                     placeholder="Dejar en blanco para no cambiar"
                     class="form-control"
                   />
@@ -290,9 +279,9 @@ const volver = () => {
                 <div class="mb-3">
                   <label class="form-label" for="repetirContrasena">Repetir contraseña</label>
                   <input
+                    type="password"
                     id="repetirContrasena"
                     v-model="formData.repetirContrasena"
-                    type="password"
                     placeholder="Confirmar contraseña"
                     class="form-control"
                   />
@@ -300,14 +289,17 @@ const volver = () => {
 
                 <div class="mb-3">
                   <label class="form-label" for="rol">Rol</label>
-                  <input id="rol" v-model="usuario.rol" type="text"
-class="form-control" disabled />
+                  <input
+                    type="text"
+                    id="rol"
+                    v-model="usuario.rol"
+                    class="form-control"
+                    disabled
+                  />
                 </div>
               </div>
               <div class="form-container__footer">
-                <button class="btn btn-outline-primary rounded-pill" type="button" @click="volver">
-                  Cancelar
-                </button>
+                <button class="btn btn-outline-primary rounded-pill" type="button" @click="volver">Cancelar</button>
                 <button class="btn btn-primary rounded-pill" type="submit">Guardar cambios</button>
               </div>
             </div>
@@ -316,30 +308,18 @@ class="form-control" disabled />
       </div>
     </main>
 
-    <div
-      v-if="showSaveConfirmModal"
-      class="modal animate__animated animate__fadeIn"
-      @click="cancelSave"
-    >
+    <div v-if="showSaveConfirmModal" class="modal animate__animated animate__fadeIn" @click="cancelSave">
       <div class="modal-content animate__animated animate__fadeInUp" @click.stop>
         <div class="modal-header">
           <h4 class="modal-title">Editar usuario</h4>
           <button class="btn-close" @click="cancelCreate"></button>
         </div>
         <div class="modal-body">
-          <p>
-            ¿Estás seguro que deseas <strong>guardar</strong> los cambios de
-            <strong>{{ formData.nombre }}</strong
-            >?
-          </p>
+          <p>¿Estás seguro que deseas <strong>guardar</strong> los cambios de <strong>{{ formData.nombre }}</strong>?</p>
         </div>
         <div class="modal-footer justify-content-center">
-          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cancelSave">
-            Cancelar
-          </button>
-          <button class="btn btn-primary rounded-pill" type="button" @click="guardarUsuario">
-            Sí, guardar
-          </button>
+          <button class="btn btn-outline-primary rounded-pill" type="button" @click="cancelSave">Cancelar</button>
+          <button class="btn btn-primary rounded-pill" type="button" @click="guardarUsuario">Sí, guardar</button>
         </div>
       </div>
     </div>

@@ -1,78 +1,105 @@
 <template>
-    <div class="panel__content panel__content--items-content">
-        <AppHeader
-            title="Platos"
-            description="Administra la carta de tu local"
-        />
+    <AppContentHeader
+        title="Platos"
+        description="Administra la carta de tu local"
+    />
 
-        <div class="panel__body" aria-label="Listado de platos">
-            <DishFilters
-                v-model:search="filters.search"
-                @open-filters="openFiltersModal"
-            />
+    <div class="app-content__body" aria-label="Listado de platos">
+        <section class="app-view app-view--list">
+            <div class="app-view__toolbar">
+                <AppListToolbar
+                    v-model:search="filters.search"
+                    search-id="dish-search"
+                    search-placeholder="Buscar platos..."
+                    search-label="Buscar platos"
+                    :total="filteredDishes.length"
+                    total-label="platos"
+                    action-label="Crear plato"
+                    action-link="/app/dishes/new"
+                    @open-filters="openFiltersModal">
 
-            <DishFiltersModal
-                v-model="showFiltersModal"
-                :filters="filters"
-                :categories="categories"
-                @apply="handleApplyFilters"
-            />
+                    <template #table-header>
+                        <div class="table-header">
+                            <span>Estado</span>
+                            <span>Imagen</span>
+                            <span>Nombre</span>
+                            <span>Precio</span>
+                            <span>Acciones</span>
+                        </div>
+                    </template>
 
-            <div class="table table--dishes">
-                <div class="table-header">
-                    <span>Estado</span>
-                    <span>Imagen</span>
-                    <span>Nombre</span>
-                    <span>Precio</span>
-                    <span>Acciones</span>
+                </AppListToolbar>
+            </div>
+
+            <div class="app-view__content">
+                <template v-if="isLoading">
+                    <SkeletonCardListItem  v-for="index in 6" :key="index" />
+                </template>
+
+                <div v-else-if="!filteredDishes.length" class="app-view__empty">
+                    No hay platos registrados.
+                </div>
+
+                <div class="app-view__list">
+                    <AppListItem
+                        v-for="dish in filteredDishes"
+                        :key="dish.id"
+                        :enabled="dish.estado"
+                        @edit="editDish(dish)"
+                        @delete="openDeleteModal(dish)"
+                        @toggle-status="toggleDishStatus(dish)">
+
+                        <template #content>
+                            <DishItemContent :dish="dish" />
+                        </template>
+                    </AppListItem>
                 </div>
             </div>
-
-            <DishList
-                :dishes="filteredDishes"
-                :loading="isLoading"
-                @edit="editDish"
-                @delete="openDeleteModal"
-                @toggle-status="toggleDishStatus"
-            />
-        </div>
-
-        <footer class="panel__footer">
-            <div class="panel__actions">
-                <RouterLink
-                    class="btn btn--primary btn--block"
-                    to="/app/dishes/new">
-                    Crear plato
-                </RouterLink>
-            </div>
-            <DsSignature />
-        </footer>
-
-        <ConfirmModal
-            v-model="showDeleteModal"
-            title="Eliminar plato"
-            :message="`
-                La siguiente acción no se puede deshacer.
-                ¿Deseas eliminar ${dishToDelete?.nombre || 'este plato'}?
-            `"
-            confirm-text="Eliminar"
-            cancel-text="Cancelar"
-            confirm-variant="danger"
-            @confirm="deleteDish"
-        />
+        </section>
     </div>
+
+    <AppContentFooter>
+        <template #actions>
+            <RouterLink
+                class="btn btn--primary btn--block"
+                to="/app/dishes/new">
+                Crear plato
+            </RouterLink>
+        </template>
+    </AppContentFooter>
+
+    <DishFiltersModal
+        v-model="showFiltersModal"
+        :filters="filters"
+        :categories="categories"
+        @apply="handleApplyFilters"
+    />
+
+    <ConfirmModal
+        v-model="showDeleteModal"
+        title="Eliminar plato"
+        :message="`
+            La siguiente acción no se puede deshacer.
+            ¿Deseas eliminar ${dishToDelete?.nombre || 'este plato'}?
+        `"
+        confirm-text="Eliminar"
+        cancel-text="Cancelar"
+        confirm-variant="danger"
+        @confirm="deleteDish"
+    />
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
-
-import AppHeader from '@/components/layout/AppHeader.vue'
-import DsSignature from '@/components/DsSignature.vue'
-import DishFilters from '@/components/dishes/DishFilters.vue'
-import DishList from '@/components/dishes/DishList.vue'
+import AppContentHeader from '@/components/layout/AppContentHeader.vue'
+import AppListToolbar from '@/components/layout/AppListToolbar.vue'
+import SkeletonCardListItem from '@/components/skeletons/SkeletonCardListItem.vue'
+import AppListItem from '@/components/layout/AppListItem.vue'
+import DishItemContent from '@/features/dishes/DishItemContent.vue'
+import AppContentFooter from '@/components/layout/AppContentFooter.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
-import DishFiltersModal from '@/components/dishes/DishFiltersModal.vue'
+import DishFiltersModal from '@/features/dishes/DishFiltersModal.vue'
 
 import { apiService } from '@/services/api.service'
 

@@ -1,0 +1,46 @@
+@use '../abstracts' as *;
+
+.app-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &__toolbar {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        padding-bottom: .5rem;
+    }
+
+    &__content {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+
+        .app-view__empty {
+            text-align: center;
+        }
+
+        .app-view__list {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            min-height: 100%;
+
+            &--added-dishes {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                border-radius: 1rem;
+                background-color: #f0f0f0;
+                padding: .5rem;
+
+                &--empty {
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+    }
+}

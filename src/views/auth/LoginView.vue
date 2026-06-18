@@ -144,9 +144,31 @@ const performLogin = async () => {
                     local: usuarioRolesLocales[0].local,
                 }
 
+                const empresa = await apiService.get(
+                    `empresas/por-local/${selected.local.id}`
+                )
+
+                console.log(
+                    'EMPRESA',
+                    empresa
+                )
+
+                const localConfig = {
+                    ...selected.local,
+
+                    usaMesas:
+                        empresa.usaMesas,
+
+                    usaNombreCliente:
+                        empresa.usaNombreCliente,
+
+                    tipoNegocio:
+                        empresa.tipoNegocio,
+                }
+
                 localStorage.setItem(
                     'local',
-                    JSON.stringify(selected.local)
+                    JSON.stringify(localConfig)
                 )
 
                 /*

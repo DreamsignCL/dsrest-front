@@ -86,11 +86,18 @@ const props = defineProps({
         default: null,
         validator: (value) => ['primary', 'danger'].includes(value),
     },
+
+    type: {
+        type: String,
+        default: null,
+        validator: (value) => ['confirm', 'success'].includes(value),
+    },
 })
 
 const classes = computed(() => [
     'modal',
     props.variant ? `modal--${props.variant}` : null,
+    props.type ? `modal--${props.type}` : null,
     props.size ? `modal--${props.size}` : null,
     {
         'modal--fullscreen': props.fullscreen,

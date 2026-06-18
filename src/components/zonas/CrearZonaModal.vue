@@ -8,7 +8,7 @@
       <div class="modal-body">
         <div class="mb-3">
           <label class="form-label">Nombre de la zona</label>
-          <input v-model="nombre" class="form-control" placeholder="Ej: Terraza" />
+          <input class="form-control" v-model="nombre" placeholder="Ej: Terraza" />
         </div>
       </div>
       <div class="modal-footer">
@@ -25,19 +25,15 @@
 import { ref, watch } from 'vue'
 const props = defineProps({
   show: Boolean,
-  zonaEditar: Object,
+  zonaEditar: Object 
 })
 const emit = defineEmits(['crear', 'cancel'])
 
 const nombre = ref('')
 
-watch(
-  () => props.zonaEditar,
-  (zona) => {
-    nombre.value = zona?.nombre || ''
-  },
-  { immediate: true }
-)
+watch(() => props.zonaEditar, (zona) => {
+  nombre.value = zona?.nombre || ''
+}, { immediate: true })
 
 const onCrear = () => {
   emit('crear', { nombre: nombre.value, id: props.zonaEditar?.id })
@@ -47,15 +43,9 @@ const onCancel = () => emit('cancel')
 
 <style scoped>
 .modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
   z-index: 2000;
 }
 .modal-content {
@@ -64,7 +54,7 @@ const onCancel = () => emit('cancel')
   padding: 24px 20px;
   min-width: 320px;
   max-width: 90vw;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
   position: relative;
 }
 .close {
@@ -73,7 +63,6 @@ const onCancel = () => emit('cancel')
   font-size: 1.5rem;
   cursor: pointer;
   position: absolute;
-  top: 12px;
-  right: 16px;
+  top: 12px; right: 16px;
 }
 </style>
