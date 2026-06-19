@@ -99,26 +99,16 @@ const router = createRouter({
           name: 'edit-order',
           component: () => import('@/views/orders/EditOrderView.vue'),
         },
+
+        //Profile
+        
+        {
+          path: 'profile',
+          name: 'profile',
+          component: () => import('@/views/profile/ProfileView.vue'),
+        },
         
       ]
-    },
-    {
-      path: '/platos',
-      name: 'platos',
-      component: () => import('../views/PlatosView.vue'),
-      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
-    },
-    {
-      path: '/platos/nuevo',
-      name: 'nuevo-plato',
-      component: () => import('../views/NuevoPlatoView.vue'),
-      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
-    },
-    {
-      path: '/platos/:id/editar',
-      name: 'editar-plato',
-      component: () => import('../views/EditarPlatoView.vue'),
-      meta: { requiresAuth: true, allowedRoles: ['Administrador'] },
     },
     {
       path: '/carta/:nombreLocal',

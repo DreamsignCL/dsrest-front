@@ -104,7 +104,7 @@
             border-radius: .5rem;
             width: 100%;
 
-            background: #EEF7FF;
+            background-color: #EEF7FF;
             border-color: #D6EAFD;
 
             .summary__icon {
@@ -118,6 +118,43 @@
 
             .summary__value {
                 font-size: .8rem;
+            }
+        }
+    }
+
+    &--resume {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: .5rem;
+
+        .summary__row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .3rem;
+
+            .summary__column {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                font-size: .875rem;
+                border: 1px solid #D6EAFD;
+                padding: .3rem .5rem;
+                border-radius: .5rem;
+                width: 100%;
+                height: 100%;
+                
+
+                &--label {
+                    font-size: .73rem;
+                    color: #4c85b6;
+                    background-color: #EEF7FF;
+                }
+
+                &--content {
+                    font-size: .8rem;
+                }
             }
         }
     }

@@ -32,6 +32,8 @@
     </nav>
 </template>
 
+<UserRoundPen />
+
 <script setup>
 import { computed } from 'vue'
 import { usePermissions } from '@/composables/usePermissions'
@@ -46,6 +48,7 @@ import {
     Map,
     Tags,
     LogOut,
+    UserRoundPen
 } from 'lucide-vue-next'
 
 const {hasRole, hasCategory,} = usePermissions()
@@ -56,6 +59,12 @@ const navigationItems = [
         label: 'Dashboard',
         route: '/app/dashboard',
         icon: LayoutDashboard,
+    },
+
+    {
+        label: 'Mi Perfil',
+        route: '/app/profile',
+        icon: UserRoundPen,
     },
 
     {
