@@ -1,7 +1,10 @@
 <template>
     <nav class="main-menu" aria-label="Navegación principal">
         <ul>
-            <li v-for="item in filteredNavigationItems" :key="item.route">
+            <li 
+                v-for="item in filteredNavigationItems" 
+                :class="{'hidden-md': item.mobileOnly }"
+                :key="item.route">
                 <RouterLink
                     :to="item.route"
                     class="main-menu__link"
@@ -65,6 +68,7 @@ const navigationItems = [
         label: 'Mi Perfil',
         route: '/app/profile',
         icon: UserRoundPen,
+        mobileOnly: true,
     },
 
     {
@@ -140,7 +144,7 @@ const filteredNavigationItems = computed(() => {
         
         const tablesAllowed =
             !item.requiresTables ||
-            config.value.usesTables
+            config.value.tablesMode === 'si'
         
         const roleAllowed =
             !item.roles ||

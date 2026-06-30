@@ -1,6 +1,7 @@
 <template>
     <div class="app-view__toolbar">
         <OrderCustomerCollapse
+            v-if="props.showCustomer"
             :model-value="props.customerName"
             @update:model-value="
                 emit(
@@ -68,6 +69,11 @@ const props = defineProps({
     items: {
         type: Array,
         default: () => [],
+    },
+
+    showCustomer: {
+        type: Boolean,
+        default: true,
     },
 })
 

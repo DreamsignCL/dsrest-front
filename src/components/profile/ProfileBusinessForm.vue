@@ -9,31 +9,33 @@
         <BaseInput
             id="business-name"
             label="Nombre de fantasía"
-            required =true
+            required
             v-model="form.nombreFantasia" />
 
         <BaseInput
             id="business-address"
             label="Dirección"
+            required
             v-model="form.direccion" />
 
         <BaseSelect
             id="business-type"
             label="Tipo de negocio"
+            required
             v-model="form.tipoNegocio"
             :options="businessTypeOptions" />
 
         <BaseSelect
             id="tables-mode"
             label="¿Usa mesas?"
-            required =true
+            required
             v-model="form.usaMesas"
             :options="tablesModeOptions" />
 
         <BaseSelect
             id="customer-name-mode"
             label="¿Usa nombre de cliente?"
-            required =true
+            required
             v-model="form.usaNombreCliente"
             :options="customerNameOptions" />
 

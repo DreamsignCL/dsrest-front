@@ -182,6 +182,12 @@ Objetivos:
 
 # Principios del proyecto
 
+## Primer paso
+
+Antes de realizar cambios en el proyecto leer:
+
+- docs/project-context.md
+
 ## Mobile First
 
 Todas las vistas y componentes deben diseñarse primero para dispositivos móviles y luego adaptarse a escritorio.
@@ -362,3 +368,7 @@ docs/
 ```
 
 antes de considerarse finalizada.
+
+### API
+
+- api-reference.md → Endpoints y contratos validados durante el desarrollo.

@@ -11,6 +11,7 @@
                 :categories="categories"
                 :errors="errors"
                 @update:form="Object.assign(form, $event)"
+                @image-error="handleImageError"
                 @submit="openCreateModal"
             />
         </section>
@@ -47,6 +48,7 @@
 import { ref, reactive, inject, onMounted, } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFile } from '@/composables/useFile'
+import { useToast } from '@/composables/useToast'
 import AppContentHeader from '@/components/layout/AppContentHeader.vue'
 import DishForm from '@/components/dishes/DishForm.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -56,11 +58,17 @@ import BaseLoader from '@/components/ui/BaseLoader.vue'
 
 import { apiService } from '@/services/api.service'
 
+const { showToast } = useToast()
+
 const router = useRouter()
 
 const showCreateModal = ref(false)
 
 const openCreateModal = () => {
+    console.log(
+        'OPEN CREATE MODAL'
+    )
+    
     if (!validateForm()) return
 
     showCreateModal.value = true
@@ -87,6 +95,23 @@ const isLoading = ref(false)
 const categories = ref([])
 
 const errors = reactive({})
+
+const handleImageError = message => {
+
+    if (!message) {
+        delete errors.image
+
+        return
+    }
+
+    errors.image = message
+
+    showToast({
+        message,
+        variant: 'error',
+        showIcon: true,
+    })
+}
 
 const form = reactive({
     name: '',
@@ -135,11 +160,13 @@ const loadCategories = async () => {
 
 const validateForm = () => {
 
+    console.log('VALIDANDO FORM')
+
     Object.keys(errors).forEach(
         key => delete errors[key]
     )
 
-    if (!form.name?.trim()){
+    if (!form.name?.trim()) {
         errors.name = 'Debes ingresar un nombre'
     }
 
@@ -147,11 +174,29 @@ const validateForm = () => {
         errors.categoryId = 'Debes seleccionar una categoría'
     }
 
-    if (!form.price || Number(form.price) <= 0) {
+    if (
+        !form.price ||
+        Number(form.price) <= 0
+    ) {
         errors.price = 'Debes ingresar un precio válido'
     }
 
-    return Object.keys(errors).length === 0
+    if (
+        Object.keys(errors).length
+    ) {
+
+        console.log('ERRORS', errors)
+
+        showToast({
+            message: Object.values(errors)[0],
+            variant: 'error',
+            showIcon: true,
+        })
+
+        return false
+    }
+
+    return true
 }
 
 /*
@@ -161,6 +206,10 @@ const validateForm = () => {
 */
 
 const createDish = async () => {
+
+    console.log(
+        'CREATE DISH START'
+    )
 
     if (!validateForm()) {
         return
@@ -176,6 +225,11 @@ const createDish = async () => {
         if (form.image) {
             image = await fileToBase64(
                 form.image
+            )
+
+            console.log(
+                'BASE64 LENGTH',
+                image.length
             )
         }
 

@@ -11,7 +11,6 @@
                 :class="{'is-error': error}"
                 :placeholder="placeholder"
                 :value="modelValue"
-                :required="required"
                 :disabled="disabled"
                 :aria-label="ariaLabel"
                 :aria-describedby="[

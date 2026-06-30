@@ -6,17 +6,14 @@
             label="Foto"
             variant="square"
             :model-value="form.image"
-            @update:model-value="
-                updateField(
-                    'image',
-                    $event
-                )
-            "
+            :error="errors.image"
+            @update:model-value="handleImageChange($event)"
+            @error="$emit('image-error', $event)"
         />
 
         <BaseInput
             id="dish-name"
-            label="Nombre"
+            label="Nombre:"
             placeholder="Ingresa el nombre del plato"
             :model-value="form.name"
             :error="errors.name"
@@ -31,7 +28,7 @@
 
         <BaseTextarea
             id="dish-description"
-            label="Descripción"
+            label="Descripción:"
             placeholder="Describe el plato"
             :model-value="form.description"
             :error="errors.description"
@@ -45,7 +42,7 @@
 
         <BaseSelect
             id="dish-category"
-            label="Categoría"
+            label="Categoría:"
             placeholder="Selecciona una categoría"
             :model-value="form.categoryId"
             :options="categoryOptions"
@@ -63,7 +60,7 @@
 
             <BaseInput
                 id="dish-price"
-                label="Precio"
+                label="Precio:"
                 type="number"
                 placeholder="0"
                 :model-value="form.price"
@@ -79,7 +76,7 @@
 
             <BaseInput
                 id="dish-compare-price"
-                label="Precio comparación"
+                label="Precio comparación:"
                 type="number"
                 placeholder="0"
                 :model-value="form.comparePrice"
@@ -141,6 +138,7 @@ const props = defineProps({
 const emit = defineEmits([
     'update:form',
     'submit',
+    'image-error',
 ])
 
 const categoryOptions = computed(() => {
@@ -159,6 +157,21 @@ const updateField = ( field, value ) => {
             ...props.form,
             [field]: value,
         }
+    )
+}
+
+const handleImageChange = file => {
+    emit(
+        'update:form',
+        {
+            ...props.form,
+            image: file,
+        }
+    )
+
+    emit(
+        'image-error',
+        ''
     )
 }
 </script>

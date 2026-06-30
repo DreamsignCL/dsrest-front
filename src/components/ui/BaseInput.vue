@@ -12,7 +12,6 @@
                 :type="inputType"
                 :placeholder="placeholder"
                 :value="modelValue"
-                :required="required"
                 :disabled="disabled"
                 :aria-label="ariaLabel"
                 :aria-describedby="[

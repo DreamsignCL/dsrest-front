@@ -9,7 +9,7 @@
                 <div class="summary__item">
                     <span
                         class="badge"
-                        :class="form.state ? 'tag--success' : 'tag--danger'">
+                        :class="form.state ? 'badge--success' : 'badge--danger'">
                         {{ form.state ? 'Activo' : 'Inactivo' }}
                     </span>
                 </div>

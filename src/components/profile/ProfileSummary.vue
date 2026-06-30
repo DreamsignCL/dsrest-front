@@ -2,7 +2,7 @@
     <div class="summary summary--resume">
         <div class="summary__row">
             <div class="summary__column summary__column--label">
-                Rut personal:
+                Rut per.:
             </div>
 
             <div class="summary__column summary__column--content">
@@ -10,7 +10,7 @@
             </div>
 
             <div class="summary__column summary__column--label">
-                Rut empresa:
+                Rut emp.:
             </div>
 
             <div class="summary__column summary__column--content">
@@ -26,12 +26,14 @@
             <div class="summary__column summary__column--content">
                 {{ userEmail }}
             </div>
+        </div>
 
+        <div class="summary__row">
             <div class="summary__column summary__column--label">
-                Razón social:
+                Razón soc.:
             </div>
 
-            <div class="summary__column summary__column--content">
+            <div class="summary__column summary__column--content hide-long-text">
                 {{ businessName }}
             </div>
         </div>

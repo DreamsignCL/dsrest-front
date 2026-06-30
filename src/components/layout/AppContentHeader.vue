@@ -56,7 +56,7 @@
                                 </div>
 
                                 <div class="user-info__footer">
-                                    <RouterLink to="editar-perfil">
+                                    <RouterLink to="profile">
                                         Editar perfil
                                     </RouterLink>
                                 </div>

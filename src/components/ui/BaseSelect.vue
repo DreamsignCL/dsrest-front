@@ -9,7 +9,6 @@
             class="form-select"
             :class="{ 'is-error': error }"
             :value="modelValue"
-            :required="required"
             :disabled="disabled"
             :aria-label="ariaLabel"
             :aria-describedby="[

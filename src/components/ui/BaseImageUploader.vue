@@ -15,6 +15,7 @@
                 {
                     'image-uploader--disabled': disabled,
                     'image-uploader--has-image': previewUrl,
+                    'is-error': error,
                 },
             ]">
 
@@ -61,6 +62,10 @@
         <div v-if="helper" class="form-helper">
             {{ helper }}
         </div>
+
+        <div v-if="error" class="form-error">
+            {{ error }}
+        </div>
     </div>
 </template>
 
@@ -99,6 +104,16 @@ const props = defineProps({
         type: String,
         default: 'circle',
     },
+
+    error: {
+        type: String,
+        default: '',
+    },
+
+    maxSize: {
+        type: Number,
+        default: 1024 * 1024,
+    },
 })
 
 const generatedId = useId()
@@ -109,6 +124,7 @@ const inputId = computed(() =>
 
 const emit = defineEmits([
     'update:modelValue',
+    'error',
 ])
 
 const removeImage = () => {
@@ -137,7 +153,27 @@ const handleFileChange = event => {
 
     const file = event.target.files?.[0]
 
+    console.log(
+        'FILE SIZE',
+        file.size
+    )
+
     if (!file) {
+        return
+    }
+
+    if (
+        file.size >
+        props.maxSize
+    ) {
+
+        emit(
+            'error',
+            'La imagen supera el tamaño permitido'
+        )
+
+        event.target.value = ''
+
         return
     }
 

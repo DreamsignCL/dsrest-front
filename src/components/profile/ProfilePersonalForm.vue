@@ -5,6 +5,7 @@
         <BaseInput
             id="name"
             label="Nombre"
+            required
             v-model="form.nombre" />
 
         <BaseInput

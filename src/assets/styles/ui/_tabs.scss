@@ -6,10 +6,10 @@
 
     &__item {
         display: block;
-        width: 50%;
+        width: 100%;
         color: #adb0b6;
         text-align: center;
-        padding: .5rem;
+        padding: .5rem 1rem;
         border-bottom: 1px solid #D9D9D9;
         background: #f5f5f5;
         background: linear-gradient(0deg, #f5f5f5, #f5f5f500 67%);
@@ -23,8 +23,26 @@
         &--active {
             color: var(--color-primary);
             border: 1px solid #D9D9D9;
-            border-bottom-color: transparent;
+            border-bottom-color: #fff;
             background: #fff;
+        }
+    }
+}
+
+@include mq(md) {
+    .tabs {
+        position: relative;
+
+        &::after {
+            content: '';
+            flex: 1;
+            height: calc(100% - 1px);
+            border-bottom: 1px solid #D9D9D9;
+        }
+
+        &__item {
+            width: auto;
+            font-size: .875rem;
         }
     }
 }

@@ -145,15 +145,33 @@
                 width: 100%;
                 height: 100%;
                 
-
                 &--label {
                     font-size: .73rem;
                     color: #4c85b6;
                     background-color: #EEF7FF;
+                    max-width: 85px;
                 }
 
                 &--content {
                     font-size: .8rem;
+                }
+            }
+        }
+    }
+}
+
+
+@include mq(md) {
+    .summary {
+        &--resume {
+            flex-direction:row;
+
+            .summary__row {
+                .summary__column {
+                    &--label,
+                    &--content {
+                        max-width: 200px;
+                    }
                 }
             }
         }

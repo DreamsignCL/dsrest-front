@@ -1,30 +1,60 @@
-import { computed } from 'vue'
+import { ref } from 'vue'
+
+const user = ref(
+    JSON.parse(
+        localStorage.getItem('user')
+    ) || null
+)
+
+const local = ref(
+    JSON.parse(
+        localStorage.getItem('local')
+    ) || null
+)
+
+const token = ref(
+    localStorage.getItem('token')
+)
 
 export function useCurrentUser() {
 
-    const user = computed(() => {
-        const stored = localStorage.getItem('user')
+    const updateUser = data => {
 
-        return stored
-            ? JSON.parse(stored)
-            : null
-    })
+        user.value = data
 
-    const local = computed(() => {
-        const stored = localStorage.getItem('local')
+        localStorage.setItem(
+            'user',
+            JSON.stringify(data)
+        )
+    }
 
-        return stored
-            ? JSON.parse(stored)
-            : null
-    })
+    const updateLocal = data => {
 
-    const token = computed(() => {
-        return localStorage.getItem('token')
-    })
+        local.value = data
+
+        localStorage.setItem(
+            'local',
+            JSON.stringify(data)
+        )
+    }
+
+    const updateToken = value => {
+
+        token.value = value
+
+        localStorage.setItem(
+            'token',
+            value
+        )
+    }
 
     return {
         user,
         local,
         token,
+
+        updateUser,
+        updateLocal,
+        updateToken,
     }
 }
