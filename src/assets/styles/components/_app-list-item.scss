@@ -69,4 +69,15 @@
             border-color: var(--color-primary);
         }
     }
+
+    &--table {
+        display: block;
+        padding: .5rem 2rem .5rem .5rem ;
+        margin-bottom: 1rem;
+        border-color: #cfcfcf;
+
+        &.list-item--active {
+            border-color: var(--color-primary);
+        }
+    }
 }

@@ -107,6 +107,20 @@ const router = createRouter({
           name: 'profile',
           component: () => import('@/views/profile/ProfileView.vue'),
         },
+
+        //Tables
+        
+        {
+          path: 'tables',
+          name: 'tables',
+          component: () => import('@/views/tables/TablesView.vue'),
+        },
+
+        {
+          path: 'tables/new',
+          name: 'new-table',
+          component: () => import('@/views/tables/NewTableView.vue'),
+        },
         
       ]
     },

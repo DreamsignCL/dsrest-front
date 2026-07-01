@@ -148,11 +148,6 @@ const performLogin = async () => {
                     `empresas/por-local/${selected.local.id}`
                 )
 
-                console.log(
-                    'EMPRESA',
-                    empresa
-                )
-
                 const localConfig = {
                     ...selected.local,
 

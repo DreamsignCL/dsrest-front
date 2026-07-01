@@ -113,7 +113,7 @@ const navigationItems = [
 
     {
         label: 'Mesas',
-        route: '/mesas',
+        route: '/app/tables',
         icon: TableProperties,
         roles: ['Administrador'],
         requiresTables: true,
