@@ -4,7 +4,7 @@
             <h3 class="title">Mesa #{{ table.numero }}</h3>
 
             <span class="badge" :class="statusClass">
-                {{ table.estado }}
+                {{ statusLabel }}
             </span>
         </div>
 
@@ -61,5 +61,31 @@ const statusClass = computed(() => {
         default:
             return 'badge--neutral'
     }
+})
+
+const statusLabel = computed(() => {
+
+    switch (
+        props.table.estado?.toLowerCase()
+    ) {
+
+        case 'disponible':
+            return 'Disponible'
+
+        case 'ocupada':
+            return 'Ocupada'
+
+        case 'reservada':
+            return 'Reservada'
+
+        case 'fuera de servicio':
+        case 'fuera_servicio':
+            return 'Fuera de servicio'
+
+        default:
+            return props.table.estado
+
+    }
+
 })
 </script>

@@ -6,9 +6,7 @@
         type="confirm"
         @update:modelValue="$emit('update:modelValue', $event)"
     >
-        <p class="confirm-modal__message">
-            {{ message }}
-        </p>
+        <p class="confirm-modal__message" v-html="message"></p>
 
         <template #footer>
             <BaseButton

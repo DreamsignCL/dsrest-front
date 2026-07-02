@@ -158,6 +158,63 @@
             }
         }
     }
+
+    &--tables {
+        display: flex;
+        justify-content: center;
+        gap: .5rem;
+
+        .summary__item {
+            border: 1px solid transparent;
+            border-radius: .5rem;
+            overflow: hidden;
+
+            .summary__item-head {
+                padding: .3rem .5rem;
+                font-size: .78rem;
+                line-height: .875rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 50%;
+            }
+
+            &--info {
+                border-color: var(--color-info-light);
+                
+                .summary__item-head {
+                    background-color: var(--color-info-lighter);
+                    color:            var(--color-info);
+                }
+            }
+
+            &--warning {
+                border-color: var(--color-warning-light);
+                
+                .summary__item-head {
+                    background-color: var(--color-warning-lighter);
+                    color:            var(--color-warning);
+                }
+            }
+            
+            &--success {
+                border-color: var(--color-success-light);
+                
+                .summary__item-head {
+                    background-color: var(--color-success-lighter);
+                    color:            var(--color-success);
+                }
+            }
+
+            &--danger {
+                border-color: var(--color-danger-light);
+                .summary__item-head {
+                    background-color: var(--color-danger-lighter);
+                    color:            var(--color-danger);
+                }
+            }
+        }
+    }
 }
 
 

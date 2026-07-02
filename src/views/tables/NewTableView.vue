@@ -4,28 +4,49 @@
         description="Completa la información de la mesa"
     />
 
-    <div class="app-content__body" aria-label="Crear nueva mesa">
+    <div
+        class="app-content__body"
+        aria-label="Crear nueva mesa">
+
         <section class="app-view app-view--form">
+
             <TableForm
                 :form="form"
                 :zones="zones"
                 :errors="errors"
-                @update:form="Object.assign(form, $event)"
-                @submit="openCreateModal"
+                @update:form="
+                    Object.assign(
+                        form,
+                        $event
+                    )
+                "
+                @submit="openConfirmModal"
             />
+
         </section>
+
     </div>
 
     <AppContentFooter>
+
         <template #actions>
-            <RouterLink to="/app/tables" class="btn btn--outline-primary">Volver</RouterLink>
+
+            <RouterLink
+                to="/app/tables"
+                class="btn btn--outline-primary">
+
+                Volver
+
+            </RouterLink>
 
             <BaseButton
                 type="submit"
                 variant="primary"
                 form="table-form"
                 :disabled="isLoading">
+
                 Crear mesa
+
             </BaseButton>
 
         </template>
@@ -33,9 +54,9 @@
     </AppContentFooter>
 
     <ConfirmModal
-        v-model="showCreateModal"
+        v-model="showConfirmModal"
         title="Crear mesa"
-        :message="`¿Deseas crear la mesa <strong>${form.number}</strong>?`"
+        :message="`¿Deseas crear la mesa <strong>#${form.numero}</strong>?`"
         confirm-text="Crear mesa"
         cancel-text="Cancelar"
         confirm-variant="primary"
@@ -46,27 +67,44 @@
         v-if="isLoading"
         text="Guardando mesa..."
     />
-
 </template>
 
 <script setup>
-import { ref, reactive, onMounted,} from 'vue'
+import {
+    ref,
+    reactive,
+    inject,
+    onMounted,
+} from 'vue'
+
 import { useRouter } from 'vue-router'
 import { useToast } from '@/composables/useToast'
+
 import AppContentHeader from '@/components/layout/AppContentHeader.vue'
 import AppContentFooter from '@/components/layout/AppContentFooter.vue'
+
 import TableForm from '@/components/tables/TableForm.vue'
+
 import BaseButton from '@/components/ui/BaseButton.vue'
 import BaseLoader from '@/components/ui/BaseLoader.vue'
+
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 
 import { apiService } from '@/services/api.service'
 
-const { showToast } = useToast()
-
 const router = useRouter()
 
-const local = inject('currentLocal')
+const { showToast } = useToast()
+
+/*
+|--------------------------------------------------------------------------
+| Current Local
+|--------------------------------------------------------------------------
+*/
+
+const local = inject(
+    'currentLocal'
+)
 
 /*
 |--------------------------------------------------------------------------
@@ -74,19 +112,24 @@ const local = inject('currentLocal')
 |--------------------------------------------------------------------------
 */
 
-const showCreateModal = ref(false)
-
 const isLoading = ref(false)
+
+const showConfirmModal = ref(false)
 
 const zones = ref([])
 
 const errors = reactive({})
 
 const form = reactive({
-    number: '',
-    name: '',
-    capacity: '',
-    zoneId: '',
+
+    numero: '',
+
+    nombre: '',
+
+    capacidad: '',
+
+    zona_id: '',
+
 })
 
 /*
@@ -96,6 +139,10 @@ const form = reactive({
 */
 
 const loadZones = async () => {
+
+    if (!local?.value?.id) {
+        return
+    }
 
     try {
 
@@ -128,30 +175,41 @@ const validateForm = () => {
         key => delete errors[key]
     )
 
-    if (!form.number) {
-        errors.number =
-            'Debes ingresar un número'
+    if (!form.numero) {
+        errors.numero =
+            'Debes ingresar un número de mesa'
     }
 
     if (
-        !form.capacity ||
-        Number(form.capacity) <= 0
+        !form.capacidad ||
+        Number(form.capacidad) <= 0
     ) {
-        errors.capacity =
+
+        errors.capacidad =
             'Debes ingresar una capacidad válida'
+
     }
 
-    if (!form.zoneId) {
-        errors.zoneId =
+    if (!form.zona_id) {
+
+        errors.zona_id =
             'Debes seleccionar una zona'
+
     }
 
-    if (Object.keys(errors).length) {
+    if (
+        Object.keys(errors).length
+    ) {
 
         showToast({
-            message: Object.values(errors)[0],
+
+            message:
+                Object.values(errors)[0],
+
             variant: 'error',
+
             showIcon: true,
+
         })
 
         return false
@@ -168,51 +226,47 @@ const validateForm = () => {
 |--------------------------------------------------------------------------
 */
 
-const openCreateModal = () => {
+const openConfirmModal = () => {
 
     if (!validateForm()) {
         return
     }
 
-    showCreateModal.value = true
+    showConfirmModal.value = true
 
 }
 
 const createTable = async () => {
 
-    showCreateModal.value = false
+    if (!validateForm()) {
+        return
+    }
+
+    showConfirmModal.value = false
 
     isLoading.value = true
 
     try {
 
-        if (!local?.value?.id) {
-
-            console.error(
-                'Local not found'
-            )
-
-            return
-
-        }
-
         const payload = {
 
-            nombre:
-                form.name.trim() || null,
-
             numero:
-                Number(form.number),
+                Number(form.numero),
+
+            nombre:
+                form.nombre || null,
 
             capacidad:
-                Number(form.capacity),
+                Number(form.capacidad),
+
+            estado:
+                'disponible',
+
+            activo:
+                true,
 
             zona_id:
-                Number(form.zoneId),
-
-            activo: true,
-
-            estado: 'disponible',
+                Number(form.zona_id),
 
             local_id:
                 local.value.id,
@@ -224,7 +278,9 @@ const createTable = async () => {
             payload
         )
 
-        router.push('/app/tables')
+        router.push(
+            '/app/tables'
+        )
 
     } catch (error) {
 

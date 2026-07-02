@@ -9,26 +9,27 @@
     border: 1px solid transparent;
 
     &--primary {
-        background-color: #dff6ff;
-        border-color: #95cfe6;
-        color: #5cabca;
+        background-color: var(--color-info-lighter);
+        border-color:     var(--color-info-light);
+        color:            var(--color-info);
     }
 
     &--warning {
-        background-color: #fffbe9;
-        border-color: #eedd91;
-        color: #c9b148;
+        background-color: var(--color-warning-lighter);
+        border-color:     var(--color-warning-light);
+        color:            var(--color-warning);
+    }
+    
+    &--success {
+        background-color: var(--color-success-lighter);
+        border-color:     var(--color-success-light);
+        color:            var(--color-success);
     }
 
     &--danger {
-        background-color: #ffe9e9;
-        border-color: #f0baba;
-        color: #bb4848;
+        background-color: var(--color-danger-lighter);
+        border-color:     var(--color-danger-light);
+        color:            var(--color-danger);
     }
 
-    &--success {
-        background-color: #eaffe9;
-        border-color: #96cf93;
-        color: #529c4e;
-    }
 }

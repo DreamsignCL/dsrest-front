@@ -1,25 +1,45 @@
 :root {
-    /* Brand */
-    --color-primary: #009ee3;
-    --color-primary-dark: #0360b6;
-    --color-secondary: #ffc107;
-    --color-secondary-dark: #c99807;
-    --color-gray: #ddd;
-    --color-gray-dark: #bbb;
+    /* --------BRAND--------- */
 
-    /* Feedback */
-    --color-info: #009ee3;
-    --color-warning: #ffc107;
-    --color-success: #16a34a;
-    --color-danger: #dc2626;
-    --color-danger-dark: #920a0a;
+    /* Primary */
+    --color-primary:         #009ee3;
+    --color-primary-dark:    #0360b6;
 
-    /* Neutral */
-    --color-text: #1e1e1e;
-    --color-text-muted: #6d6d6d;
+    /* Secondary */
+    --color-secondary:       #ffc107;
+    --color-secondary-dark:  #c99807;
 
-    --color-background: #f5f7fa;
-    --color-surface: #ffffff;
+    /* Gray */
+    --color-gray:            #ddd;
+    --color-gray-dark:       #bbb;
 
-    --color-border: #e5e7eb;
+    /* --------FEEDBACK--------- */
+
+    /* Info */
+    --color-info-lighter:    #dff6ff;
+    --color-info-light:      #95cfe6;
+    --color-info:            #009ee3;
+
+    /* Warning */
+    --color-warning-lighter: #fffbe9;
+    --color-warning-light:   #eedd91;
+    --color-warning:         #c9b148;
+
+    /* Success */
+    --color-success-lighter: #eaffe9;
+    --color-success-light:   #96cf93;
+    --color-success:         #529c4e;
+
+    /* Danger */
+    --color-danger-lighter:  #ffe9e9;
+    --color-danger-light:    #f0baba;
+    --color-danger:          #bb4848;
+    --color-danger-dark:     #920a0a;
+
+    /* --------NEUTRAL--------- */
+    --color-text:            #1e1e1e;
+    --color-text-muted:      #6d6d6d;
+    --color-background:      #f5f7fa;
+    --color-surface:         #ffffff;
+    --color-border:          #e5e7eb;
 }

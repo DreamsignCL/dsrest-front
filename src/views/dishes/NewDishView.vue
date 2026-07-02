@@ -12,7 +12,7 @@
                 :errors="errors"
                 @update:form="Object.assign(form, $event)"
                 @image-error="handleImageError"
-                @submit="openCreateModal"
+                @submit="openConfirmModal"
             />
         </section>
     </div>
@@ -32,7 +32,7 @@
     </AppContentFooter>
     
     <ConfirmModal
-        v-model="showCreateModal"
+        v-model="showConfirmModal"
         title="Crear plato"
         :message="`¿Deseas crear el plato <strong>'${form.name}</strong>'?`"
         confirm-text="Crear plato"
@@ -62,16 +62,12 @@ const { showToast } = useToast()
 
 const router = useRouter()
 
-const showCreateModal = ref(false)
+const showConfirmModal = ref(false)
 
-const openCreateModal = () => {
-    console.log(
-        'OPEN CREATE MODAL'
-    )
-    
+const openConfirmModal = () => {
     if (!validateForm()) return
 
-    showCreateModal.value = true
+    showConfirmModal.value = true
 }
 
 const { fileToBase64,} = useFile()
@@ -215,7 +211,7 @@ const createDish = async () => {
         return
     }
 
-    showCreateModal.value = false
+    showConfirmModal.value = false
 
     isLoading.value = true
 

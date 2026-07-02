@@ -115,13 +115,17 @@ const router = createRouter({
           name: 'tables',
           component: () => import('@/views/tables/TablesView.vue'),
         },
-
         {
           path: 'tables/new',
           name: 'new-table',
           component: () => import('@/views/tables/NewTableView.vue'),
         },
-        
+        {
+          path: 'tables/edit/:id',
+          name: 'edit-table',
+          component: () => import('@/views/tables/EditTableView.vue'),
+        }
+
       ]
     },
     {
